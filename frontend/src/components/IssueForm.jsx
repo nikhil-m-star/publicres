@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from 'react'
-import { Upload, MapPin, X, Loader2, Navigation, CircleDot, Trash2, Lightbulb, Droplets, FileText } from 'lucide-react'
+import { Upload, MapPin, X, Loader2, Navigation, CircleDot, Trash2, Lightbulb, Droplets, FileText, AlertTriangle, XCircle } from 'lucide-react'
 import { MapContainer, TileLayer, Marker, useMap } from 'react-leaflet'
 import L from 'leaflet'
 import 'leaflet/dist/leaflet.css'
@@ -303,18 +303,18 @@ export default function IssueForm({ onSuccess }) {
                 {geoStatus === 'found' && address && (
                     <div className="flex items-center gap-2 text-xs text-emerald-600 bg-emerald-50 px-3 py-2.5 rounded-lg mb-2">
                         <MapPin className="w-3.5 h-3.5 flex-shrink-0" />
-                        <span className="truncate font-medium">📍 {address.display}</span>
+                        <span className="truncate font-medium"><MapPin className="w-3.5 h-3.5 inline" /> {address.display}</span>
                     </div>
                 )}
                 {geoStatus === 'denied' && (
                     <div className="text-xs text-red-600 bg-red-50 px-3 py-2.5 rounded-lg mb-2">
-                        <p className="font-medium mb-1">⚠️ Location access is required</p>
+                        <p className="font-medium mb-1"><AlertTriangle className="w-3.5 h-3.5 inline" /> Location access is required</p>
                         <p className="text-red-500">You must be physically present at the issue location to report it. Please enable location access in your browser settings and click "Refresh location".</p>
                     </div>
                 )}
                 {geoStatus === 'error' && (
                     <div className="text-xs text-red-600 bg-red-50 px-3 py-2.5 rounded-lg mb-2">
-                        ❌ Your browser does not support geolocation. Please use a modern browser.
+                        <XCircle className="w-3.5 h-3.5 inline" /> Your browser does not support geolocation. Please use a modern browser.
                     </div>
                 )}
 
@@ -355,7 +355,7 @@ export default function IssueForm({ onSuccess }) {
             {duplicateWarning && (
                 <div className="bg-orange-50 border border-orange-200 rounded-xl p-4 animate-fade-in">
                     <div className="flex items-start gap-3">
-                        <div className="text-orange-500 mt-0.5">⚠️</div>
+                        <div className="text-orange-500 mt-0.5"><AlertTriangle className="w-4 h-4" /></div>
                         <div>
                             <h4 className="text-sm font-semibold text-orange-800">Similar Issue Detected</h4>
                             <p className="text-sm text-orange-700 mt-1">

@@ -1,6 +1,6 @@
 import { Link, useLocation } from 'react-router-dom'
 import { SignedIn, SignedOut, SignInButton, UserButton } from '@clerk/clerk-react'
-import { Menu, X, Shield, MapPin, Map, Trophy, Sparkles } from 'lucide-react'
+import { Menu, X, Shield, MapPin, Map, Trophy, Sparkles, Home, FileText } from 'lucide-react'
 import { useState } from 'react'
 import NotificationsDropdown from './NotificationsDropdown'
 import { useAuthSync } from '../hooks/useIssues'
@@ -27,27 +27,27 @@ export default function Navbar() {
                 <div className="nav-links">
                     <Link
                         to="/"
-                        className={`nav-link ${isActive('/') ? 'active' : ''}`}
+                        className={`nav - link ${isActive('/') ? 'active' : ''} `}
                     >
                         Home
                     </Link>
                     <Link
                         to="/map"
-                        className={`nav-link ${isActive('/map') ? 'active' : ''}`}
+                        className={`nav - link ${isActive('/map') ? 'active' : ''} `}
                     >
                         <Map className="w-3.5 h-3.5" />
                         Map
                     </Link>
                     <Link
                         to="/leaderboard"
-                        className={`nav-link ${isActive('/leaderboard') ? 'active' : ''}`}
+                        className={`nav - link ${isActive('/leaderboard') ? 'active' : ''} `}
                     >
                         <Trophy className="w-3.5 h-3.5" />
                         Leaderboard
                     </Link>
                     <Link
                         to="/report"
-                        className={`nav-link accent ${isActive('/report') ? 'active' : ''}`}
+                        className={`nav - link accent ${isActive('/report') ? 'active' : ''} `}
                     >
                         <Sparkles className="w-3.5 h-3.5" />
                         AI Insights
@@ -55,13 +55,13 @@ export default function Navbar() {
                     <SignedIn>
                         <Link
                             to="/dashboard"
-                            className={`nav-link ${isActive('/dashboard') ? 'active' : ''}`}
+                            className={`nav - link ${isActive('/dashboard') ? 'active' : ''} `}
                         >
                             My Reports
                         </Link>
                         <Link
                             to="/profile"
-                            className={`nav-link ${isActive('/profile') ? 'active' : ''}`}
+                            className={`nav - link ${isActive('/profile') ? 'active' : ''} `}
                         >
                             <Shield className="w-3.5 h-3.5" />
                             Profile
@@ -115,21 +115,21 @@ export default function Navbar() {
                         className="nav-panel__link"
                         onClick={() => setMobileOpen(false)}
                     >
-                        🗺️ Map Explorer
+                        <Map className="w-4 h-4" /> Map Explorer
                     </Link>
                     <Link
                         to="/leaderboard"
                         className="nav-panel__link"
                         onClick={() => setMobileOpen(false)}
                     >
-                        🏆 Leaderboard
+                        <Trophy className="w-4 h-4" /> Leaderboard
                     </Link>
                     <Link
                         to="/report"
                         onClick={() => setMobileOpen(false)}
                         className="nav-panel__link accent"
                     >
-                        ✨ AI Locality Insights
+                        <Sparkles className="w-4 h-4" /> AI Locality Insights
                     </Link>
                     <SignedIn>
                         <Link

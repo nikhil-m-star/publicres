@@ -65,11 +65,11 @@ function RatingDialog({ issue, onClose }) {
                     ))}
                 </div>
                 <p className="text-center text-sm text-gray-500 mb-4">
-                    {score === 1 && '😞 Poor'}
-                    {score === 2 && '😐 Below Average'}
-                    {score === 3 && '🙂 Average'}
-                    {score === 4 && '😊 Good'}
-                    {score === 5 && '🌟 Excellent'}
+                    {score === 1 && 'Poor'}
+                    {score === 2 && 'Below Average'}
+                    {score === 3 && 'Average'}
+                    {score === 4 && 'Good'}
+                    {score === 5 && 'Excellent'}
                 </p>
 
                 {/* Feedback */}
@@ -207,7 +207,7 @@ export default function IssueDetails() {
                             <div>
                                 <p className="text-sm font-semibold text-gray-900">Assigned to: {issue.assignedTo.name}</p>
                                 {issue.assignedTo.area && (
-                                    <p className="text-xs text-gray-500">{issue.assignedTo.area} • Rating: {issue.assignedTo.avgRating?.toFixed(1) || '—'} ⭐</p>
+                                    <p className="text-xs text-gray-500">{issue.assignedTo.area} • Rating: {issue.assignedTo.avgRating?.toFixed(1) || '—'}</p>
                                 )}
                             </div>
                         </div>
@@ -225,7 +225,7 @@ export default function IssueDetails() {
                             <div className="flex items-center justify-between">
                                 <div>
                                     <h3 className="font-semibold text-gray-900 mb-1">
-                                        {issue.status === 'RESOLVED' ? '🎉 This issue has been resolved!' : '⭐ Rate your reporting experience'}
+                                        {issue.status === 'RESOLVED' ? 'This issue has been resolved!' : 'Rate your reporting experience'}
                                     </h3>
                                     <p className="text-sm text-gray-500">Rate the officer or city administration to help improve civic services.</p>
                                 </div>

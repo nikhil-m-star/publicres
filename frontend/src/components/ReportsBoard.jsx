@@ -101,11 +101,11 @@ export default function ReportsBoard({
                     className="input-field w-auto min-w-[140px]"
                 >
                     <option value="">All Categories</option>
-                    <option value="POTHOLE">🕳️ Pothole</option>
-                    <option value="GARBAGE">🗑️ Garbage</option>
-                    <option value="STREETLIGHT">💡 Streetlight</option>
-                    <option value="WATER_LEAK">💧 Water Leak</option>
-                    <option value="OTHER">📋 Other</option>
+                    <option value="POTHOLE">Pothole</option>
+                    <option value="GARBAGE">Garbage</option>
+                    <option value="STREETLIGHT">Streetlight</option>
+                    <option value="WATER_LEAK">Water Leak</option>
+                    <option value="OTHER">Other</option>
                 </select>
 
                 {/* Status filter */}

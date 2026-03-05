@@ -95,7 +95,7 @@ export default function Profile() {
                                         {roleKey !== 'CITIZEN' && (
                                             <div className="flex items-center gap-2 pt-2 border-t border-gray-100 mt-2">
                                                 <div className="flex items-center gap-1.5 px-3 py-1.5 bg-amber-50 text-amber-700 rounded-lg">
-                                                    <span className="font-semibold text-sm">⭐ Overall Rating:</span>
+                                                    <span className="font-semibold text-sm">Overall Rating:</span>
                                                     <span className="font-bold text-sm">{user?.avgRating > 0 ? user.avgRating.toFixed(1) : 'No ratings yet'}</span>
                                                 </div>
                                             </div>

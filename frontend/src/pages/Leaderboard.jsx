@@ -34,8 +34,8 @@ const roleColors = {
 }
 
 const roleTitles = {
-    PRESIDENT: '👑 President',
-    OFFICER: '🛡️ Officer',
+    PRESIDENT: 'President',
+    OFFICER: 'Officer',
 }
 
 function GeneralRatingDialog({ officer, onClose }) {
@@ -78,11 +78,11 @@ function GeneralRatingDialog({ officer, onClose }) {
                     ))}
                 </div>
                 <p className="text-center text-sm text-gray-500 mb-4">
-                    {score === 1 && '😞 Poor'}
-                    {score === 2 && '😐 Below Average'}
-                    {score === 3 && '🙂 Average'}
-                    {score === 4 && '😊 Good'}
-                    {score === 5 && '🌟 Excellent'}
+                    {score === 1 && 'Poor'}
+                    {score === 2 && 'Below Average'}
+                    {score === 3 && 'Average'}
+                    {score === 4 && 'Good'}
+                    {score === 5 && 'Excellent'}
                 </p>
 
                 {/* Feedback */}
@@ -129,7 +129,7 @@ export default function Leaderboard() {
     }
 
     return (
-        <div className="page-container py-8">
+        <div className="page-container pt-24 pb-8">
             {/* Header */}
             <div className="text-center mb-10">
                 <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-amber-50 border border-amber-200 text-amber-700 text-sm font-medium mb-4">

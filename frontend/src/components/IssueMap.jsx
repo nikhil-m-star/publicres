@@ -238,7 +238,7 @@ export default function IssueMap({
                     <>
                         <Marker position={userPosition} icon={userIcon}>
                             <Popup>
-                                <p className="text-sm font-medium">📍 Your Location</p>
+                                <p className="text-sm font-medium">Your Location</p>
                             </Popup>
                         </Marker>
                         <Circle
