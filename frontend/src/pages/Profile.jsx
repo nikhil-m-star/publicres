@@ -1,17 +1,16 @@
 import { useState } from 'react';
 import { api } from '../api/client';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { Shield, Key, MapPin, Loader2, CheckCircle2, AlertCircle } from 'lucide-react';
+import { Shield, MapPin, Loader2, CheckCircle2, AlertCircle } from 'lucide-react';
 
 export default function Profile() {
-    const [otp, setOtp] = useState('');
     const [role, setRole] = useState('OFFICER');
     const [area, setArea] = useState('Bengaluru Central');
     const [success, setSuccess] = useState(false);
     const queryClient = useQueryClient();
 
     const verifyMutation = useMutation({
-        mutationFn: api.verifyAdminOtp,
+        mutationFn: api.verifyByEmail,
         onSuccess: () => {
             setSuccess(true);
             queryClient.invalidateQueries({ queryKey: ['me'] }); // if applicable, to hard-refresh user state
@@ -28,7 +27,7 @@ export default function Profile() {
                         <Shield className="w-8 h-8 text-white" />
                     </div>
                     <h1 className="text-2xl font-bold text-white mb-2">Profile Verification</h1>
-                    <p className="text-civic-100 mb-2">Enter your secure OTP to upgrade your account access.</p>
+                    <p className="text-civic-100 mb-2">Your account will be verified automatically using your email domain.</p>
                     <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/20 text-xs font-medium text-white border border-white/20">
                         <AlertCircle className="w-3.5 h-3.5" />
                         Requires a valid bmsce.ac.in email
@@ -46,25 +45,10 @@ export default function Profile() {
                         <form
                             onSubmit={(e) => {
                                 e.preventDefault();
-                                verifyMutation.mutate({ otp, requestedRole: role, area: role === 'OFFICER' ? area : undefined });
+                                verifyMutation.mutate({ requestedRole: role, area: role === 'OFFICER' ? area : undefined });
                             }}
                             className="space-y-5"
                         >
-                            <div>
-                                <label className="block text-sm font-medium text-gray-700 mb-1">Secret OTP</label>
-                                <div className="relative">
-                                    <Key className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
-                                    <input
-                                        type="password"
-                                        required
-                                        value={otp}
-                                        onChange={(e) => setOtp(e.target.value)}
-                                        className="w-full pl-10 pr-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl focus:border-civic-500 focus:ring-4 focus:ring-civic-500/10 outline-none transition-all"
-                                        placeholder="••••••"
-                                    />
-                                </div>
-                            </div>
-
                             <div>
                                 <label className="block text-sm font-medium text-gray-700 mb-1">Requested Role</label>
                                 <select
@@ -115,3 +99,4 @@ export default function Profile() {
         </div>
     );
 }
+

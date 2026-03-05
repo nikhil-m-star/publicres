@@ -7,15 +7,15 @@ import {
     getUsers,
 } from "../controllers/issueController.js";
 import {
-    verifyAdminOtp,
+    verifyByEmail,
     getNotifications,
     markNotificationAsRead
 } from "../controllers/userController.js";
 
 const router = Router();
 
-// Citizen -> Admin promotion (requires valid OTP)
-router.post("/verify-otp", requireAuth, verifyAdminOtp);
+// Citizen -> Admin promotion (auto-verified by bmsce.ac.in email domain)
+router.post("/verify-email", requireAuth, verifyByEmail);
 
 // Officer/President: Notifications
 router.get("/notifications", requireAuth, requireOfficer, getNotifications);

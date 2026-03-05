@@ -53,8 +53,8 @@ export const api = {
     getNotifications: () => client.get('/admin/notifications').then((r) => r.data),
     markNotificationRead: (id) => client.put(`/admin/notifications/${id}/read`).then((r) => r.data),
 
-    // OTP Admin Verification
-    verifyAdminOtp: ({ otp, requestedRole, area }) => client.post('/admin/verify-otp', { otp, requestedRole, area }).then((r) => r.data),
+    // Email Domain Admin Verification
+    verifyByEmail: ({ requestedRole, area }) => client.post('/admin/verify-email', { requestedRole, area }).then((r) => r.data),
 }
 
 export default client

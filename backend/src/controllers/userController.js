@@ -5,23 +5,22 @@ dotenv.config();
 
 const prisma = new PrismaClient();
 
-const ADMIN_OTP = process.env.ADMIN_OTP || "123456"; // Default for local dev
-
 /**
- * POST /api/admin/verify-otp
- * Allows a citizen to upgrade their account to OFFICER or PRESIDENT
+ * POST /api/admin/verify-email
+ * Allows a citizen with a @bmsce.ac.in email to upgrade to OFFICER or PRESIDENT
  */
-export const verifyAdminOtp = async (req, res) => {
+export const verifyByEmail = async (req, res) => {
     try {
-        const { otp, requestedRole, area } = req.body;
+        const { requestedRole, area } = req.body;
         const userId = req.user.id;
 
-        if (!otp || !requestedRole) {
-            return res.status(400).json({ error: "OTP and requestedRole are required" });
+        if (!requestedRole) {
+            return res.status(400).json({ error: "requestedRole is required" });
         }
 
-        if (otp !== ADMIN_OTP) {
-            return res.status(401).json({ error: "Invalid OTP" });
+        const validRoles = ["OFFICER", "PRESIDENT"];
+        if (!validRoles.includes(requestedRole)) {
+            return res.status(400).json({ error: "Invalid role requested. Must be OFFICER or PRESIDENT." });
         }
 
         const user = await prisma.user.findUnique({
@@ -30,11 +29,6 @@ export const verifyAdminOtp = async (req, res) => {
 
         if (!user || !user.email.endsWith('@bmsce.ac.in')) {
             return res.status(403).json({ error: "Access Denied: You must use a valid bmsce.ac.in email address to verify as an Officer or President." });
-        }
-
-        const validRoles = ["OFFICER", "PRESIDENT"];
-        if (!validRoles.includes(requestedRole)) {
-            return res.status(400).json({ error: "Invalid role requested. Must be OFFICER or PRESIDENT." });
         }
 
         const updatedUser = await prisma.user.update({
@@ -47,8 +41,8 @@ export const verifyAdminOtp = async (req, res) => {
 
         res.json({ message: "Verification successful", user: updatedUser });
     } catch (error) {
-        console.error("Admin OTP verify error:", error);
-        res.status(500).json({ error: "Failed to verify admin OTP" });
+        console.error("Email domain verify error:", error);
+        res.status(500).json({ error: "Failed to verify email domain" });
     }
 };
 
