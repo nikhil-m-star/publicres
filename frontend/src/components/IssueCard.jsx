@@ -37,7 +37,10 @@ export default function IssueCard({ issue }) {
                             src={issue.imageUrl}
                             alt={issue.title}
                             className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                            onError={(e) => { e.target.style.display = 'none' }}
+                            onError={(e) => {
+                                e.target.onerror = null;
+                                e.target.src = `https://picsum.photos/seed/${issue.id}/800/600`;
+                            }}
                         />
                         <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent" />
                         <span

@@ -537,16 +537,8 @@ export const rateOfficer = async (req, res) => {
             return res.status(403).json({ error: "Only the issue reporter can rate" });
         }
 
-        // Issue must be resolved
-        if (issue.status !== "RESOLVED") {
-            return res.status(400).json({ error: "Can only rate resolved issues" });
-        }
-
-        // Must have an assigned officer or resolver
+        // Must have an assigned officer or resolver (optional)
         const officerId = issue.resolvedById || issue.assignedToId;
-        if (!officerId) {
-            return res.status(400).json({ error: "No officer assigned to this issue" });
-        }
 
         // Create or update rating
         const rating = await prisma.rating.upsert({
@@ -559,28 +551,35 @@ export const rateOfficer = async (req, res) => {
                 feedback,
                 issueId,
                 givenById: userId,
-                officerId,
+                ...(officerId && { officerId }),
             },
         });
 
-        // Recalculate officer's average rating
-        const allRatings = await prisma.rating.aggregate({
-            where: { officerId },
-            _avg: { score: true },
-            _count: { score: true },
-        });
+        // Recalculate officer's average rating if applicable
+        let officerAvgRating = 0;
+        let totalRatings = 0;
+        if (officerId) {
+            const allRatings = await prisma.rating.aggregate({
+                where: { officerId },
+                _avg: { score: true },
+                _count: { score: true },
+            });
 
-        await prisma.user.update({
-            where: { id: officerId },
-            data: {
-                avgRating: allRatings._avg.score || 0,
-            },
-        });
+            officerAvgRating = allRatings._avg.score || 0;
+            totalRatings = allRatings._count.score;
+
+            await prisma.user.update({
+                where: { id: officerId },
+                data: {
+                    avgRating: officerAvgRating,
+                },
+            });
+        }
 
         res.json({
             rating,
-            officerAvgRating: allRatings._avg.score,
-            totalRatings: allRatings._count.score,
+            officerAvgRating,
+            totalRatings,
         });
     } catch (error) {
         console.error("Rate officer error:", error);

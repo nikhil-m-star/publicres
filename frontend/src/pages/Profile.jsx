@@ -1,10 +1,12 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { api, setAuthToken } from '../api/client';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useAuth } from '@clerk/clerk-react';
 import { Shield, MapPin, Loader2, CheckCircle2, AlertCircle, User, Crown, Mail } from 'lucide-react';
 
 export default function Profile() {
+    const navigate = useNavigate();
     const [success, setSuccess] = useState(false);
     const [verificationResult, setVerificationResult] = useState(null);
     const queryClient = useQueryClient();
@@ -30,8 +32,8 @@ export default function Profile() {
             setSuccess(true);
             setVerificationResult(data);
             queryClient.invalidateQueries({ queryKey: ['me'] }); // if applicable, to hard-refresh user state
-            // Optionally reload page to force Clerk + JWT role propagation
-            setTimeout(() => window.location.assign('/admin'), 2000);
+            // Use client-side routing instead of full page reload
+            setTimeout(() => navigate('/admin'), 2000);
         }
     });
 
@@ -90,6 +92,14 @@ export default function Profile() {
                                             <MapPin className="w-4 h-4 text-gray-400" />
                                             <span>{user?.area || (roleKey === 'OFFICER' ? 'Unassigned' : '—')}</span>
                                         </div>
+                                        {roleKey !== 'CITIZEN' && (
+                                            <div className="flex items-center gap-2 pt-2 border-t border-gray-100 mt-2">
+                                                <div className="flex items-center gap-1.5 px-3 py-1.5 bg-amber-50 text-amber-700 rounded-lg">
+                                                    <span className="font-semibold text-sm">⭐ Overall Rating:</span>
+                                                    <span className="font-bold text-sm">{user?.avgRating > 0 ? user.avgRating.toFixed(1) : 'No ratings yet'}</span>
+                                                </div>
+                                            </div>
+                                        )}
                                     </div>
                                 )}
                             </div>

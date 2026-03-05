@@ -119,9 +119,9 @@ export default function IssueDetails() {
         if (isSignedIn) voteIssue.mutate(id)
     }
 
-    // Check if current user is the reporter and issue is resolved and not yet rated
-    const isReporter = isSignedIn && issue.createdBy?.id && clerkUser
-    const canRate = issue.status === 'RESOLVED' && isReporter && (!issue.ratings || issue.ratings.length === 0)
+    // Check if current user is the reporter, allowing rating even before resolution
+    const isReporter = isSignedIn && clerkUser?.primaryEmailAddress?.emailAddress === issue.createdBy?.email
+    const canRate = isReporter && (!issue.ratings || issue.ratings.length === 0)
     const existingRating = issue.ratings?.find((r) => r.givenBy?.id === issue.createdBy?.id)
 
     return (
@@ -141,7 +141,15 @@ export default function IssueDetails() {
                     {/* Image */}
                     {issue.imageUrl && (
                         <div className="rounded-2xl overflow-hidden shadow-lg">
-                            <img src={issue.imageUrl} alt={issue.title} className="w-full h-72 object-cover" onError={(e) => { e.target.style.display = 'none' }} />
+                            <img
+                                src={issue.imageUrl}
+                                alt={issue.title}
+                                className="w-full h-72 object-cover"
+                                onError={(e) => {
+                                    e.target.onerror = null;
+                                    e.target.src = `https://picsum.photos/seed/${issue.id}/800/600`;
+                                }}
+                            />
                         </div>
                     )}
 
@@ -202,13 +210,15 @@ export default function IssueDetails() {
                         <StatusTimeline currentStatus={issue.status} />
                     </div>
 
-                    {/* Rating prompt for resolved issues */}
+                    {/* Rating prompt for issues */}
                     {canRate && (
                         <div className="card p-5 bg-amber-50/50 border-amber-100">
                             <div className="flex items-center justify-between">
                                 <div>
-                                    <h3 className="font-semibold text-gray-900 mb-1">🎉 This issue has been resolved!</h3>
-                                    <p className="text-sm text-gray-500">Rate the officer who handled your issue to help improve civic services.</p>
+                                    <h3 className="font-semibold text-gray-900 mb-1">
+                                        {issue.status === 'RESOLVED' ? '🎉 This issue has been resolved!' : '⭐ Rate your reporting experience'}
+                                    </h3>
+                                    <p className="text-sm text-gray-500">Rate the officer or city administration to help improve civic services.</p>
                                 </div>
                                 <button onClick={() => setShowRating(true)} className="btn-primary text-sm whitespace-nowrap">
                                     <Star className="w-4 h-4 inline mr-1" />
