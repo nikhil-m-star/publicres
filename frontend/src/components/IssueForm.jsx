@@ -111,7 +111,6 @@ export default function IssueForm({ onSuccess }) {
         formData.append('longitude', position[1])
         if (address?.city) formData.append('city', address.city)
         if (address?.area) formData.append('area', address.area)
-        if (address?.area) formData.append('area', address.area)
         if (imageFile) formData.append('image', imageFile)
 
         try {
@@ -139,7 +138,7 @@ export default function IssueForm({ onSuccess }) {
 
         setIsCheckingDuplicate(true);
         try {
-            const res = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:5000/api'}/issues/check-duplicate`, {
+            const res = await fetch(`${import.meta.env.VITE_API_URL}/issues/check-duplicate`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
