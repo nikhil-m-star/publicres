@@ -10,6 +10,8 @@ import {
     rateOfficer,
     getAnalytics,
     getLeaderboard,
+    checkDuplicateIssue,
+    getCityReport
 } from "../controllers/issueController.js";
 
 const router = Router();
@@ -22,6 +24,12 @@ router.get("/stats", getAnalytics);
 
 // Public: Leaderboard
 router.get("/leaderboard", getLeaderboard);
+
+// Public: Get AI City Report
+router.get("/city-report", getCityReport);
+
+// Public: Check Dupes via Post
+router.post("/check-duplicate", checkDuplicateIssue);
 
 // Public: Get single issue
 router.get("/:id", getIssueById);

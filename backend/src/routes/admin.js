@@ -6,8 +6,20 @@ import {
     updateUserRole,
     getUsers,
 } from "../controllers/issueController.js";
+import {
+    verifyAdminOtp,
+    getNotifications,
+    markNotificationAsRead
+} from "../controllers/userController.js";
 
 const router = Router();
+
+// Citizen -> Admin promotion (requires valid OTP)
+router.post("/verify-otp", requireAuth, verifyAdminOtp);
+
+// Officer/President: Notifications
+router.get("/notifications", requireAuth, requireOfficer, getNotifications);
+router.put("/notifications/:id/read", requireAuth, requireOfficer, markNotificationAsRead);
 
 // Officer/President: Update issue status
 router.put("/issues/:id/status", requireAuth, requireOfficer, updateStatus);

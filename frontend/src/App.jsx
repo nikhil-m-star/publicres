@@ -7,6 +7,8 @@ import IssueDetails from './pages/IssueDetails'
 import AdminDashboard from './pages/AdminDashboard'
 import MapExplorer from './pages/MapExplorer'
 import Leaderboard from './pages/Leaderboard'
+import AdminVerification from './pages/AdminVerification'
+import BriberyBoard from './pages/BriberyBoard'
 
 function ProtectedRoute({ children }) {
     return (
@@ -44,6 +46,15 @@ export default function App() {
                         </ProtectedRoute>
                     }
                 />
+                <Route
+                    path="/verify-admin"
+                    element={
+                        <ProtectedRoute>
+                            <AdminVerification />
+                        </ProtectedRoute>
+                    }
+                />
+                <Route path="/bribery" element={<BriberyBoard />} />
             </Routes>
         </div>
     )

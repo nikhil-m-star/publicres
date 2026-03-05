@@ -24,8 +24,9 @@ export const api = {
     createIssue: (formData) =>
         client.post('/issues', formData, { headers: { 'Content-Type': 'multipart/form-data' } }).then((r) => r.data),
 
-    // Public stats
+    // Public stats & Reports
     getStats: () => client.get('/issues/stats').then((r) => r.data),
+    getCityReport: (city) => client.get('/issues/city-report', { params: { city } }).then((r) => r.data),
 
     // Public leaderboard
     getLeaderboard: () => client.get('/issues/leaderboard').then((r) => r.data),
@@ -47,6 +48,13 @@ export const api = {
     // President: user management
     getUsers: () => client.get('/admin/users').then((r) => r.data),
     updateUserRole: ({ id, role, area }) => client.put(`/admin/users/${id}/role`, { role, area }).then((r) => r.data),
+
+    // Notifications
+    getNotifications: () => client.get('/admin/notifications').then((r) => r.data),
+    markNotificationRead: (id) => client.put(`/admin/notifications/${id}/read`).then((r) => r.data),
+
+    // OTP Admin Verification
+    verifyAdminOtp: ({ otp, requestedRole, area }) => client.post('/admin/verify-otp', { otp, requestedRole, area }).then((r) => r.data),
 }
 
 export default client

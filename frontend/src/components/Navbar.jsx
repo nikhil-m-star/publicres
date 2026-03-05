@@ -1,10 +1,13 @@
 import { Link, useLocation } from 'react-router-dom'
 import { SignedIn, SignedOut, SignInButton, UserButton } from '@clerk/clerk-react'
-import { Menu, X, Shield, MapPin, Map, Trophy } from 'lucide-react'
+import { Menu, X, Shield, MapPin, Map, Trophy, Sparkles } from 'lucide-react'
 import { useState } from 'react'
+import CityReportModal from './CityReportModal'
+import NotificationsDropdown from './NotificationsDropdown'
 
 export default function Navbar() {
     const [mobileOpen, setMobileOpen] = useState(false)
+    const [reportOpen, setReportOpen] = useState(false)
     const location = useLocation()
 
     const isActive = (path) => location.pathname === path
@@ -48,6 +51,13 @@ export default function Navbar() {
                             <Trophy className="w-3.5 h-3.5" />
                             Leaderboard
                         </Link>
+                        <button
+                            onClick={() => setReportOpen(true)}
+                            className="px-4 py-2 rounded-lg text-sm font-medium transition-colors flex items-center gap-1.5 text-civic-600 hover:text-civic-700 hover:bg-civic-50/50"
+                        >
+                            <Sparkles className="w-3.5 h-3.5 text-purple-500" />
+                            City Report
+                        </button>
                         <SignedIn>
                             <Link
                                 to="/dashboard"
@@ -55,6 +65,14 @@ export default function Navbar() {
                                     }`}
                             >
                                 Dashboard
+                            </Link>
+                            <Link
+                                to="/bribery"
+                                className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors flex items-center gap-1.5 ${isActive('/bribery') ? 'bg-red-50 text-red-700' : 'text-red-600 hover:text-red-700 hover:bg-red-50'
+                                    }`}
+                            >
+                                <Shield className="w-3.5 h-3.5" />
+                                Bribery
                             </Link>
                             <Link
                                 to="/admin"
@@ -75,13 +93,16 @@ export default function Navbar() {
                             </SignInButton>
                         </SignedOut>
                         <SignedIn>
-                            <UserButton
-                                appearance={{
-                                    elements: {
-                                        avatarBox: 'w-9 h-9 ring-2 ring-civic-100',
-                                    },
-                                }}
-                            />
+                            <div className="flex items-center gap-3 pr-2">
+                                <NotificationsDropdown userRole="UNKNOWN_TRY_FETCH" />
+                                <UserButton
+                                    appearance={{
+                                        elements: {
+                                            avatarBox: 'w-9 h-9 ring-2 ring-civic-100',
+                                        },
+                                    }}
+                                />
+                            </div>
                         </SignedIn>
                     </div>
 
@@ -118,6 +139,12 @@ export default function Navbar() {
                         >
                             🏆 Leaderboard
                         </Link>
+                        <button
+                            onClick={() => { setReportOpen(true); setMobileOpen(false); }}
+                            className="block w-full text-left px-4 py-2.5 rounded-lg text-sm font-medium text-purple-600 hover:bg-purple-50"
+                        >
+                            ✨ AI City Report
+                        </button>
                         <SignedIn>
                             <Link
                                 to="/dashboard"
@@ -125,6 +152,13 @@ export default function Navbar() {
                                 onClick={() => setMobileOpen(false)}
                             >
                                 Dashboard
+                            </Link>
+                            <Link
+                                to="/bribery"
+                                className="block px-4 py-2.5 rounded-lg text-sm font-medium text-red-600 hover:bg-red-50"
+                                onClick={() => setMobileOpen(false)}
+                            >
+                                🚨 Report Bribery
                             </Link>
                             <Link
                                 to="/admin"
@@ -147,6 +181,8 @@ export default function Navbar() {
                     </div>
                 )}
             </div>
+
+            <CityReportModal isOpen={reportOpen} onClose={() => setReportOpen(false)} />
         </nav>
     )
 }

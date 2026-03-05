@@ -1,14 +1,69 @@
 import { PrismaClient } from "@prisma/client";
 import { uploadImage } from "../services/cloudinary.js";
+import { assessIntensity, checkDuplicate as groqCheckDuplicate, generateCityReport as groqGenerateCityReport } from "../services/groq.js";
 
 const prisma = new PrismaClient();
+
+/**
+ * POST /api/issues/check-duplicate — AI-powered semantic duplicate check
+ */
+export const checkDuplicateIssue = async (req, res) => {
+    try {
+        const { title, description, city } = req.body;
+
+        if (!title || !description) {
+            return res.status(400).json({ error: "Title and description required for duplicate check" });
+        }
+
+        // Fetch recent issues from the same city (last 7 days)
+        const recentIssues = await prisma.issue.findMany({
+            where: {
+                city: city || "Bengaluru",
+                createdAt: { gte: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000) },
+                status: { not: "RESOLVED" }
+            },
+            take: 20,
+            select: { id: true, title: true, description: true }
+        });
+
+        const result = await groqCheckDuplicate(title, description, recentIssues);
+        res.json(result);
+    } catch (error) {
+        console.error("Check duplicate error:", error);
+        res.status(500).json({ error: "Failed to check duplicates" });
+    }
+};
+
+/**
+ * GET /api/issues/city-report?city=Bengaluru — Generate AI summary of city issues
+ */
+export const getCityReport = async (req, res) => {
+    try {
+        const city = req.query.city || "Bengaluru";
+
+        // Fetch up to 50 recent issues to summarize
+        const recentIssues = await prisma.issue.findMany({
+            where: { city },
+            orderBy: { createdAt: "desc" },
+            take: 50,
+            select: { id: true, title: true, description: true, category: true, status: true }
+        });
+
+        const reportMarkdown = await groqGenerateCityReport(city, recentIssues);
+
+        res.json({ city, reportMarkdown });
+    } catch (error) {
+        console.error("City Report error:", error);
+        res.status(500).json({ error: "Failed to generate AI city report" });
+    }
+};
 
 /**
  * POST /api/issues — Create a new issue
  */
 export const createIssue = async (req, res) => {
     try {
-        const { title, description, category, latitude, longitude } = req.body;
+        const { title, description, category, latitude, longitude, city } = req.body;
 
         if (!title || !description || !category || !latitude || !longitude) {
             return res.status(400).json({ error: "All fields are required" });
@@ -19,6 +74,11 @@ export const createIssue = async (req, res) => {
             imageUrl = await uploadImage(req.file.buffer);
         }
 
+        // Assess intensity via Groq AI
+        const intensity = await assessIntensity(title, description, category);
+
+        const assignedCity = city || "Bengaluru";
+
         const issue = await prisma.issue.create({
             data: {
                 title,
@@ -26,7 +86,9 @@ export const createIssue = async (req, res) => {
                 category,
                 latitude: parseFloat(latitude),
                 longitude: parseFloat(longitude),
+                city: assignedCity,
                 imageUrl,
+                intensity,
                 createdById: req.user.id,
             },
             include: {
@@ -34,6 +96,33 @@ export const createIssue = async (req, res) => {
                 _count: { select: { comments: true, voteRecords: true } },
             },
         });
+
+        // Trigger Notification for severe issues (Intensity >= 8) or Bribery
+        if (intensity >= 8 || category === "BRIBERY") {
+            // Find presidents and top officers in that city
+            const admins = await prisma.user.findMany({
+                where: {
+                    role: { in: ["PRESIDENT", "OFFICER"] },
+                }
+            });
+
+            // For bribery, alert everyone. For severe issues, alert local officers + president
+            const targets = category === "BRIBERY"
+                ? admins
+                : admins.filter(a => a.role === "PRESIDENT" || (a.city === assignedCity));
+
+            if (targets.length > 0) {
+                await prisma.notification.createMany({
+                    data: targets.map(admin => ({
+                        userId: admin.id,
+                        issueId: issue.id,
+                        message: category === "BRIBERY"
+                            ? `🚨 URGENT: New Bribery Report filed in ${assignedCity}.`
+                            : `⚠️ High Intensity Alert (Score: ${intensity}/10): ${title} in ${assignedCity}.`,
+                    }))
+                });
+            }
+        }
 
         res.status(201).json(issue);
     } catch (error) {

@@ -43,6 +43,8 @@ export default function IssueForm({ onSuccess }) {
     const [imagePreview, setImagePreview] = useState(null)
     const [geoStatus, setGeoStatus] = useState('detecting')
     const [address, setAddress] = useState(null)
+    const [duplicateWarning, setDuplicateWarning] = useState(null)
+    const [isCheckingDuplicate, setIsCheckingDuplicate] = useState(false)
     const fileRef = useRef(null)
 
     const createIssue = useCreateIssue()
@@ -100,16 +102,14 @@ export default function IssueForm({ onSuccess }) {
         if (fileRef.current) fileRef.current.value = ''
     }
 
-    const handleSubmit = async (e) => {
-        e.preventDefault()
-        if (!position) return alert('Location is required. Please allow location access.')
-
+    const submitFinal = async () => {
         const formData = new FormData()
         formData.append('title', title)
         formData.append('description', description)
         formData.append('category', category)
         formData.append('latitude', position[0])
         formData.append('longitude', position[1])
+        if (address?.city) formData.append('city', address.city)
         if (imageFile) formData.append('image', imageFile)
 
         try {
@@ -117,13 +117,44 @@ export default function IssueForm({ onSuccess }) {
             setTitle('')
             setDescription('')
             setCategory('')
-            // Re-detect location for next report
+            setDuplicateWarning(null)
             handleRelocate()
             removeImage()
             onSuccess?.()
         } catch (err) {
             console.error('Failed to create issue:', err)
         }
+    }
+
+    const handleSubmit = async (e) => {
+        e.preventDefault()
+        if (!position) return alert('Location is required. Please allow location access.')
+
+        // Bypass check if we already showed the warning and user clicked "Submit Anyway"
+        if (duplicateWarning) {
+            return submitFinal();
+        }
+
+        setIsCheckingDuplicate(true);
+        try {
+            const res = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:5000/api'}/issues/check-duplicate`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ title, description, city: address?.city || 'Bengaluru' })
+            });
+            const data = await res.json();
+
+            if (data.isDuplicate) {
+                setDuplicateWarning(data);
+                setIsCheckingDuplicate(false);
+                return; // halt submission
+            }
+        } catch (error) {
+            console.error("Duplicate check failed, proceeding anyway", error);
+        }
+
+        setIsCheckingDuplicate(false);
+        await submitFinal();
     }
 
     return (
@@ -164,8 +195,8 @@ export default function IssueForm({ onSuccess }) {
                             type="button"
                             onClick={() => setCategory(cat.value)}
                             className={`px-3 py-2.5 rounded-xl text-sm font-medium border transition-all ${category === cat.value
-                                    ? 'bg-civic-50 border-civic-300 text-civic-700 ring-2 ring-civic-200'
-                                    : 'bg-white border-gray-200 text-gray-600 hover:border-gray-300'
+                                ? 'bg-civic-50 border-civic-300 text-civic-700 ring-2 ring-civic-200'
+                                : 'bg-white border-gray-200 text-gray-600 hover:border-gray-300'
                                 }`}
                         >
                             {cat.label}
@@ -282,19 +313,47 @@ export default function IssueForm({ onSuccess }) {
                 )}
             </div>
 
+            {/* Duplicate Warning Prompt */}
+            {duplicateWarning && (
+                <div className="bg-orange-50 border border-orange-200 rounded-xl p-4 animate-fade-in">
+                    <div className="flex items-start gap-3">
+                        <div className="text-orange-500 mt-0.5">⚠️</div>
+                        <div>
+                            <h4 className="text-sm font-semibold text-orange-800">Similar Issue Detected</h4>
+                            <p className="text-sm text-orange-700 mt-1">
+                                {duplicateWarning.reasoning || "An issue similar to this was recently reported."}
+                            </p>
+                            {duplicateWarning.matchedIssueId && (
+                                <a
+                                    href={`/issues/${duplicateWarning.matchedIssueId}`}
+                                    target="_blank"
+                                    rel="noreferrer"
+                                    className="text-sm font-medium text-orange-600 hover:text-orange-800 underline block mt-2"
+                                >
+                                    View existing issue to upvote instead
+                                </a>
+                            )}
+                        </div>
+                    </div>
+                </div>
+            )}
+
             {/* Submit */}
             <button
                 type="submit"
-                disabled={createIssue.isPending || !title || !description || !category || !position}
-                className="btn-primary w-full flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+                disabled={createIssue.isPending || isCheckingDuplicate || !title || !description || !category || !position}
+                className={`w-full flex items-center justify-center gap-2 py-3 rounded-xl font-medium transition-colors ${duplicateWarning
+                    ? "bg-orange-500 hover:bg-orange-600 text-white"
+                    : "btn-primary disabled:opacity-50 disabled:cursor-not-allowed"
+                    }`}
             >
-                {createIssue.isPending ? (
+                {(createIssue.isPending || isCheckingDuplicate) ? (
                     <>
                         <Loader2 className="w-4 h-4 animate-spin" />
-                        Submitting...
+                        {isCheckingDuplicate ? "Checking via AI..." : "Submitting..."}
                     </>
                 ) : (
-                    'Report Issue'
+                    duplicateWarning ? 'Submit Anyway' : 'Report Issue'
                 )}
             </button>
 
