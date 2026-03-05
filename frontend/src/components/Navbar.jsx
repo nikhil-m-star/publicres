@@ -18,7 +18,7 @@ export default function Navbar() {
                 {/* Logo */}
                 <Link to="/" className="nav-brand">
                     <span className="nav-logo">
-                        <MapPin className="w-5 h-5" />
+                        <img src="/logo.png" alt="Namma Parihara" className="w-6 h-6" />
                     </span>
                     <span className="nav-title">Namma Parihara</span>
                 </Link>

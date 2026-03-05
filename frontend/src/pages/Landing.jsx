@@ -272,7 +272,7 @@ export default function Landing() {
                 <div className="page-container footer__inner">
                     <div className="footer__brand">
                         <span className="nav-logo">
-                            <MapPin className="w-4 h-4" />
+                            <img src="/logo.png" alt="Namma Parihara" className="w-5 h-5" />
                         </span>
                         <span>Namma Parihara</span>
                     </div>
