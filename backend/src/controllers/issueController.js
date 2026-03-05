@@ -87,6 +87,7 @@ export const createIssue = async (req, res) => {
         const intensity = await assessIntensity(title, description, category);
 
         const assignedCity = city || "Bengaluru";
+        const normalizedArea = typeof area === "string" && area.trim().length > 0 ? area.trim() : null;
 
         const issue = await prisma.issue.create({
             data: {
