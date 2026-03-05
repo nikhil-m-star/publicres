@@ -1,0 +1,89 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  CITIZEN
+  ADMIN
+}
+
+enum Category {
+  POTHOLE
+  GARBAGE
+  STREETLIGHT
+  WATER_LEAK
+  OTHER
+}
+
+enum Status {
+  REPORTED
+  IN_PROGRESS
+  RESOLVED
+}
+
+model User {
+  id        String    @id @default(cuid())
+  clerkId   String    @unique
+  name      String
+  email     String    @unique
+  role      Role      @default(CITIZEN)
+  createdAt DateTime  @default(now())
+
+  issues    Issue[]
+  votes     Vote[]
+  comments  Comment[]
+
+  @@map("users")
+}
+
+model Issue {
+  id          String   @id @default(cuid())
+  title       String
+  description String
+  category    Category
+  status      Status   @default(REPORTED)
+  latitude    Float
+  longitude   Float
+  imageUrl    String?
+  department  String?
+  votes       Int      @default(0)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  createdBy   User     @relation(fields: [createdById], references: [id])
+  createdById String
+
+  voteRecords Vote[]
+  comments    Comment[]
+
+  @@map("issues")
+}
+
+model Vote {
+  id      String @id @default(cuid())
+  issue   Issue  @relation(fields: [issueId], references: [id], onDelete: Cascade)
+  issueId String
+  user    User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId  String
+
+  @@unique([issueId, userId])
+  @@map("votes")
+}
+
+model Comment {
+  id        String   @id @default(cuid())
+  comment   String
+  createdAt DateTime @default(now())
+
+  issue   Issue  @relation(fields: [issueId], references: [id], onDelete: Cascade)
+  issueId String
+  user    User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId  String
+
+  @@map("comments")
+}

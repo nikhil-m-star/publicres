@@ -1,0 +1,72 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  body {
+    font-family: 'Inter', system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    background-color: #f8fafc;
+    color: #0f172a;
+  }
+
+  /* Leaflet map fix */
+  .leaflet-container {
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+  }
+}
+
+@layer components {
+  .btn-primary {
+    @apply bg-civic-600 hover:bg-civic-700 text-white font-semibold py-2.5 px-6 rounded-xl transition-all duration-200 shadow-lg shadow-civic-600/25 hover:shadow-xl hover:shadow-civic-600/30 active:scale-[0.98];
+  }
+
+  .btn-secondary {
+    @apply bg-white hover:bg-gray-50 text-gray-700 font-medium py-2.5 px-6 rounded-xl border border-gray-200 transition-all duration-200 hover:border-gray-300 active:scale-[0.98];
+  }
+
+  .card {
+    @apply bg-white rounded-2xl border border-gray-100 shadow-sm hover:shadow-md transition-all duration-300;
+  }
+
+  .card-glass {
+    @apply bg-white/70 backdrop-blur-xl rounded-2xl border border-white/20 shadow-xl;
+  }
+
+  .status-badge {
+    @apply inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold uppercase tracking-wide;
+  }
+
+  .status-reported {
+    @apply bg-red-50 text-red-700 border border-red-200;
+  }
+
+  .status-in_progress {
+    @apply bg-amber-50 text-amber-700 border border-amber-200;
+  }
+
+  .status-resolved {
+    @apply bg-emerald-50 text-emerald-700 border border-emerald-200;
+  }
+
+  .category-badge {
+    @apply inline-flex items-center gap-1 px-2.5 py-0.5 rounded-lg text-xs font-medium;
+  }
+
+  .input-field {
+    @apply w-full px-4 py-3 rounded-xl border border-gray-200 bg-white focus:outline-none focus:ring-2 focus:ring-civic-500/30 focus:border-civic-500 transition-all duration-200 text-sm;
+  }
+
+  .page-container {
+    @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8;
+  }
+}

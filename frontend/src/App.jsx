@@ -1,0 +1,46 @@
+import { Routes, Route } from 'react-router-dom'
+import { SignedIn, SignedOut, RedirectToSignIn } from '@clerk/clerk-react'
+import Navbar from './components/Navbar'
+import Landing from './pages/Landing'
+import Dashboard from './pages/Dashboard'
+import IssueDetails from './pages/IssueDetails'
+import AdminDashboard from './pages/AdminDashboard'
+
+function ProtectedRoute({ children }) {
+    return (
+        <>
+            <SignedIn>{children}</SignedIn>
+            <SignedOut>
+                <RedirectToSignIn />
+            </SignedOut>
+        </>
+    )
+}
+
+export default function App() {
+    return (
+        <div className="min-h-screen bg-gray-50">
+            <Navbar />
+            <Routes>
+                <Route path="/" element={<Landing />} />
+                <Route
+                    path="/dashboard"
+                    element={
+                        <ProtectedRoute>
+                            <Dashboard />
+                        </ProtectedRoute>
+                    }
+                />
+                <Route path="/issues/:id" element={<IssueDetails />} />
+                <Route
+                    path="/admin"
+                    element={
+                        <ProtectedRoute>
+                            <AdminDashboard />
+                        </ProtectedRoute>
+                    }
+                />
+            </Routes>
+        </div>
+    )
+}
