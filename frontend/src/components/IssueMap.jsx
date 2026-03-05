@@ -52,11 +52,11 @@ const statusLabels = {
 }
 
 const categoryLabels = {
-    POTHOLE: '🕳️ Pothole',
-    GARBAGE: '🗑️ Garbage',
-    STREETLIGHT: '💡 Streetlight',
-    WATER_LEAK: '💧 Water Leak',
-    OTHER: '📋 Other',
+    POTHOLE: 'Pothole',
+    GARBAGE: 'Garbage',
+    STREETLIGHT: 'Streetlight',
+    WATER_LEAK: 'Water Leak',
+    OTHER: 'Other',
 }
 
 // Custom cluster icon

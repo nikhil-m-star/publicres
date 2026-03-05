@@ -9,11 +9,11 @@ const statusColors = {
 }
 
 const categoryLabels = {
-    POTHOLE: '🕳️ Pothole',
-    GARBAGE: '🗑️ Garbage',
-    STREETLIGHT: '💡 Streetlight',
-    WATER_LEAK: '💧 Water Leak',
-    OTHER: '📋 Other',
+    POTHOLE: 'Pothole',
+    GARBAGE: 'Garbage',
+    STREETLIGHT: 'Streetlight',
+    WATER_LEAK: 'Water Leak',
+    OTHER: 'Other',
 }
 
 export default function AdminIssueTable({ issues = [] }) {

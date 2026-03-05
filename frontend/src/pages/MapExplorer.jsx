@@ -6,11 +6,11 @@ import IssueCard from '../components/IssueCard'
 
 const categories = [
     { value: '', label: 'All Categories' },
-    { value: 'POTHOLE', label: '🕳️ Pothole' },
-    { value: 'GARBAGE', label: '🗑️ Garbage' },
-    { value: 'STREETLIGHT', label: '💡 Streetlight' },
-    { value: 'WATER_LEAK', label: '💧 Water Leak' },
-    { value: 'OTHER', label: '📋 Other' },
+    { value: 'POTHOLE', label: 'Pothole' },
+    { value: 'GARBAGE', label: 'Garbage' },
+    { value: 'STREETLIGHT', label: 'Streetlight' },
+    { value: 'WATER_LEAK', label: 'Water Leak' },
+    { value: 'OTHER', label: 'Other' },
 ]
 
 const statuses = [

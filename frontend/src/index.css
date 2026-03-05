@@ -3154,12 +3154,13 @@ h3,
   width: 38px;
   height: 38px;
   border-radius: 14px;
-  background: linear-gradient(135deg, rgba(35, 227, 255, 0.9), rgba(124, 233, 255, 0.7));
+  background: #0a0a0a;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  color: #031017;
-  box-shadow: 0 10px 20px rgba(35, 227, 255, 0.35);
+  color: var(--glow);
+  border: 1px solid var(--line);
+  overflow: hidden;
 }
 
 .nav-title {

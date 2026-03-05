@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from 'react'
-import { Upload, MapPin, X, Loader2, Navigation } from 'lucide-react'
+import { Upload, MapPin, X, Loader2, Navigation, CircleDot, Trash2, Lightbulb, Droplets, FileText } from 'lucide-react'
 import { MapContainer, TileLayer, Marker, useMap } from 'react-leaflet'
 import L from 'leaflet'
 import 'leaflet/dist/leaflet.css'
@@ -27,11 +27,11 @@ function FlyToPosition({ position }) {
 }
 
 const categories = [
-    { value: 'POTHOLE', label: '🕳️ Pothole' },
-    { value: 'GARBAGE', label: '🗑️ Garbage' },
-    { value: 'STREETLIGHT', label: '💡 Streetlight' },
-    { value: 'WATER_LEAK', label: '💧 Water Leak' },
-    { value: 'OTHER', label: '📋 Other' },
+    { value: 'POTHOLE', label: 'Pothole', icon: CircleDot },
+    { value: 'GARBAGE', label: 'Garbage', icon: Trash2 },
+    { value: 'STREETLIGHT', label: 'Streetlight', icon: Lightbulb },
+    { value: 'WATER_LEAK', label: 'Water Leak', icon: Droplets },
+    { value: 'OTHER', label: 'Other', icon: FileText },
 ]
 
 export default function IssueForm({ onSuccess }) {
@@ -217,6 +217,7 @@ export default function IssueForm({ onSuccess }) {
                                 : 'bg-white border-gray-200 text-gray-600 hover:border-gray-300'
                                 }`}
                         >
+                            <cat.icon className="w-4 h-4" />
                             {cat.label}
                         </button>
                     ))}

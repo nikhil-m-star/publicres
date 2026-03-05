@@ -1,5 +1,5 @@
 import { useParams, Link } from 'react-router-dom'
-import { ArrowLeft, ThumbsUp, MapPin, Calendar, User, Loader2, Star, Shield } from 'lucide-react'
+import { ArrowLeft, ThumbsUp, MapPin, Calendar, User, Loader2, Star, Shield, CircleDot, Trash2, Lightbulb, Droplets, FileText } from 'lucide-react'
 import { useIssue, useVoteIssue, useRateOfficer, useAuthSync } from '../hooks/useIssues'
 import { useUser } from '@clerk/clerk-react'
 import { useState } from 'react'
@@ -7,12 +7,20 @@ import StatusTimeline from '../components/StatusTimeline'
 import CommentSection from '../components/CommentSection'
 import IssueMap from '../components/IssueMap'
 
+const categoryIcons = {
+    POTHOLE: CircleDot,
+    GARBAGE: Trash2,
+    STREETLIGHT: Lightbulb,
+    WATER_LEAK: Droplets,
+    OTHER: FileText,
+}
+
 const categoryLabels = {
-    POTHOLE: '🕳️ Pothole',
-    GARBAGE: '🗑️ Garbage',
-    STREETLIGHT: '💡 Streetlight',
-    WATER_LEAK: '💧 Water Leak',
-    OTHER: '📋 Other',
+    POTHOLE: 'Pothole',
+    GARBAGE: 'Garbage',
+    STREETLIGHT: 'Streetlight',
+    WATER_LEAK: 'Water Leak',
+    OTHER: 'Other',
 }
 
 function RatingDialog({ issue, onClose }) {
@@ -157,6 +165,7 @@ export default function IssueDetails() {
                     <div>
                         <div className="flex items-center gap-2 mb-3">
                             <span className="category-badge bg-gray-100 text-gray-700 border border-gray-200">
+                                {(() => { const CatIcon = categoryIcons[issue.category] || FileText; return <CatIcon className="w-3.5 h-3.5" />; })()}
                                 {categoryLabels[issue.category]}
                             </span>
                             {issue.department && (

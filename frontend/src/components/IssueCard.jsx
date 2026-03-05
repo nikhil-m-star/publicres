@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom'
-import { MapPin, MessageCircle, ThumbsUp, Clock } from 'lucide-react'
+import { MapPin, MessageCircle, ThumbsUp, Clock, CircleDot, Trash2, Lightbulb, Droplets, FileText } from 'lucide-react'
 
 const categoryColors = {
     POTHOLE: { bg: 'bg-orange-50', text: 'text-orange-700', border: 'border-orange-200' },
@@ -9,12 +9,20 @@ const categoryColors = {
     OTHER: { bg: 'bg-gray-50', text: 'text-gray-700', border: 'border-gray-200' },
 }
 
+const categoryIcons = {
+    POTHOLE: CircleDot,
+    GARBAGE: Trash2,
+    STREETLIGHT: Lightbulb,
+    WATER_LEAK: Droplets,
+    OTHER: FileText,
+}
+
 const categoryLabels = {
-    POTHOLE: '🕳️ Pothole',
-    GARBAGE: '🗑️ Garbage',
-    STREETLIGHT: '💡 Streetlight',
-    WATER_LEAK: '💧 Water Leak',
-    OTHER: '📋 Other',
+    POTHOLE: 'Pothole',
+    GARBAGE: 'Garbage',
+    STREETLIGHT: 'Streetlight',
+    WATER_LEAK: 'Water Leak',
+    OTHER: 'Other',
 }
 
 const statusLabels = {
@@ -25,6 +33,7 @@ const statusLabels = {
 
 export default function IssueCard({ issue }) {
     const catColor = categoryColors[issue.category] || categoryColors.OTHER
+    const CatIcon = categoryIcons[issue.category] || FileText
     const timeAgo = getTimeAgo(issue.createdAt)
 
     return (
@@ -69,6 +78,7 @@ export default function IssueCard({ issue }) {
                     <div className="flex items-center justify-between mb-3">
                         <div className="flex items-center gap-2">
                             <span className={`category-badge ${catColor.bg} ${catColor.text} border ${catColor.border}`}>
+                                <CatIcon className="w-3.5 h-3.5" />
                                 {categoryLabels[issue.category]}
                             </span>
                             {issue.area && (
