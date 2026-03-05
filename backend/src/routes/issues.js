@@ -7,12 +7,16 @@ import {
     getIssueById,
     voteOnIssue,
     addComment,
+    getAnalytics,
 } from "../controllers/issueController.js";
 
 const router = Router();
 
 // Public: Get all issues (with optional filters)
 router.get("/", getIssues);
+
+// Public: Get analytics/stats for landing page
+router.get("/stats", getAnalytics);
 
 // Public: Get single issue
 router.get("/:id", getIssueById);

@@ -11,7 +11,6 @@ const client = axios.create({
 
 /**
  * Set the auth token for API requests.
- * Called from hooks after getting the Clerk token.
  */
 export const setAuthToken = (token) => {
     if (token) {
@@ -32,6 +31,9 @@ export const api = {
                 headers: { 'Content-Type': 'multipart/form-data' },
             })
             .then((r) => r.data),
+
+    // Public stats (no auth needed)
+    getStats: () => client.get('/issues/stats').then((r) => r.data),
 
     // Votes
     voteIssue: (id) => client.post(`/issues/${id}/vote`).then((r) => r.data),

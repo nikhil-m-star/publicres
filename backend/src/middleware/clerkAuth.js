@@ -1,4 +1,4 @@
-import { clerkClient } from "@clerk/express";
+import { clerkClient, verifyToken } from "@clerk/express";
 import { PrismaClient } from "@prisma/client";
 
 const prisma = new PrismaClient();
@@ -17,7 +17,11 @@ export const requireAuth = async (req, res, next) => {
         const token = authHeader.split(" ")[1];
 
         // Verify the JWT with Clerk
-        const { sub: clerkUserId } = await clerkClient.verifyToken(token);
+        const payload = await verifyToken(token, {
+            secretKey: process.env.CLERK_SECRET_KEY,
+        });
+
+        const clerkUserId = payload.sub;
 
         if (!clerkUserId) {
             return res.status(401).json({ error: "Unauthorized: Invalid token" });

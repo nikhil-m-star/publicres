@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from 'react'
-import { Upload, MapPin, X, Loader2, Crosshair, Navigation, MapPinned } from 'lucide-react'
-import { MapContainer, TileLayer, Marker, useMapEvents, useMap } from 'react-leaflet'
+import { Upload, MapPin, X, Loader2, Navigation } from 'lucide-react'
+import { MapContainer, TileLayer, Marker, useMap } from 'react-leaflet'
 import L from 'leaflet'
 import 'leaflet/dist/leaflet.css'
 import { useCreateIssue } from '../hooks/useIssues'
@@ -13,17 +13,6 @@ L.Icon.Default.mergeOptions({
     iconUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/images/marker-icon.png',
     shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/images/marker-shadow.png',
 })
-
-function LocationPicker({ position, setPosition, onLocationPicked }) {
-    useMapEvents({
-        click(e) {
-            const loc = [e.latlng.lat, e.latlng.lng]
-            setPosition(loc)
-            onLocationPicked?.(loc)
-        },
-    })
-    return position ? <Marker position={position} /> : null
-}
 
 // Fly the map to a given position
 function FlyToPosition({ position }) {
@@ -44,30 +33,6 @@ const categories = [
     { value: 'OTHER', label: '📋 Other' },
 ]
 
-// Key Bengaluru areas for quick selection
-const bengaluruAreas = [
-    { name: 'Koramangala', lat: 12.9352, lng: 77.6245 },
-    { name: 'Indiranagar', lat: 12.9784, lng: 77.6408 },
-    { name: 'Jayanagar', lat: 12.9308, lng: 77.5838 },
-    { name: 'Whitefield', lat: 12.9698, lng: 77.7500 },
-    { name: 'HSR Layout', lat: 12.9116, lng: 77.6474 },
-    { name: 'BTM Layout', lat: 12.9166, lng: 77.6101 },
-    { name: 'Marathahalli', lat: 12.9591, lng: 77.6974 },
-    { name: 'Electronic City', lat: 12.8399, lng: 77.6770 },
-    { name: 'Rajajinagar', lat: 12.9900, lng: 77.5523 },
-    { name: 'Malleshwaram', lat: 13.0035, lng: 77.5685 },
-    { name: 'Banashankari', lat: 12.9255, lng: 77.5468 },
-    { name: 'JP Nagar', lat: 12.9063, lng: 77.5857 },
-    { name: 'Hebbal', lat: 13.0358, lng: 77.5970 },
-    { name: 'Yelahanka', lat: 13.1007, lng: 77.5963 },
-    { name: 'Basavanagudi', lat: 12.9422, lng: 77.5757 },
-    { name: 'MG Road', lat: 12.9756, lng: 77.6068 },
-    { name: 'Brigade Road', lat: 12.9716, lng: 77.6070 },
-    { name: 'Sadashivanagar', lat: 13.0070, lng: 77.5800 },
-    { name: 'RT Nagar', lat: 13.0210, lng: 77.5970 },
-    { name: 'Bommanahalli', lat: 12.9010, lng: 77.6190 },
-]
-
 export default function IssueForm({ onSuccess }) {
     const [title, setTitle] = useState('')
     const [description, setDescription] = useState('')
@@ -78,12 +43,11 @@ export default function IssueForm({ onSuccess }) {
     const [imagePreview, setImagePreview] = useState(null)
     const [geoStatus, setGeoStatus] = useState('detecting')
     const [address, setAddress] = useState(null)
-    const [showAreaPicker, setShowAreaPicker] = useState(false)
     const fileRef = useRef(null)
 
     const createIssue = useCreateIssue()
 
-    // Auto-detect user location on mount
+    // Auto-detect user location on mount — ENFORCED: must be at the location
     useEffect(() => {
         if (!navigator.geolocation) {
             setGeoStatus('error')
@@ -98,17 +62,13 @@ export default function IssueForm({ onSuccess }) {
                 fetchAddress(loc[0], loc[1])
             },
             () => setGeoStatus('denied'),
-            { enableHighAccuracy: true, timeout: 10000 }
+            { enableHighAccuracy: true, timeout: 15000 }
         )
     }, [])
 
     const fetchAddress = async (lat, lng) => {
         const result = await reverseGeocode(lat, lng)
         setAddress(result)
-    }
-
-    const handleLocationPicked = (loc) => {
-        fetchAddress(loc[0], loc[1])
     }
 
     const handleRelocate = () => {
@@ -122,17 +82,8 @@ export default function IssueForm({ onSuccess }) {
                 fetchAddress(loc[0], loc[1])
             },
             () => setGeoStatus('denied'),
-            { enableHighAccuracy: true, timeout: 10000 }
+            { enableHighAccuracy: true, timeout: 15000 }
         )
-    }
-
-    const handleAreaSelect = (area) => {
-        const loc = [area.lat, area.lng]
-        setPosition(loc)
-        setFlyTarget([...loc])
-        setGeoStatus('found')
-        setAddress({ display: `${area.name}, Bengaluru`, area: area.name, city: 'Bengaluru' })
-        setShowAreaPicker(false)
     }
 
     const handleImageChange = (e) => {
@@ -151,7 +102,7 @@ export default function IssueForm({ onSuccess }) {
 
     const handleSubmit = async (e) => {
         e.preventDefault()
-        if (!position) return alert('Please select a location on the map')
+        if (!position) return alert('Location is required. Please allow location access.')
 
         const formData = new FormData()
         formData.append('title', title)
@@ -166,8 +117,8 @@ export default function IssueForm({ onSuccess }) {
             setTitle('')
             setDescription('')
             setCategory('')
-            setPosition(null)
-            setAddress(null)
+            // Re-detect location for next report
+            handleRelocate()
             removeImage()
             onSuccess?.()
         } catch (err) {
@@ -256,72 +207,49 @@ export default function IssueForm({ onSuccess }) {
                 />
             </div>
 
-            {/* Map Location */}
+            {/* Location — GPS only (must be at the location) */}
             <div>
                 <div className="flex items-center justify-between mb-1.5">
                     <label className="block text-sm font-medium text-gray-700">
                         <MapPin className="w-4 h-4 inline mr-1" />
-                        Location — Bengaluru
+                        Your Current Location
                     </label>
-                    <div className="flex items-center gap-2">
-                        <button
-                            type="button"
-                            onClick={() => setShowAreaPicker(!showAreaPicker)}
-                            className="flex items-center gap-1 text-xs text-purple-600 hover:text-purple-700 font-medium transition-colors"
-                        >
-                            <MapPinned className="w-3.5 h-3.5" />
-                            Pick area
-                        </button>
-                        <button
-                            type="button"
-                            onClick={handleRelocate}
-                            className="flex items-center gap-1 text-xs text-civic-600 hover:text-civic-700 font-medium transition-colors"
-                        >
-                            <Crosshair className={`w-3.5 h-3.5 ${geoStatus === 'detecting' ? 'animate-spin' : ''}`} />
-                            {geoStatus === 'detecting' ? 'Detecting...' : 'My location'}
-                        </button>
-                    </div>
+                    <button
+                        type="button"
+                        onClick={handleRelocate}
+                        className="flex items-center gap-1 text-xs text-civic-600 hover:text-civic-700 font-medium transition-colors"
+                    >
+                        <Navigation className={`w-3.5 h-3.5 ${geoStatus === 'detecting' ? 'animate-pulse' : ''}`} />
+                        Refresh location
+                    </button>
                 </div>
 
-                {/* Bengaluru area quick picker */}
-                {showAreaPicker && (
-                    <div className="mb-2 p-3 bg-gray-50 rounded-xl animate-fade-in">
-                        <p className="text-xs font-semibold text-gray-500 mb-2">Quick select a Bengaluru area:</p>
-                        <div className="flex flex-wrap gap-1.5">
-                            {bengaluruAreas.map((area) => (
-                                <button
-                                    key={area.name}
-                                    type="button"
-                                    onClick={() => handleAreaSelect(area)}
-                                    className="px-2.5 py-1 text-xs font-medium bg-white border border-gray-200 rounded-lg hover:border-civic-300 hover:bg-civic-50 hover:text-civic-700 transition-all"
-                                >
-                                    {area.name}
-                                </button>
-                            ))}
-                        </div>
-                    </div>
-                )}
-
                 {/* Status messages */}
-                {geoStatus === 'detecting' && !position && (
+                {geoStatus === 'detecting' && (
                     <div className="flex items-center gap-2 text-xs text-civic-600 bg-civic-50 px-3 py-2 rounded-lg mb-2">
                         <Navigation className="w-3.5 h-3.5 animate-pulse" />
-                        Detecting your location in Bengaluru...
+                        Detecting your current location...
                     </div>
                 )}
                 {geoStatus === 'found' && address && (
-                    <div className="flex items-center gap-2 text-xs text-emerald-600 bg-emerald-50 px-3 py-2 rounded-lg mb-2">
+                    <div className="flex items-center gap-2 text-xs text-emerald-600 bg-emerald-50 px-3 py-2.5 rounded-lg mb-2">
                         <MapPin className="w-3.5 h-3.5 flex-shrink-0" />
-                        <span className="truncate">📍 {address.display} — Tap map to adjust</span>
+                        <span className="truncate font-medium">📍 {address.display}</span>
                     </div>
                 )}
-                {geoStatus === 'denied' && !position && (
-                    <div className="flex items-center gap-2 text-xs text-amber-600 bg-amber-50 px-3 py-2 rounded-lg mb-2">
-                        ⚠️ Location denied. Pick an area above or tap the map.
+                {geoStatus === 'denied' && (
+                    <div className="text-xs text-red-600 bg-red-50 px-3 py-2.5 rounded-lg mb-2">
+                        <p className="font-medium mb-1">⚠️ Location access is required</p>
+                        <p className="text-red-500">You must be physically present at the issue location to report it. Please enable location access in your browser settings and click "Refresh location".</p>
+                    </div>
+                )}
+                {geoStatus === 'error' && (
+                    <div className="text-xs text-red-600 bg-red-50 px-3 py-2.5 rounded-lg mb-2">
+                        ❌ Your browser does not support geolocation. Please use a modern browser.
                     </div>
                 )}
 
-                <div className="h-64 rounded-xl overflow-hidden border border-gray-200 relative">
+                <div className="h-56 rounded-xl overflow-hidden border border-gray-200 relative">
                     <MapContainer
                         center={position || BENGALURU_CENTER}
                         zoom={position ? 16 : 12}
@@ -332,14 +260,24 @@ export default function IssueForm({ onSuccess }) {
                             attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
                             url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                         />
-                        <LocationPicker position={position} setPosition={setPosition} onLocationPicked={handleLocationPicked} />
+                        {position && <Marker position={position} />}
                         {flyTarget && <FlyToPosition position={flyTarget} />}
                     </MapContainer>
+                    {/* Overlay to prevent manual interaction */}
+                    {!position && (
+                        <div className="absolute inset-0 z-[1000] bg-gray-900/20 backdrop-blur-[2px] flex items-center justify-center">
+                            <div className="bg-white rounded-xl px-5 py-3 shadow-lg text-center">
+                                <Navigation className="w-6 h-6 text-civic-500 mx-auto mb-2 animate-pulse" />
+                                <p className="text-sm font-medium text-gray-700">Waiting for GPS...</p>
+                                <p className="text-xs text-gray-400 mt-1">Please allow location access</p>
+                            </div>
+                        </div>
+                    )}
                 </div>
 
                 {position && (
                     <p className="text-xs text-gray-400 mt-1.5">
-                        📍 {address?.display || `${position[0].toFixed(4)}, ${position[1].toFixed(4)}`}
+                        Coordinates: {position[0].toFixed(6)}, {position[1].toFixed(6)}
                     </p>
                 )}
             </div>
@@ -359,6 +297,12 @@ export default function IssueForm({ onSuccess }) {
                     'Report Issue'
                 )}
             </button>
+
+            {!position && geoStatus !== 'detecting' && (
+                <p className="text-xs text-center text-red-500">
+                    Location access is required to report issues. You must be at the issue location.
+                </p>
+            )}
 
             {createIssue.isError && (
                 <p className="text-sm text-red-600 text-center">

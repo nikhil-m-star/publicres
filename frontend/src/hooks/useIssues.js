@@ -137,3 +137,13 @@ export function useAnalytics() {
         },
     })
 }
+
+/**
+ * Public: fetch stats for landing page (no auth).
+ */
+export function useStats() {
+    return useQuery({
+        queryKey: ['stats'],
+        queryFn: () => api.getStats(),
+    })
+}
