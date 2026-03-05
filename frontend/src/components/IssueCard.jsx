@@ -64,9 +64,17 @@ export default function IssueCard({ issue }) {
                 <div className="p-5">
                     {/* Category + Status (no image) */}
                     <div className="flex items-center justify-between mb-3">
-                        <span className={`category-badge ${catColor.bg} ${catColor.text} border ${catColor.border}`}>
-                            {categoryLabels[issue.category]}
-                        </span>
+                        <div className="flex items-center gap-2">
+                            <span className={`category-badge ${catColor.bg} ${catColor.text} border ${catColor.border}`}>
+                                {categoryLabels[issue.category]}
+                            </span>
+                            {issue.area && (
+                                <span className="text-xs font-medium text-gray-500 bg-gray-100 px-2 py-0.5 rounded border border-gray-200 flex items-center gap-1">
+                                    <MapPin className="w-3 h-3" />
+                                    {issue.area}
+                                </span>
+                            )}
+                        </div>
                         {!issue.imageUrl && (
                             <span
                                 className={`status-badge ${issue.status === 'REPORTED'

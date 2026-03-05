@@ -5,6 +5,7 @@ import L from 'leaflet'
 import 'leaflet/dist/leaflet.css'
 import { useCreateIssue } from '../hooks/useIssues'
 import { BENGALURU_CENTER, reverseGeocode } from './IssueMap'
+import { BENGALURU_AREAS } from '../data/bengaluruAreas'
 
 // Fix default marker icons in Leaflet
 delete L.Icon.Default.prototype._getIconUrl
@@ -43,6 +44,7 @@ export default function IssueForm({ onSuccess }) {
     const [imagePreview, setImagePreview] = useState(null)
     const [geoStatus, setGeoStatus] = useState('detecting')
     const [address, setAddress] = useState(null)
+    const [selectedArea, setSelectedArea] = useState('')
     const [duplicateWarning, setDuplicateWarning] = useState(null)
     const [isCheckingDuplicate, setIsCheckingDuplicate] = useState(false)
     const fileRef = useRef(null)
@@ -110,7 +112,7 @@ export default function IssueForm({ onSuccess }) {
         formData.append('latitude', position[0])
         formData.append('longitude', position[1])
         if (address?.city) formData.append('city', address.city)
-        if (address?.area) formData.append('area', address.area)
+        if (selectedArea) formData.append('area', selectedArea)
         if (imageFile) formData.append('image', imageFile)
 
         try {
@@ -145,7 +147,7 @@ export default function IssueForm({ onSuccess }) {
                     title,
                     description,
                     city: address?.city || 'Bengaluru',
-                    area: address?.area || '',
+                    area: selectedArea || '',
                 })
             });
             const data = await res.json();
@@ -208,6 +210,25 @@ export default function IssueForm({ onSuccess }) {
                             {cat.label}
                         </button>
                     ))}
+                </div>
+            </div>
+
+            {/* Area Dropdown */}
+            <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1.5">Locality / Area</label>
+                <div className="relative">
+                    <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+                    <select
+                        value={selectedArea}
+                        onChange={(e) => setSelectedArea(e.target.value)}
+                        className="w-full pl-10 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:border-civic-500 focus:ring-4 focus:ring-civic-500/10 outline-none transition-all appearance-none"
+                        required
+                    >
+                        <option value="" disabled>Select your area</option>
+                        {BENGALURU_AREAS.map((areaName) => (
+                            <option key={areaName} value={areaName}>{areaName}</option>
+                        ))}
+                    </select>
                 </div>
             </div>
 
@@ -347,7 +368,7 @@ export default function IssueForm({ onSuccess }) {
             {/* Submit */}
             <button
                 type="submit"
-                disabled={createIssue.isPending || isCheckingDuplicate || !title || !description || !category || !position}
+                disabled={createIssue.isPending || isCheckingDuplicate || !title || !description || !category || !position || !selectedArea}
                 className={`w-full flex items-center justify-center gap-2 py-3 rounded-xl font-medium transition-colors ${duplicateWarning
                     ? "bg-orange-500 hover:bg-orange-600 text-white"
                     : "btn-primary disabled:opacity-50 disabled:cursor-not-allowed"

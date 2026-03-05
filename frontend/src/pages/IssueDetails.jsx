@@ -175,7 +175,11 @@ export default function IssueDetails() {
                         </span>
                         <span className="flex items-center gap-1.5">
                             <MapPin className="w-4 h-4" />
-                            {issue.latitude.toFixed(4)}, {issue.longitude.toFixed(4)}
+                            {issue.area ? (
+                                <span className="font-medium text-gray-700">{issue.area}</span>
+                            ) : (
+                                `${issue.latitude.toFixed(4)}, ${issue.longitude.toFixed(4)}`
+                            )}
                         </span>
                     </div>
 
