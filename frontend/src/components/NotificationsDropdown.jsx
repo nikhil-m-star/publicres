@@ -1,22 +1,33 @@
 import { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { api } from '../api/client';
+import { useAuth } from '@clerk/clerk-react';
+import { api, setAuthToken } from '../api/client';
 import { Bell, Check, Loader2, AlertTriangle, ShieldAlert } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 export default function NotificationsDropdown() {
     const [isOpen, setIsOpen] = useState(false);
+    const { getToken, isSignedIn } = useAuth();
     const queryClient = useQueryClient();
 
     const { data, isLoading, isError } = useQuery({
         queryKey: ['notifications'],
-        queryFn: api.getNotifications,
+        queryFn: async () => {
+            const token = await getToken();
+            setAuthToken(token);
+            return api.getNotifications();
+        },
         retry: false, // If it fails (403 for citizens), don't retry
         refetchInterval: (query) => query.state.status === 'error' ? false : 30000, // Only poll if successful
+        enabled: isSignedIn,
     });
 
     const markReadMutation = useMutation({
-        mutationFn: api.markNotificationRead,
+        mutationFn: async (id) => {
+            const token = await getToken();
+            setAuthToken(token);
+            return api.markNotificationRead(id);
+        },
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ['notifications'] });
         }

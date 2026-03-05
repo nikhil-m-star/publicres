@@ -16,8 +16,7 @@ export const checkDuplicateIssue = async (req, res) => {
         }
 
         const assignedCity = city || "Bengaluru";
-        const normalizedArea = typeof area === "string" && area.trim().length > 0 ? area.trim() : null;
-        const assignedArea = typeof area === "string" && area.trim() ? area.trim() : null;
+        const assignedArea = typeof area === "string" && area.trim().length > 0 ? area.trim() : null;
 
         // Fetch recent issues from the same city (last 7 days)
         const recentIssues = await prisma.issue.findMany({

@@ -13,6 +13,7 @@ const prisma = new PrismaClient();
  */
 export const verifyByEmail = async (req, res) => {
     try {
+        const { requestedRole, area } = req.body;
         const userId = req.user.id;
 
         const user = await prisma.user.findUnique({
@@ -24,12 +25,15 @@ export const verifyByEmail = async (req, res) => {
             return res.status(403).json({ error: "Access Denied: You must use a valid bmsce.ac.in email address to verify as an Officer or President." });
         }
 
+        const validRoles = ["OFFICER", "PRESIDENT"];
+        const fallbackRole = validRoles.includes(requestedRole) ? requestedRole : "OFFICER";
+
         const directoryMatch = findOfficerByEmail(email);
-        const assignedRole = directoryMatch?.role || "OFFICER";
+        const assignedRole = directoryMatch?.role || fallbackRole;
         const assignedArea =
             assignedRole === "OFFICER"
-                ? (directoryMatch?.area || DEFAULT_OFFICER_AREA)
-                : (directoryMatch?.area || null);
+                ? (directoryMatch?.area || (typeof area === "string" && area.trim().length > 0 ? area.trim() : DEFAULT_OFFICER_AREA))
+                : null;
 
         const updatedUser = await prisma.user.update({
             where: { id: userId },

@@ -1,19 +1,30 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
-import { api } from '../api/client'
+import { useAuth } from '@clerk/clerk-react'
+import { api, setAuthToken } from '../api/client'
 import { AlertTriangle, ShieldAlert, Loader2, Check } from 'lucide-react'
 import { Link } from 'react-router-dom'
 
 export default function NotificationsPanel({ title = 'Notifications' }) {
+    const { getToken, isSignedIn } = useAuth()
     const queryClient = useQueryClient()
 
     const { data, isLoading } = useQuery({
         queryKey: ['notifications'],
-        queryFn: api.getNotifications,
+        queryFn: async () => {
+            const token = await getToken()
+            setAuthToken(token)
+            return api.getNotifications()
+        },
         refetchInterval: 30000,
+        enabled: isSignedIn,
     })
 
     const markReadMutation = useMutation({
-        mutationFn: api.markNotificationRead,
+        mutationFn: async (id) => {
+            const token = await getToken()
+            setAuthToken(token)
+            return api.markNotificationRead(id)
+        },
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ['notifications'] })
         },

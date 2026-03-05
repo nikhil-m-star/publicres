@@ -23,7 +23,7 @@ export const api = {
     getMyIssues: (params) => client.get('/issues/mine', { params }).then((r) => r.data),
     getIssue: (id) => client.get(`/issues/${id}`).then((r) => r.data),
     createIssue: (formData) =>
-        client.post('/issues', formData, { headers: { 'Content-Type': 'multipart/form-data' } }).then((r) => r.data),
+        client.post('/issues', formData).then((r) => r.data),
 
     // Public stats & Reports
     getStats: () => client.get('/issues/stats').then((r) => r.data),
@@ -57,7 +57,7 @@ export const api = {
     markNotificationRead: (id) => client.put(`/admin/notifications/${id}/read`).then((r) => r.data),
 
     // Email Domain Admin Verification
-    verifyByEmail: () => client.post('/admin/verify-email').then((r) => r.data),
+    verifyByEmail: (payload) => client.post('/admin/verify-email', payload).then((r) => r.data),
 }
 
 export default client
