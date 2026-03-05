@@ -28,21 +28,21 @@ export default function CityReport() {
     };
 
     return (
-        <div className="min-h-[calc(100vh-64px)] bg-gray-50/50 py-8">
-            <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="report-shell">
+            <div className="page-container">
                 {/* Header */}
-                <div className="mb-8">
-                    <Link to="/#reports" className="inline-flex items-center text-sm font-medium text-gray-500 hover:text-gray-900 mb-4 transition-colors">
-                        <ArrowLeft className="w-4 h-4 mr-1" />
+                <div className="report-header">
+                    <Link to="/#reports" className="report-back">
+                        <ArrowLeft className="w-4 h-4" />
                         Back to Reports
                     </Link>
-                    <div className="flex items-center gap-3 text-civic-700">
-                        <div className="w-12 h-12 bg-purple-100 rounded-2xl flex items-center justify-center shrink-0">
-                            <Sparkles className="w-6 h-6 text-purple-600" />
+                    <div className="report-hero">
+                        <div className="report-icon">
+                            <Sparkles className="w-6 h-6" />
                         </div>
                         <div>
-                            <h1 className="text-2xl font-bold text-gray-900">Locality Health Report</h1>
-                            <p className="text-gray-600 mt-1">
+                            <h1 className="report-title">Locality Health Report</h1>
+                            <p className="report-subtitle">
                                 Generate an AI-powered insights report for any area within Bengaluru.
                             </p>
                         </div>
@@ -51,18 +51,17 @@ export default function CityReport() {
 
                 {/* Input Section */}
                 {!report && !loading && (
-                    <div className="bg-white border text-left border-gray-100 rounded-2xl p-6 md:p-8 shadow-sm animate-fade-in">
-                        <div className="max-w-xl">
-                            <label className="block text-sm font-medium text-gray-700 mb-2">
+                    <div className="panel report-panel">
+                        <div className="report-form">
+                            <label className="report-label">
                                 Which area inside Bengaluru would you like to analyze?
                             </label>
-                            <div className="flex flex-col sm:flex-row gap-3">
-                                <div className="relative flex-1">
-                                    <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+                            <div className="report-controls">
+                                <div className="report-select">
+                                    <MapPin className="w-5 h-5" />
                                     <select
                                         value={area}
                                         onChange={(e) => setArea(e.target.value)}
-                                        className="w-full pl-10 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:border-civic-500 focus:ring-4 focus:ring-civic-500/10 outline-none transition-all appearance-none"
                                     >
                                         <option value="" disabled>Select an area</option>
                                         {BENGALURU_AREAS.map((areaName) => (
@@ -73,23 +72,23 @@ export default function CityReport() {
                                 <button
                                     onClick={generateReport}
                                     disabled={!area.trim()}
-                                    className="btn bg-purple-600 hover:bg-purple-700 text-white font-medium px-6 py-3 rounded-xl transition-colors sm:w-auto w-full flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+                                    className="btn-primary report-generate"
                                 >
                                     <Sparkles className="w-4 h-4" />
                                     Generate
                                 </button>
                             </div>
-                            {error && <p className="text-red-500 text-sm mt-3">{error}</p>}
+                            {error && <p className="report-error">{error}</p>}
                         </div>
                     </div>
                 )}
 
                 {/* Loading State */}
                 {loading && (
-                    <div className="bg-white border border-gray-100 rounded-2xl p-12 shadow-sm flex flex-col items-center justify-center text-center">
-                        <Loader2 className="w-10 h-10 animate-spin text-purple-500 mb-4" />
-                        <h3 className="text-lg font-medium text-gray-900">Synthesizing Data</h3>
-                        <p className="text-gray-500 mt-2 max-w-sm animate-pulse">
+                    <div className="panel report-loading">
+                        <Loader2 className="w-10 h-10 animate-spin" />
+                        <h3>Synthesizing Data</h3>
+                        <p>
                             Our AI is analyzing recent civic reports, severity levels, and resolution times for {area}, Bengaluru...
                         </p>
                     </div>
@@ -97,44 +96,43 @@ export default function CityReport() {
 
                 {/* Generated Report */}
                 {report && (
-                    <div className="bg-white border border-gray-100 rounded-2xl p-6 md:p-8 shadow-sm animate-fade-in">
-                        <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 mb-8 pb-6 border-b border-gray-100">
+                    <div className="panel report-output">
+                        <div className="report-output__head">
                             <div>
-                                <h2 className="text-2xl font-bold text-gray-900">{area} Insights</h2>
-                                <p className="text-sm text-gray-500 flex items-center gap-1.5 mt-1">
-                                    <Sparkles className="w-3.5 h-3.5 text-purple-500" />
+                                <h2>{area} Insights</h2>
+                                <p>
+                                    <Sparkles className="w-3.5 h-3.5" />
                                     AI Generated Synthesis
                                 </p>
                             </div>
                             <button
                                 onClick={() => setReport(null)}
-                                className="text-sm font-medium text-civic-600 hover:text-civic-700 hover:bg-civic-50 px-4 py-2 rounded-lg transition-colors border border-transparent hover:border-civic-100"
+                                className="btn-secondary report-reset"
                             >
                                 Analyze Another Area
                             </button>
                         </div>
 
-                        {/* Custom markdown rendering to fix hyperlink visibility and base styling */}
-                        <div className="w-full overflow-hidden">
+                        <div className="report-md">
                             <ReactMarkdown
                                 components={{
-                                    h1: ({ node, ...props }) => <h1 className="text-2xl font-bold mt-8 mb-4 text-gray-900 pb-2 border-b border-gray-100" {...props} />,
-                                    h2: ({ node, ...props }) => <h2 className="text-xl font-bold mt-6 mb-3 text-gray-800" {...props} />,
-                                    h3: ({ node, ...props }) => <h3 className="text-lg font-semibold mt-5 mb-2 text-gray-800" {...props} />,
-                                    p: ({ node, ...props }) => <p className="mb-4 text-gray-600 leading-relaxed" {...props} />,
-                                    ul: ({ node, ...props }) => <ul className="list-disc pl-6 mb-4 text-gray-600 space-y-1.5 marker:text-gray-400" {...props} />,
-                                    ol: ({ node, ...props }) => <ol className="list-decimal pl-6 mb-4 text-gray-600 space-y-1.5 marker:text-gray-400" {...props} />,
-                                    li: ({ node, ...props }) => <li className="pl-1" {...props} />,
+                                    h1: ({ node, ...props }) => <h1 className="report-md__h1" {...props} />,
+                                    h2: ({ node, ...props }) => <h2 className="report-md__h2" {...props} />,
+                                    h3: ({ node, ...props }) => <h3 className="report-md__h3" {...props} />,
+                                    p: ({ node, ...props }) => <p className="report-md__p" {...props} />,
+                                    ul: ({ node, ...props }) => <ul className="report-md__list" {...props} />,
+                                    ol: ({ node, ...props }) => <ol className="report-md__list" {...props} />,
+                                    li: ({ node, ...props }) => <li className="report-md__item" {...props} />,
                                     a: ({ node, ...props }) => (
                                         <a
-                                            className="text-civic-600 font-medium hover:text-civic-800 underline decoration-civic-300 hover:decoration-civic-600 underline-offset-2 transition-all"
+                                            className="report-md__link"
                                             target="_blank"
                                             rel="noopener noreferrer"
                                             {...props}
                                         />
                                     ),
-                                    strong: ({ node, ...props }) => <strong className="font-semibold text-gray-900" {...props} />,
-                                    blockquote: ({ node, ...props }) => <blockquote className="border-l-4 border-gray-200 pl-4 py-1 italic text-gray-500 mb-4 bg-gray-50 rounded-r-lg" {...props} />
+                                    strong: ({ node, ...props }) => <strong className="report-md__strong" {...props} />,
+                                    blockquote: ({ node, ...props }) => <blockquote className="report-md__quote" {...props} />
                                 }}
                             >
                                 {report}
