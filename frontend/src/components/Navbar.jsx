@@ -66,14 +66,6 @@ export default function Navbar() {
                                 Dashboard
                             </Link>
                             <Link
-                                to="/bribery"
-                                className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors flex items-center gap-1.5 ${isActive('/bribery') ? 'bg-red-50 text-red-700' : 'text-red-600 hover:text-red-700 hover:bg-red-50'
-                                    }`}
-                            >
-                                <Shield className="w-3.5 h-3.5" />
-                                Bribery
-                            </Link>
-                            <Link
                                 to="/profile"
                                 className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors flex items-center gap-1.5 ${isActive('/profile') ? 'bg-civic-50 text-civic-700' : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
                                     }`}
@@ -152,13 +144,6 @@ export default function Navbar() {
                                 onClick={() => setMobileOpen(false)}
                             >
                                 Dashboard
-                            </Link>
-                            <Link
-                                to="/bribery"
-                                className="block px-4 py-2.5 rounded-lg text-sm font-medium text-red-600 hover:bg-red-50"
-                                onClick={() => setMobileOpen(false)}
-                            >
-                                🚨 Report Bribery
                             </Link>
                             <Link
                                 to="/profile"

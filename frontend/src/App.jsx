@@ -8,7 +8,6 @@ import Leaderboard from './pages/Leaderboard'
 import AdminDashboard from './pages/AdminDashboard'
 import MapExplorer from './pages/MapExplorer'
 import Profile from './pages/Profile'
-import BriberyBoard from './pages/BriberyBoard'
 import CityReport from './pages/CityReport'
 
 function ProtectedRoute({ children }) {
@@ -55,7 +54,6 @@ export default function App() {
                         </ProtectedRoute>
                     }
                 />
-                <Route path="/bribery" element={<BriberyBoard />} />
                 <Route path="/report" element={<CityReport />} />
             </Routes>
         </div>
