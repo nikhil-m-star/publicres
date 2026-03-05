@@ -35,6 +35,12 @@ export const OFFICER_DIRECTORY = [
         role: "OFFICER",
         area: "Whitefield",
     },
+    {
+        name: "Nikhil M",
+        email: "nikhilm.cs24@bmsce.ac.in",
+        role: "OFFICER",
+        area: "Bengaluru Central",
+    },
 ];
 
 export function findOfficerByEmail(email) {
