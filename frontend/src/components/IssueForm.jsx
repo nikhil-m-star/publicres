@@ -75,8 +75,18 @@ export default function IssueForm({ onSuccess }) {
         setAddress(result)
     }
 
-    const handleRelocate = () => {
+    const handleRelocate = async () => {
         setGeoStatus('detecting')
+        // Check permission state first — if denied, show instructions immediately
+        if (navigator.permissions) {
+            try {
+                const perm = await navigator.permissions.query({ name: 'geolocation' })
+                if (perm.state === 'denied') {
+                    setGeoStatus('denied')
+                    return
+                }
+            } catch (_) { /* Permissions API not supported, proceed anyway */ }
+        }
         navigator.geolocation.getCurrentPosition(
             (pos) => {
                 const loc = [pos.coords.latitude, pos.coords.longitude]
