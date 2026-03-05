@@ -23,7 +23,7 @@ function ProtectedRoute({ children }) {
 
 export default function App() {
     return (
-        <div className="min-h-screen bg-gray-50">
+        <div className="app-shell">
             <Navbar />
             <Routes>
                 <Route path="/" element={<Landing />} />

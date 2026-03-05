@@ -13,161 +13,152 @@ export default function Navbar() {
     const isActive = (path) => location.pathname === path
 
     return (
-        <nav className="sticky top-0 z-50 bg-white/80 backdrop-blur-xl border-b border-gray-100">
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div className="flex items-center justify-between h-16">
-                    {/* Logo */}
-                    <Link to="/" className="flex items-center gap-2.5 group">
-                        <div className="w-9 h-9 bg-gradient-to-br from-civic-500 to-civic-700 rounded-xl flex items-center justify-center shadow-lg shadow-civic-500/25 group-hover:shadow-civic-500/40 transition-shadow">
-                            <MapPin className="w-5 h-5 text-white" />
-                        </div>
-                        <span className="text-xl font-bold bg-gradient-to-r from-civic-700 to-civic-500 bg-clip-text text-transparent">
-                            PublicRes
-                        </span>
-                    </Link>
+        <nav className="nav-shell">
+            <div className="nav-inner">
+                {/* Logo */}
+                <Link to="/" className="nav-brand">
+                    <span className="nav-logo">
+                        <MapPin className="w-5 h-5" />
+                    </span>
+                    <span className="nav-title">PublicRes</span>
+                </Link>
 
-                    {/* Desktop nav */}
-                    <div className="hidden md:flex items-center gap-1">
-                        <Link
-                            to="/"
-                            className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${isActive('/') ? 'bg-civic-50 text-civic-700' : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
-                                }`}
-                        >
-                            Home
-                        </Link>
-                        <Link
-                            to="/map"
-                            className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors flex items-center gap-1.5 ${isActive('/map') ? 'bg-civic-50 text-civic-700' : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
-                                }`}
-                        >
-                            <Map className="w-3.5 h-3.5" />
-                            Map
-                        </Link>
-                        <Link
-                            to="/leaderboard"
-                            className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors flex items-center gap-1.5 ${isActive('/leaderboard') ? 'bg-civic-50 text-civic-700' : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
-                                }`}
-                        >
-                            <Trophy className="w-3.5 h-3.5" />
-                            Leaderboard
-                        </Link>
-                        <Link
-                            to="/report"
-                            className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors flex items-center gap-1.5 ${isActive('/report') ? 'bg-purple-50 text-purple-700' : 'text-purple-600 hover:text-purple-700 hover:bg-purple-50'
-                                }`}
-                        >
-                            <Sparkles className="w-3.5 h-3.5" />
-                            AI Insights
-                        </Link>
-                        <SignedIn>
-                            <Link
-                                to="/dashboard"
-                                className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${isActive('/dashboard') ? 'bg-civic-50 text-civic-700' : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
-                                    }`}
-                            >
-                                My Reports
-                            </Link>
-                            <Link
-                                to="/profile"
-                                className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors flex items-center gap-1.5 ${isActive('/profile') ? 'bg-civic-50 text-civic-700' : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
-                                    }`}
-                            >
-                                <Shield className="w-3.5 h-3.5" />
-                                Profile
-                            </Link>
-                        </SignedIn>
-                    </div>
-
-                    {/* Auth */}
-                    <div className="hidden md:flex items-center gap-3">
-                        <SignedOut>
-                            <SignInButton mode="modal">
-                                <button className="btn-primary text-sm">Sign In</button>
-                            </SignInButton>
-                        </SignedOut>
-                        <SignedIn>
-                            <div className="flex items-center gap-3 pr-2">
-                                <NotificationsDropdown />
-                                <UserButton
-                                    appearance={{
-                                        elements: {
-                                            avatarBox: 'w-9 h-9 ring-2 ring-civic-100',
-                                        },
-                                    }}
-                                />
-                            </div>
-                        </SignedIn>
-                    </div>
-
-                    {/* Mobile menu button */}
-                    <button
-                        className="md:hidden p-2 rounded-lg hover:bg-gray-100 transition-colors"
-                        onClick={() => setMobileOpen(!mobileOpen)}
+                {/* Desktop nav */}
+                <div className="nav-links">
+                    <Link
+                        to="/"
+                        className={`nav-link ${isActive('/') ? 'active' : ''}`}
                     >
-                        {mobileOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
-                    </button>
+                        Home
+                    </Link>
+                    <Link
+                        to="/map"
+                        className={`nav-link ${isActive('/map') ? 'active' : ''}`}
+                    >
+                        <Map className="w-3.5 h-3.5" />
+                        Map
+                    </Link>
+                    <Link
+                        to="/leaderboard"
+                        className={`nav-link ${isActive('/leaderboard') ? 'active' : ''}`}
+                    >
+                        <Trophy className="w-3.5 h-3.5" />
+                        Leaderboard
+                    </Link>
+                    <Link
+                        to="/report"
+                        className={`nav-link accent ${isActive('/report') ? 'active' : ''}`}
+                    >
+                        <Sparkles className="w-3.5 h-3.5" />
+                        AI Insights
+                    </Link>
+                    <SignedIn>
+                        <Link
+                            to="/dashboard"
+                            className={`nav-link ${isActive('/dashboard') ? 'active' : ''}`}
+                        >
+                            My Reports
+                        </Link>
+                        <Link
+                            to="/profile"
+                            className={`nav-link ${isActive('/profile') ? 'active' : ''}`}
+                        >
+                            <Shield className="w-3.5 h-3.5" />
+                            Profile
+                        </Link>
+                    </SignedIn>
                 </div>
 
-                {/* Mobile menu */}
-                {mobileOpen && (
-                    <div className="md:hidden pb-4 pt-2 space-y-1 animate-fade-in">
-                        <Link
-                            to="/"
-                            className="block px-4 py-2.5 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-50"
-                            onClick={() => setMobileOpen(false)}
-                        >
-                            Home
-                        </Link>
-                        <Link
-                            to="/map"
-                            className="block px-4 py-2.5 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-50"
-                            onClick={() => setMobileOpen(false)}
-                        >
-                            🗺️ Map Explorer
-                        </Link>
-                        <Link
-                            to="/leaderboard"
-                            className="block px-4 py-2.5 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-50"
-                            onClick={() => setMobileOpen(false)}
-                        >
-                            🏆 Leaderboard
-                        </Link>
-                        <Link
-                            to="/report"
-                            onClick={() => setMobileOpen(false)}
-                            className="block px-4 py-2.5 rounded-lg text-sm font-medium text-purple-600 hover:bg-purple-50"
-                        >
-                            ✨ AI Locality Insights
-                        </Link>
-                        <SignedIn>
-                            <Link
-                                to="/dashboard"
-                                className="block px-4 py-2.5 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-50"
-                                onClick={() => setMobileOpen(false)}
-                            >
-                                My Reports
-                            </Link>
-                            <Link
-                                to="/profile"
-                                className="block px-4 py-2.5 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-50"
-                                onClick={() => setMobileOpen(false)}
-                            >
-                                Profile
-                            </Link>
-                            <div className="px-4 pt-2">
-                                <UserButton />
-                            </div>
-                        </SignedIn>
-                        <SignedOut>
-                            <div className="px-4 pt-2">
-                                <SignInButton mode="modal">
-                                    <button className="btn-primary text-sm w-full">Sign In</button>
-                                </SignInButton>
-                            </div>
-                        </SignedOut>
-                    </div>
-                )}
+                {/* Auth */}
+                <div className="nav-actions">
+                    <SignedOut>
+                        <SignInButton mode="modal">
+                            <button className="btn-primary text-sm">Sign In</button>
+                        </SignInButton>
+                    </SignedOut>
+                    <SignedIn>
+                        <div className="nav-user">
+                            <NotificationsDropdown />
+                            <UserButton
+                                appearance={{
+                                    elements: {
+                                        avatarBox: 'w-9 h-9 ring-2 ring-ember-500/40',
+                                    },
+                                }}
+                            />
+                        </div>
+                    </SignedIn>
+                </div>
+
+                {/* Mobile menu button */}
+                <button
+                    className="nav-toggle"
+                    onClick={() => setMobileOpen(!mobileOpen)}
+                    aria-label="Toggle navigation"
+                >
+                    {mobileOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+                </button>
             </div>
+
+            {/* Mobile menu */}
+            {mobileOpen && (
+                <div className="nav-panel">
+                    <Link
+                        to="/"
+                        className="nav-panel__link"
+                        onClick={() => setMobileOpen(false)}
+                    >
+                        Home
+                    </Link>
+                    <Link
+                        to="/map"
+                        className="nav-panel__link"
+                        onClick={() => setMobileOpen(false)}
+                    >
+                        🗺️ Map Explorer
+                    </Link>
+                    <Link
+                        to="/leaderboard"
+                        className="nav-panel__link"
+                        onClick={() => setMobileOpen(false)}
+                    >
+                        🏆 Leaderboard
+                    </Link>
+                    <Link
+                        to="/report"
+                        onClick={() => setMobileOpen(false)}
+                        className="nav-panel__link accent"
+                    >
+                        ✨ AI Locality Insights
+                    </Link>
+                    <SignedIn>
+                        <Link
+                            to="/dashboard"
+                            className="nav-panel__link"
+                            onClick={() => setMobileOpen(false)}
+                        >
+                            My Reports
+                        </Link>
+                        <Link
+                            to="/profile"
+                            className="nav-panel__link"
+                            onClick={() => setMobileOpen(false)}
+                        >
+                            Profile
+                        </Link>
+                        <div className="nav-panel__user">
+                            <UserButton />
+                        </div>
+                    </SignedIn>
+                    <SignedOut>
+                        <div className="nav-panel__user">
+                            <SignInButton mode="modal">
+                                <button className="btn-primary text-sm w-full">Sign In</button>
+                            </SignInButton>
+                        </div>
+                    </SignedOut>
+                </div>
+            )}
         </nav>
     )
 }

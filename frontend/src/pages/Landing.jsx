@@ -68,129 +68,127 @@ export default function Landing() {
     }))
 
     return (
-        <div className="min-h-screen bg-[color:var(--earth-950)] text-[color:var(--earth-ink)]">
-            {/* Hero */}
-            <section className="relative overflow-hidden">
-                <div className="absolute inset-0">
-                    <div className="absolute -top-32 -right-24 w-[520px] h-[520px] rounded-full bg-[color:var(--earth-ember)]/10 blur-3xl glow-orb animate-glow-pulse" />
-                    <div className="absolute top-24 -left-24 w-[420px] h-[420px] rounded-full bg-[color:var(--earth-moss)]/20 blur-3xl glow-moss animate-glow-pulse" />
-                    <div className="absolute inset-0 opacity-30 bg-[radial-gradient(circle_at_top,_rgba(255,143,61,0.2),_transparent_55%)]" />
-                </div>
-
-                <div className="page-container relative pt-20 pb-12">
-                    <div className="max-w-3xl space-y-7">
-                        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[color:var(--earth-900)] border border-civic-800 text-xs text-[color:var(--earth-muted)] shadow-sm">
-                            <Sparkles className="w-3.5 h-3.5 text-ember-300" />
-                            Namma Bengaluru — civic fixes made simple
+        <div className="landing">
+            <section className="hero">
+                <div className="hero__glow hero__glow--ember" />
+                <div className="hero__glow hero__glow--moss" />
+                <div className="page-container hero__grid">
+                    <div className="hero__copy">
+                        <div className="hero__badge">
+                            <Sparkles className="w-4 h-4" />
+                            Civic signal, tuned for Bengaluru
                         </div>
-
-                        <h1 className="text-4xl sm:text-6xl font-semibold leading-tight">
+                        <h1 className="hero__title">
                             Fixes, not fuss.
-                            <span className="block text-transparent bg-clip-text bg-gradient-to-r from-ember-300 via-civic-200 to-moss-300">
-                                Report fast. Track brighter.
-                            </span>
+                            <span>Report fast. Track brighter.</span>
                         </h1>
-
-                        <p className="text-lg text-[color:var(--earth-muted)] leading-relaxed max-w-2xl">
-                            Spot a pothole, broken light, or garbage pile? Drop a quick report and watch the city respond.
+                        <p className="hero__subtitle">
+                            Drop a quick report, share the signal, and let the city move with clarity. A bold, friendly way to keep Bengaluru in flow.
                         </p>
-
-                        <div className="flex flex-wrap gap-3">
-                            <Link to="/#reports" className="btn-primary flex items-center gap-2 hover:rotate-[-1deg]">
+                        <div className="hero__actions">
+                            <Link to="/#reports" className="btn-primary">
                                 Report an Issue
                                 <ArrowRight className="w-4 h-4" />
                             </Link>
                             <SignedOut>
                                 <SignInButton mode="modal">
-                                    <button className="btn-secondary hover:rotate-[1deg]">
-                                        Sign In
-                                    </button>
+                                    <button className="btn-secondary">Sign In</button>
                                 </SignInButton>
                             </SignedOut>
                         </div>
-
-                        <div className="flex flex-wrap gap-2 pt-2 text-sm">
+                        <div className="hero__tags">
                             <span className="chip">Potholes</span>
                             <span className="chip">Streetlights</span>
                             <span className="chip">Garbage</span>
                             <span className="chip">Water leaks</span>
                         </div>
                     </div>
-                </div>
-            </section>
 
-            {/* Quick Stats */}
-            <section className="page-container">
-                <div className="flex flex-wrap gap-4">
-                    <div className="card p-5 flex-1 min-w-[220px] group hover:-translate-y-1 hover:rotate-[0.4deg]">
-                        <div className="flex items-center gap-3">
-                            <div className="w-12 h-12 rounded-2xl bg-[color:var(--earth-900)] border border-civic-800 flex items-center justify-center">
-                                <AlertTriangle className="w-5 h-5 text-ember-300 group-hover:animate-wiggle" />
+                    <div className="hero__visual">
+                        <div className="radar-card">
+                            <div className="radar">
+                                <div className="radar__ring" />
+                                <div className="radar__ring" />
+                                <div className="radar__ring" />
+                                <span className="radar__sweep" />
+                                <span className="radar__blip radar__blip--one" />
+                                <span className="radar__blip radar__blip--two" />
+                                <span className="radar__blip radar__blip--three" />
                             </div>
-                            <div>
-                                <p className="text-3xl font-semibold">{totalIssues}</p>
-                                <p className="text-sm text-[color:var(--earth-muted)]">Total issues</p>
-                            </div>
-                        </div>
-                    </div>
-                    <div className="card p-5 flex-1 min-w-[220px] group hover:-translate-y-1 hover:rotate-[-0.4deg]">
-                        <div className="flex items-center gap-3">
-                            <div className="w-12 h-12 rounded-2xl bg-[color:var(--earth-900)] border border-civic-800 flex items-center justify-center">
-                                <Clock className="w-5 h-5 text-amber-200 group-hover:animate-wiggle" />
-                            </div>
-                            <div>
-                                <p className="text-3xl font-semibold">{unresolvedCount}</p>
-                                <p className="text-sm text-[color:var(--earth-muted)]">Unresolved</p>
-                            </div>
-                        </div>
-                    </div>
-                    <div className="card p-5 flex-1 min-w-[220px] group hover:-translate-y-1 hover:rotate-[0.3deg]">
-                        <div className="flex items-center gap-3">
-                            <div className="w-12 h-12 rounded-2xl bg-[color:var(--earth-900)] border border-civic-800 flex items-center justify-center">
-                                <CheckCircle className="w-5 h-5 text-moss-300 group-hover:animate-wiggle" />
-                            </div>
-                            <div>
-                                <p className="text-3xl font-semibold">{resolvedCount}</p>
-                                <p className="text-sm text-[color:var(--earth-muted)]">Resolved</p>
+                            <div className="radar__meta">
+                                <div>
+                                    <p>Live issues</p>
+                                    <strong>{totalIssues}</strong>
+                                </div>
+                                <div>
+                                    <p>Resolved</p>
+                                    <strong>{resolutionRate}%</strong>
+                                </div>
+                                <div>
+                                    <p>Active</p>
+                                    <strong>{unresolvedCount}</strong>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                    <div className="card p-5 flex-1 min-w-[220px] group hover:-translate-y-1 hover:rotate-[-0.3deg]">
-                        <div className="flex items-center gap-3">
-                            <div className="w-12 h-12 rounded-2xl bg-[color:var(--earth-900)] border border-civic-800 flex items-center justify-center">
-                                <TrendingUp className="w-5 h-5 text-ember-300 group-hover:animate-wiggle" />
-                            </div>
-                            <div>
-                                <p className="text-3xl font-semibold">{resolutionRate}%</p>
-                                <p className="text-sm text-[color:var(--earth-muted)]">Resolution rate</p>
-                            </div>
+                        <div className="hero__note">
+                            <AlertTriangle className="w-4 h-4" />
+                            <span>Signal spikes get routed to the nearest ward team within minutes.</span>
                         </div>
                     </div>
                 </div>
             </section>
 
-            {/* Reports */}
-            <section id="reports" className="page-container scroll-mt-24 space-y-4">
-                <div>
-                    <h2 className="text-3xl sm:text-4xl font-semibold">Community Reports</h2>
-                    <p className="text-[color:var(--earth-muted)]">Browse recent issues, filter by category, or report a new one.</p>
+            <section className="page-container stat-strip">
+                <div className="stat-card">
+                    <AlertTriangle className="w-5 h-5" />
+                    <div>
+                        <p>Total issues</p>
+                        <strong>{totalIssues}</strong>
+                    </div>
                 </div>
-                <div className="card-glass p-2">
+                <div className="stat-card">
+                    <Clock className="w-5 h-5" />
+                    <div>
+                        <p>Unresolved</p>
+                        <strong>{unresolvedCount}</strong>
+                    </div>
+                </div>
+                <div className="stat-card">
+                    <CheckCircle className="w-5 h-5" />
+                    <div>
+                        <p>Resolved</p>
+                        <strong>{resolvedCount}</strong>
+                    </div>
+                </div>
+                <div className="stat-card">
+                    <TrendingUp className="w-5 h-5" />
+                    <div>
+                        <p>Resolution rate</p>
+                        <strong>{resolutionRate}%</strong>
+                    </div>
+                </div>
+            </section>
+
+            <section id="reports" className="page-container section">
+                <div className="section__head">
+                    <h2>Community Reports</h2>
+                    <p>Browse recent issues, filter by category, or report a new one.</p>
+                </div>
+                <div className="panel">
                     <ReportsBoard scope="all" />
                 </div>
             </section>
 
-            {/* Analytics Charts */}
             {totalIssues > 0 && (
-                <section className="page-container space-y-6">
-                    <div>
-                        <h2 className="text-3xl sm:text-4xl font-semibold">Quick Insights</h2>
-                        <p className="text-[color:var(--earth-muted)]">A calm snapshot of what needs attention.</p>
+                <section className="page-container section">
+                    <div className="section__head">
+                        <h2>Quick Insights</h2>
+                        <p>A calm snapshot of what needs attention.</p>
                     </div>
-                    <div className="flex flex-wrap gap-6">
-                        <div className="card p-6 flex-1 min-w-[280px]">
-                            <h3 className="font-semibold mb-4">Resolved vs Unresolved</h3>
-                            <div className="h-56">
+                    <div className="insight-grid">
+                        <div className="panel">
+                            <h3>Resolved vs Unresolved</h3>
+                            <div className="chart-box">
                                 <ResponsiveContainer width="100%" height="100%">
                                     <PieChart>
                                         <Pie
@@ -210,19 +208,19 @@ export default function Landing() {
                                     </PieChart>
                                 </ResponsiveContainer>
                             </div>
-                            <div className="flex flex-wrap gap-3 mt-2 text-xs text-[color:var(--earth-muted)]">
+                            <div className="legend">
                                 {statusData.map((s) => (
-                                    <div key={s.name} className="flex items-center gap-1.5">
-                                        <div className="w-2.5 h-2.5 rounded-full" style={{ background: s.fill }} />
+                                    <div key={s.name} className="legend__item">
+                                        <span className="legend__dot" style={{ background: s.fill }} />
                                         {s.name} ({s.value})
                                     </div>
                                 ))}
                             </div>
                         </div>
 
-                        <div className="card p-6 flex-1 min-w-[280px]">
-                            <h3 className="font-semibold mb-4">Issues by Category</h3>
-                            <div className="h-56">
+                        <div className="panel">
+                            <h3>Issues by Category</h3>
+                            <div className="chart-box">
                                 <ResponsiveContainer width="100%" height="100%">
                                     <BarChart data={categoryData} barSize={32}>
                                         <CartesianGrid strokeDasharray="3 3" stroke="#3d2a1c" />
@@ -242,49 +240,43 @@ export default function Landing() {
                 </section>
             )}
 
-            {/* Features */}
-            <section className="page-container space-y-6">
-                <div>
-                    <h2 className="text-3xl sm:text-4xl font-semibold">How It Works</h2>
-                    <p className="text-[color:var(--earth-muted)]">A simple flow from report to resolution.</p>
+            <section className="page-container section">
+                <div className="section__head">
+                    <h2>How It Works</h2>
+                    <p>A simple flow from report to resolution.</p>
                 </div>
-
-                <div className="flex flex-wrap gap-4">
+                <div className="feature-grid">
                     {features.map((feature, i) => (
-                        <div key={i} className="card p-5 flex-1 min-w-[220px] group hover:-translate-y-1 hover:rotate-[0.4deg]">
-                            <div className="w-12 h-12 rounded-2xl bg-[color:var(--earth-900)] border border-civic-800 flex items-center justify-center mb-3">
-                                <feature.icon className="w-5 h-5 text-ember-300 group-hover:animate-wiggle" />
+                        <div key={i} className="feature-card">
+                            <div className="feature-card__icon">
+                                <feature.icon className="w-5 h-5" />
                             </div>
-                            <h3 className="font-semibold mb-2">{feature.title}</h3>
-                            <p className="text-sm text-[color:var(--earth-muted)] leading-relaxed">{feature.description}</p>
+                            <h3>{feature.title}</h3>
+                            <p>{feature.description}</p>
                         </div>
                     ))}
                 </div>
             </section>
 
-            {/* Map Preview */}
-            <section className="page-container space-y-4">
-                <div>
-                    <h2 className="text-3xl sm:text-4xl font-semibold">Live Issue Map</h2>
-                    <p className="text-[color:var(--earth-muted)]">See reports across Bengaluru at a glance.</p>
+            <section className="page-container section">
+                <div className="section__head">
+                    <h2>Live Issue Map</h2>
+                    <p>See reports across Bengaluru at a glance.</p>
                 </div>
-                <div className="card overflow-hidden border border-civic-700/70">
+                <div className="map-panel">
                     <IssueMap issues={issues} height="480px" />
                 </div>
             </section>
 
-            {/* Footer */}
-            <footer className="mt-16 border-t border-civic-800 bg-[color:var(--earth-900)]">
-                <div className="page-container flex flex-col md:flex-row items-center justify-between gap-3">
-                    <div className="flex items-center gap-2">
-                        <div className="w-9 h-9 rounded-lg bg-ember-500 flex items-center justify-center shadow-[0_8px_20px_rgba(255,143,61,0.35)]">
-                            <MapPin className="w-4 h-4 text-black" />
-                        </div>
-                        <span className="font-semibold">PublicRes</span>
+            <footer className="footer">
+                <div className="page-container footer__inner">
+                    <div className="footer__brand">
+                        <span className="nav-logo">
+                            <MapPin className="w-4 h-4" />
+                        </span>
+                        <span>PublicRes</span>
                     </div>
-                    <p className="text-sm text-[color:var(--earth-muted)]">
-                        Built for Namma Bengaluru. Bold, clear, and community-first.
-                    </p>
+                    <p>Built for Namma Bengaluru. Bold, clear, and community-first.</p>
                 </div>
             </footer>
         </div>
