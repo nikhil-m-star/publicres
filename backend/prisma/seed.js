@@ -183,12 +183,13 @@ async function main() {
     ];
 
     const citizens = [];
-    for (const name of citizenNames) {
+    for (let i = 0; i < 100; i++) {
+        const name = citizenNames[i % citizenNames.length] + ` ${i}`;
         const citizen = await prisma.user.create({
             data: {
-                clerkId: `seed_citizen_${name.replace(/\s/g, "_").toLowerCase()}`,
+                clerkId: `seed_citizen_${i}_${name.replace(/\\s/g, "_").toLowerCase()}`,
                 name,
-                email: `${name.replace(/\s/g, ".").toLowerCase()}@gmail.com`,
+                email: `citizen${i}@gmail.com`,
                 role: "CITIZEN",
             },
         });
@@ -196,43 +197,133 @@ async function main() {
     }
     console.log(`👥 Created ${citizens.length} citizens\n`);
 
-    // — Create Issues —
+    // — Create Issues (Exactly 10 with images) —
+    const curatedIssues = [
+        {
+            title: "Massive pothole on 100 Feet Road",
+            description: "A huge crater has formed near the junction. Two-wheelers are struggling to navigate safely, especially at night.",
+            category: "POTHOLE",
+            area: "Indiranagar",
+            imageUrl: "https://images.unsplash.com/photo-1515162816999-a0c47dc192f7?auto=format&fit=crop&q=80&w=800",
+            status: "REPORTED",
+            daysAgo: 2
+        },
+        {
+            title: "Garbage overflow near BDA Complex",
+            description: "The main garbage bins haven't been cleared for a week. The waste is spilling onto the footpath causing a severe stench.",
+            category: "GARBAGE",
+            area: "Koramangala",
+            imageUrl: "https://images.unsplash.com/photo-1611284446314-60a58ac0deb9?auto=format&fit=crop&q=80&w=800",
+            status: "IN_PROGRESS",
+            daysAgo: 5
+        },
+        {
+            title: "Broken streetlight in 4th Block",
+            description: "Entire stretch of the road is pitch dark. This is a severe safety hazard for pedestrians walking home.",
+            category: "STREETLIGHT",
+            area: "Jayanagar",
+            imageUrl: "https://images.unsplash.com/photo-1519782431690-3ce47dd7e2a9?auto=format&fit=crop&q=80&w=800",
+            status: "REPORTED",
+            daysAgo: 1
+        },
+        {
+            title: "Major pipe burst flooding the road",
+            description: "Underground BWSSB water pipe has burst. Thousands of liters of clean water are being wasted and flooding the intersection.",
+            category: "WATER_LEAK",
+            area: "Whitefield",
+            imageUrl: "https://images.unsplash.com/photo-1549428581-22e6b01b3334?auto=format&fit=crop&q=80&w=800",
+            status: "RESOLVED",
+            daysAgo: 12
+        },
+        {
+            title: "Broken footpath tiles",
+            description: "Pedestrian walkway tiles are completely shattered here making it impossible for senior citizens to walk.",
+            category: "OTHER",
+            area: "Malleshwaram",
+            imageUrl: "https://images.unsplash.com/photo-1495556650867-99590cea3657?auto=format&fit=crop&q=80&w=800",
+            status: "RESOLVED",
+            daysAgo: 20
+        },
+        {
+            title: "Construction debris dumped on road",
+            description: "A local contractor dumped a truckload of cement rubble and sand right on the side of the main road.",
+            category: "GARBAGE",
+            area: "HSR Layout",
+            imageUrl: "https://images.unsplash.com/photo-1528323273322-d81458248d40?auto=format&fit=crop&q=80&w=800",
+            status: "IN_PROGRESS",
+            daysAgo: 3
+        },
+        {
+            title: "Deep pothole hidden by rainwater",
+            description: "This pothole gets filled with rain and becomes completely invisible. Several accidents have happened already.",
+            category: "POTHOLE",
+            area: "BTM Layout",
+            imageUrl: "https://images.unsplash.com/photo-1584985250393-eece88771190?auto=format&fit=crop&q=80&w=800",
+            status: "REPORTED",
+            daysAgo: 1
+        },
+        {
+            title: "Continuous sewage leak",
+            description: "Foul-smelling sewage water has been flowing onto the street for three days straight. Urgent health risk.",
+            category: "WATER_LEAK",
+            area: "Marathahalli",
+            imageUrl: "https://images.unsplash.com/photo-1505295713488-886d9070868f?auto=format&fit=crop&q=80&w=800",
+            status: "IN_PROGRESS",
+            daysAgo: 4
+        },
+        {
+            title: "Flickering street lamps",
+            description: "Three adjacent street lamps keep flickering on and off all night like a strobe light.",
+            category: "STREETLIGHT",
+            area: "Rajajinagar",
+            imageUrl: "https://images.unsplash.com/photo-1494247551939-2eeb2ff8eb7a?auto=format&fit=crop&q=80&w=800",
+            status: "RESOLVED",
+            daysAgo: 15
+        },
+        {
+            title: "Fallen tree blocking the cross road",
+            description: "A large branch snapped during last night's storm and is blocking one lane completely.",
+            category: "OTHER",
+            area: "JP Nagar",
+            imageUrl: "https://images.unsplash.com/photo-1518731112461-8207198a28f8?auto=format&fit=crop&q=80&w=800",
+            status: "REPORTED",
+            daysAgo: 0
+        }
+    ];
+
     const issues = [];
-    for (let i = 0; i < 50; i++) {
-        const location = randomPick(bengaluruLocations);
-        const template = randomPick(issueTemplates);
-        const titleTemplate = randomPick(template.titles);
-        const title = titleTemplate
-            .replace("{area}", location.name)
-            .replace("{road}", randomPick(roads));
-        const description = randomPick(template.descs);
-        const status = randomPick(statuses);
+    for (const item of curatedIssues) {
+        const locationDef = bengaluruLocations.find(l => l.name === item.area) || bengaluruLocations[0];
         const citizen = randomPick(citizens);
+        const officer = officers.find((o) => o.area === item.area) || randomPick(officers);
 
-        // Add small randomness to exact location
-        const lat = location.lat + randomFloat(-0.005, 0.005);
-        const lng = location.lng + randomFloat(-0.005, 0.005);
+        // Exact creation date
+        const createdAt = new Date();
+        createdAt.setDate(createdAt.getDate() - item.daysAgo);
 
-        const officer = officers.find((o) => o.area === location.name) || randomPick(officers);
+        // Add tiny variance to lat/long
+        const lat = locationDef.lat + randomFloat(-0.003, 0.003);
+        const lng = locationDef.lng + randomFloat(-0.003, 0.003);
 
         const issue = await prisma.issue.create({
             data: {
-                title,
-                description,
-                category: template.cat,
-                status,
+                title: item.title,
+                description: item.description,
+                category: item.category,
+                status: item.status,
                 latitude: lat,
                 longitude: lng,
+                imageUrl: item.imageUrl,
                 createdById: citizen.id,
-                createdAt: randomDate(90),
-                assignedToId: status !== "REPORTED" ? officer.id : null,
-                resolvedById: status === "RESOLVED" ? (Math.random() > 0.5 ? president.id : officer.id) : null,
-                votes: Math.floor(Math.random() * 50),
+                createdAt: createdAt,
+                assignedToId: item.status !== "REPORTED" ? officer.id : null,
+                resolvedById: item.status === "RESOLVED" ? (Math.random() > 0.5 ? president.id : officer.id) : null,
+                votes: Math.floor(Math.random() * 40),
             },
         });
         issues.push(issue);
     }
-    console.log(`📋 Created ${issues.length} issues\n`);
+    console.log(`📋 Created exactly ${issues.length} curated issues with images\n`);
 
     // — Create Comments —
     let commentCount = 0;
