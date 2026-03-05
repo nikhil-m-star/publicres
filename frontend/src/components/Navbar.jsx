@@ -27,27 +27,27 @@ export default function Navbar() {
                 <div className="nav-links">
                     <Link
                         to="/"
-                        className={`nav - link ${isActive('/') ? 'active' : ''} `}
+                        className={`nav-link ${isActive('/') ? 'active' : ''} `}
                     >
                         Home
                     </Link>
                     <Link
                         to="/map"
-                        className={`nav - link ${isActive('/map') ? 'active' : ''} `}
+                        className={`nav-link ${isActive('/map') ? 'active' : ''} `}
                     >
                         <Map className="w-3.5 h-3.5" />
                         Map
                     </Link>
                     <Link
                         to="/leaderboard"
-                        className={`nav - link ${isActive('/leaderboard') ? 'active' : ''} `}
+                        className={`nav-link ${isActive('/leaderboard') ? 'active' : ''} `}
                     >
                         <Trophy className="w-3.5 h-3.5" />
                         Leaderboard
                     </Link>
                     <Link
                         to="/report"
-                        className={`nav - link accent ${isActive('/report') ? 'active' : ''} `}
+                        className={`nav-link accent ${isActive('/report') ? 'active' : ''} `}
                     >
                         <Sparkles className="w-3.5 h-3.5" />
                         AI Insights
@@ -55,13 +55,13 @@ export default function Navbar() {
                     <SignedIn>
                         <Link
                             to="/dashboard"
-                            className={`nav - link ${isActive('/dashboard') ? 'active' : ''} `}
+                            className={`nav-link ${isActive('/dashboard') ? 'active' : ''} `}
                         >
                             My Reports
                         </Link>
                         <Link
                             to="/profile"
-                            className={`nav - link ${isActive('/profile') ? 'active' : ''} `}
+                            className={`nav-link ${isActive('/profile') ? 'active' : ''} `}
                         >
                             <Shield className="w-3.5 h-3.5" />
                             Profile
