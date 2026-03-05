@@ -188,7 +188,6 @@ export default function Leaderboard() {
                                         <th className="px-6 py-3.5 text-xs font-semibold text-gray-500 uppercase tracking-wider">Area</th>
                                         <th className="px-6 py-3.5 text-xs font-semibold text-gray-500 uppercase tracking-wider">Rating</th>
                                         <th className="px-6 py-3.5 text-xs font-semibold text-gray-500 uppercase tracking-wider">Resolved</th>
-                                        <th className="px-6 py-3.5 text-xs font-semibold text-gray-500 uppercase tracking-wider">Resolution %</th>
                                         <th className="px-6 py-3.5 text-xs font-semibold text-gray-500 uppercase tracking-wider text-right">Actions</th>
                                     </tr>
                                 </thead>
@@ -222,17 +221,6 @@ export default function Leaderboard() {
                                             <td className="px-6 py-4">
                                                 <span className="text-sm font-semibold text-gray-900">{officer.resolvedCount}</span>
                                                 <span className="text-xs text-gray-400 ml-1">/ {officer.assignedCount} assigned</span>
-                                            </td>
-                                            <td className="px-6 py-4">
-                                                <div className="flex items-center gap-2">
-                                                    <div className="flex-1 max-w-[80px] h-2 rounded-full bg-gray-100 overflow-hidden">
-                                                        <div
-                                                            className="h-full rounded-full bg-gradient-to-r from-civic-400 to-emerald-400 transition-all"
-                                                            style={{ width: `${officer.resolutionRate}%` }}
-                                                        />
-                                                    </div>
-                                                    <span className="text-sm font-semibold text-gray-700">{officer.resolutionRate}%</span>
-                                                </div>
                                             </td>
                                             <td className="px-6 py-4 text-right">
                                                 {isSignedIn ? (
