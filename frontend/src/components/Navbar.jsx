@@ -20,7 +20,7 @@ export default function Navbar() {
                     <span className="nav-logo">
                         <MapPin className="w-5 h-5" />
                     </span>
-                    <span className="nav-title">PublicRes</span>
+                    <span className="nav-title">Namma Parihara</span>
                 </Link>
 
                 {/* Desktop nav */}

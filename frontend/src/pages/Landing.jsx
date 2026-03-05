@@ -274,7 +274,7 @@ export default function Landing() {
                         <span className="nav-logo">
                             <MapPin className="w-4 h-4" />
                         </span>
-                        <span>PublicRes</span>
+                        <span>Namma Parihara</span>
                     </div>
                     <p>Built for Namma Bengaluru. Bold, clear, and community-first.</p>
                 </div>
