@@ -3,6 +3,7 @@ import { Sparkles, MapPin, Loader2, ArrowLeft } from 'lucide-react';
 import ReactMarkdown from 'react-markdown';
 import { Link } from 'react-router-dom';
 import { api } from '../api/client';
+import { BENGALURU_AREAS } from '../data/bengaluruAreas';
 
 export default function CityReport() {
     const [area, setArea] = useState("");
@@ -58,14 +59,16 @@ export default function CityReport() {
                             <div className="flex flex-col sm:flex-row gap-3">
                                 <div className="relative flex-1">
                                     <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
-                                    <input
-                                        type="text"
+                                    <select
                                         value={area}
                                         onChange={(e) => setArea(e.target.value)}
-                                        placeholder="e.g., Koramangala, Indiranagar, Jayanagar"
-                                        className="w-full pl-10 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:border-civic-500 focus:ring-4 focus:ring-civic-500/10 outline-none transition-all"
-                                        onKeyDown={(e) => e.key === 'Enter' && generateReport()}
-                                    />
+                                        className="w-full pl-10 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:border-civic-500 focus:ring-4 focus:ring-civic-500/10 outline-none transition-all appearance-none"
+                                    >
+                                        <option value="" disabled>Select an area</option>
+                                        {BENGALURU_AREAS.map((areaName) => (
+                                            <option key={areaName} value={areaName}>{areaName}</option>
+                                        ))}
+                                    </select>
                                 </div>
                                 <button
                                     onClick={generateReport}

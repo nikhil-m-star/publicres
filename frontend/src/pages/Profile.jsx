@@ -2,10 +2,11 @@ import { useState } from 'react';
 import { api } from '../api/client';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { Shield, MapPin, Loader2, CheckCircle2, AlertCircle } from 'lucide-react';
+import { BENGALURU_AREAS } from '../data/bengaluruAreas';
 
 export default function Profile() {
     const [role, setRole] = useState('OFFICER');
-    const [area, setArea] = useState('Bengaluru Central');
+    const [area, setArea] = useState(BENGALURU_AREAS[0] || '');
     const [success, setSuccess] = useState(false);
     const queryClient = useQueryClient();
 
@@ -66,14 +67,16 @@ export default function Profile() {
                                     <label className="block text-sm font-medium text-gray-700 mb-1">Assigned Area</label>
                                     <div className="relative">
                                         <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
-                                        <input
-                                            type="text"
+                                        <select
                                             required
                                             value={area}
                                             onChange={(e) => setArea(e.target.value)}
-                                            className="w-full pl-10 pr-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl focus:border-civic-500 focus:ring-4 focus:ring-civic-500/10 outline-none transition-all"
-                                            placeholder="e.g., Koramangala"
-                                        />
+                                            className="w-full pl-10 pr-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl focus:border-civic-500 focus:ring-4 focus:ring-civic-500/10 outline-none transition-all appearance-none"
+                                        >
+                                            {BENGALURU_AREAS.map((areaName) => (
+                                                <option key={areaName} value={areaName}>{areaName}</option>
+                                            ))}
+                                        </select>
                                     </div>
                                 </div>
                             )}
@@ -99,4 +102,3 @@ export default function Profile() {
         </div>
     );
 }
-
