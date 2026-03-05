@@ -16,7 +16,6 @@ export const requireAuth = async (req, res, next) => {
 
         const token = authHeader.split(" ")[1];
 
-        // Verify the JWT with Clerk
         const payload = await verifyToken(token, {
             secretKey: process.env.CLERK_SECRET_KEY,
         });
@@ -27,12 +26,10 @@ export const requireAuth = async (req, res, next) => {
             return res.status(401).json({ error: "Unauthorized: Invalid token" });
         }
 
-        // Look up user in our DB
         let user = await prisma.user.findUnique({
             where: { clerkId: clerkUserId },
         });
 
-        // If first login, create the user record
         if (!user) {
             const clerkUser = await clerkClient.users.getUser(clerkUserId);
             user = await prisma.user.create({
@@ -54,11 +51,26 @@ export const requireAuth = async (req, res, next) => {
 };
 
 /**
- * Middleware to require ADMIN role.
+ * Middleware to require OFFICER or PRESIDENT role.
  */
-export const requireAdmin = (req, res, next) => {
-    if (req.user?.role !== "ADMIN") {
-        return res.status(403).json({ error: "Forbidden: Admin access required" });
+export const requireOfficer = (req, res, next) => {
+    if (req.user?.role !== "OFFICER" && req.user?.role !== "PRESIDENT") {
+        return res.status(403).json({ error: "Forbidden: Officer or President access required" });
     }
     next();
 };
+
+/**
+ * Middleware to require PRESIDENT role.
+ */
+export const requirePresident = (req, res, next) => {
+    if (req.user?.role !== "PRESIDENT") {
+        return res.status(403).json({ error: "Forbidden: President access required" });
+    }
+    next();
+};
+
+/**
+ * Legacy compatibility — allows OFFICER or PRESIDENT.
+ */
+export const requireAdmin = requireOfficer;

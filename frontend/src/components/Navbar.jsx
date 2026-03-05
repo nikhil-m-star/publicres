@@ -1,6 +1,6 @@
 import { Link, useLocation } from 'react-router-dom'
 import { SignedIn, SignedOut, SignInButton, UserButton } from '@clerk/clerk-react'
-import { Menu, X, Shield, MapPin, Map } from 'lucide-react'
+import { Menu, X, Shield, MapPin, Map, Trophy } from 'lucide-react'
 import { useState } from 'react'
 
 export default function Navbar() {
@@ -39,6 +39,14 @@ export default function Navbar() {
                         >
                             <Map className="w-3.5 h-3.5" />
                             Map
+                        </Link>
+                        <Link
+                            to="/leaderboard"
+                            className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors flex items-center gap-1.5 ${isActive('/leaderboard') ? 'bg-civic-50 text-civic-700' : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
+                                }`}
+                        >
+                            <Trophy className="w-3.5 h-3.5" />
+                            Leaderboard
                         </Link>
                         <SignedIn>
                             <Link
@@ -102,6 +110,13 @@ export default function Navbar() {
                             onClick={() => setMobileOpen(false)}
                         >
                             🗺️ Map Explorer
+                        </Link>
+                        <Link
+                            to="/leaderboard"
+                            className="block px-4 py-2.5 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-50"
+                            onClick={() => setMobileOpen(false)}
+                        >
+                            🏆 Leaderboard
                         </Link>
                         <SignedIn>
                             <Link

@@ -9,7 +9,8 @@ datasource db {
 
 enum Role {
   CITIZEN
-  ADMIN
+  OFFICER
+  PRESIDENT
 }
 
 enum Category {
@@ -27,16 +28,24 @@ enum Status {
 }
 
 model User {
-  id        String    @id @default(cuid())
-  clerkId   String    @unique
-  name      String
-  email     String    @unique
-  role      Role      @default(CITIZEN)
-  createdAt DateTime  @default(now())
+  id            String    @id @default(cuid())
+  clerkId       String    @unique
+  name          String
+  email         String    @unique
+  role          Role      @default(CITIZEN)
+  area          String?   // Officer's assigned Bengaluru area
+  avgRating     Float     @default(0)
+  resolvedCount Int       @default(0)
+  assignedCount Int       @default(0)
+  createdAt     DateTime  @default(now())
 
-  issues    Issue[]
-  votes     Vote[]
-  comments  Comment[]
+  issues         Issue[]   @relation("CreatedIssues")
+  assignedIssues Issue[]   @relation("AssignedIssues")
+  resolvedIssues Issue[]   @relation("ResolvedIssues")
+  votes          Vote[]
+  comments       Comment[]
+  ratingsGiven   Rating[]  @relation("RatingGiver")
+  ratingsReceived Rating[] @relation("RatingReceiver")
 
   @@map("users")
 }
@@ -55,11 +64,18 @@ model Issue {
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
-  createdBy   User     @relation(fields: [createdById], references: [id])
-  createdById String
+  createdBy    User    @relation("CreatedIssues", fields: [createdById], references: [id])
+  createdById  String
+
+  assignedTo   User?   @relation("AssignedIssues", fields: [assignedToId], references: [id])
+  assignedToId String?
+
+  resolvedBy   User?   @relation("ResolvedIssues", fields: [resolvedById], references: [id])
+  resolvedById String?
 
   voteRecords Vote[]
   comments    Comment[]
+  ratings     Rating[]
 
   @@map("issues")
 }
@@ -86,4 +102,23 @@ model Comment {
   userId  String
 
   @@map("comments")
+}
+
+model Rating {
+  id        String   @id @default(cuid())
+  score     Int      // 1-5 stars
+  feedback  String?
+  createdAt DateTime @default(now())
+
+  issue   Issue  @relation(fields: [issueId], references: [id], onDelete: Cascade)
+  issueId String
+
+  givenBy   User   @relation("RatingGiver", fields: [givenById], references: [id])
+  givenById String
+
+  officer   User   @relation("RatingReceiver", fields: [officerId], references: [id])
+  officerId String
+
+  @@unique([issueId, givenById]) // one rating per issue per user
+  @@map("ratings")
 }

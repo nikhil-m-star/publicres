@@ -1,16 +1,24 @@
 import { Router } from "express";
-import { requireAuth, requireAdmin } from "../middleware/clerkAuth.js";
-import { updateStatus, getAnalytics } from "../controllers/issueController.js";
+import { requireAuth, requireOfficer, requirePresident } from "../middleware/clerkAuth.js";
+import {
+    updateStatus,
+    getAnalytics,
+    updateUserRole,
+    getUsers,
+} from "../controllers/issueController.js";
 
 const router = Router();
 
-// All admin routes require auth + admin role
-router.use(requireAuth, requireAdmin);
+// Officer/President: Update issue status
+router.put("/issues/:id/status", requireAuth, requireOfficer, updateStatus);
 
-// Update issue status
-router.put("/issues/:id/status", updateStatus);
+// President only: Manage user roles (promote/demote)
+router.put("/users/:id/role", requireAuth, requirePresident, updateUserRole);
 
-// Get analytics dashboard data
-router.get("/analytics", getAnalytics);
+// President only: List all users
+router.get("/users", requireAuth, requirePresident, getUsers);
+
+// Officer/President: Get analytics
+router.get("/analytics", requireAuth, requireOfficer, getAnalytics);
 
 export default router;

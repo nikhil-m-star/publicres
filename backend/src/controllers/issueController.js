@@ -66,6 +66,7 @@ export const getIssues = async (req, res) => {
                 where,
                 include: {
                     createdBy: { select: { id: true, name: true } },
+                    assignedTo: { select: { id: true, name: true, area: true } },
                     _count: { select: { comments: true, voteRecords: true } },
                 },
                 orderBy: { createdAt: "desc" },
@@ -99,14 +100,21 @@ export const getIssueById = async (req, res) => {
             where: { id: req.params.id },
             include: {
                 createdBy: { select: { id: true, name: true, email: true } },
+                assignedTo: { select: { id: true, name: true, area: true, avgRating: true } },
+                resolvedBy: { select: { id: true, name: true } },
                 comments: {
                     include: {
-                        user: { select: { id: true, name: true } },
+                        user: { select: { id: true, name: true, role: true } },
                     },
                     orderBy: { createdAt: "desc" },
                 },
                 voteRecords: {
                     select: { userId: true },
+                },
+                ratings: {
+                    include: {
+                        givenBy: { select: { id: true, name: true } },
+                    },
                 },
                 _count: { select: { comments: true, voteRecords: true } },
             },
@@ -116,7 +124,6 @@ export const getIssueById = async (req, res) => {
             return res.status(404).json({ error: "Issue not found" });
         }
 
-        // Check if current user has voted (if authenticated)
         const hasVoted = req.user
             ? issue.voteRecords.some((v) => v.userId === req.user.id)
             : false;
@@ -141,7 +148,6 @@ export const voteOnIssue = async (req, res) => {
         });
 
         if (existingVote) {
-            // Remove vote
             await prisma.$transaction([
                 prisma.vote.delete({ where: { id: existingVote.id } }),
                 prisma.issue.update({
@@ -151,7 +157,6 @@ export const voteOnIssue = async (req, res) => {
             ]);
             return res.json({ voted: false, message: "Vote removed" });
         } else {
-            // Add vote
             await prisma.$transaction([
                 prisma.vote.create({ data: { issueId: id, userId } }),
                 prisma.issue.update({
@@ -184,7 +189,7 @@ export const addComment = async (req, res) => {
                 userId: req.user.id,
             },
             include: {
-                user: { select: { id: true, name: true } },
+                user: { select: { id: true, name: true, role: true } },
             },
         });
 
@@ -196,25 +201,75 @@ export const addComment = async (req, res) => {
 };
 
 /**
- * PUT /api/issues/:id/status — Update issue status (Admin only)
+ * PUT /api/admin/issues/:id/status — Update issue status (role-based)
+ *   OFFICER: can only set IN_PROGRESS (and claims the issue)
+ *   PRESIDENT: can set IN_PROGRESS or RESOLVED
  */
 export const updateStatus = async (req, res) => {
     try {
         const { status, department } = req.body;
-        const validStatuses = ["REPORTED", "IN_PROGRESS", "RESOLVED"];
+        const userRole = req.user.role;
 
+        // Validate status value
+        const validStatuses = ["REPORTED", "IN_PROGRESS", "RESOLVED"];
         if (!validStatuses.includes(status)) {
             return res.status(400).json({ error: "Invalid status" });
         }
 
+        // Role-based restrictions
+        if (userRole === "OFFICER" && status === "RESOLVED") {
+            return res.status(403).json({
+                error: "Officers can only mark issues as In Progress. Only the President can mark as Resolved.",
+            });
+        }
+
+        const existingIssue = await prisma.issue.findUnique({
+            where: { id: req.params.id },
+        });
+
+        if (!existingIssue) {
+            return res.status(404).json({ error: "Issue not found" });
+        }
+
+        const updateData = {
+            status,
+            ...(department && { department }),
+        };
+
+        // If setting to IN_PROGRESS, assign the officer
+        if (status === "IN_PROGRESS") {
+            updateData.assignedToId = req.user.id;
+            // Increment assigned count for the officer
+            await prisma.user.update({
+                where: { id: req.user.id },
+                data: { assignedCount: { increment: 1 } },
+            });
+        }
+
+        // If PRESIDENT resolves, record who resolved it
+        if (status === "RESOLVED") {
+            updateData.resolvedById = req.user.id;
+            // Increment resolved count for the resolver
+            await prisma.user.update({
+                where: { id: req.user.id },
+                data: { resolvedCount: { increment: 1 } },
+            });
+
+            // Also increment for the assigned officer if different
+            if (existingIssue.assignedToId && existingIssue.assignedToId !== req.user.id) {
+                await prisma.user.update({
+                    where: { id: existingIssue.assignedToId },
+                    data: { resolvedCount: { increment: 1 } },
+                });
+            }
+        }
+
         const issue = await prisma.issue.update({
             where: { id: req.params.id },
-            data: {
-                status,
-                ...(department && { department }),
-            },
+            data: updateData,
             include: {
                 createdBy: { select: { id: true, name: true } },
+                assignedTo: { select: { id: true, name: true, area: true } },
                 _count: { select: { comments: true, voteRecords: true } },
             },
         });
@@ -227,34 +282,213 @@ export const updateStatus = async (req, res) => {
 };
 
 /**
- * GET /api/admin/analytics — Get analytics data
+ * POST /api/issues/:id/rate — Citizen rates the officer who handled their issue
+ */
+export const rateOfficer = async (req, res) => {
+    try {
+        const { score, feedback } = req.body;
+        const issueId = req.params.id;
+        const userId = req.user.id;
+
+        if (!score || score < 1 || score > 5) {
+            return res.status(400).json({ error: "Rating must be 1-5" });
+        }
+
+        // Get the issue
+        const issue = await prisma.issue.findUnique({
+            where: { id: issueId },
+        });
+
+        if (!issue) {
+            return res.status(404).json({ error: "Issue not found" });
+        }
+
+        // Only the citizen who created the issue can rate
+        if (issue.createdById !== userId) {
+            return res.status(403).json({ error: "Only the issue reporter can rate" });
+        }
+
+        // Issue must be resolved
+        if (issue.status !== "RESOLVED") {
+            return res.status(400).json({ error: "Can only rate resolved issues" });
+        }
+
+        // Must have an assigned officer or resolver
+        const officerId = issue.resolvedById || issue.assignedToId;
+        if (!officerId) {
+            return res.status(400).json({ error: "No officer assigned to this issue" });
+        }
+
+        // Create or update rating
+        const rating = await prisma.rating.upsert({
+            where: {
+                issueId_givenById: { issueId, givenById: userId },
+            },
+            update: { score, feedback },
+            create: {
+                score,
+                feedback,
+                issueId,
+                givenById: userId,
+                officerId,
+            },
+        });
+
+        // Recalculate officer's average rating
+        const allRatings = await prisma.rating.aggregate({
+            where: { officerId },
+            _avg: { score: true },
+            _count: { score: true },
+        });
+
+        await prisma.user.update({
+            where: { id: officerId },
+            data: {
+                avgRating: allRatings._avg.score || 0,
+            },
+        });
+
+        res.json({
+            rating,
+            officerAvgRating: allRatings._avg.score,
+            totalRatings: allRatings._count.score,
+        });
+    } catch (error) {
+        console.error("Rate officer error:", error);
+        res.status(500).json({ error: "Failed to rate officer" });
+    }
+};
+
+/**
+ * GET /api/leaderboard — Public leaderboard
+ */
+export const getLeaderboard = async (req, res) => {
+    try {
+        // Top officers by rating and resolution
+        const officers = await prisma.user.findMany({
+            where: { role: { in: ["OFFICER", "PRESIDENT"] } },
+            select: {
+                id: true,
+                name: true,
+                role: true,
+                area: true,
+                avgRating: true,
+                resolvedCount: true,
+                assignedCount: true,
+                _count: { select: { ratingsReceived: true } },
+            },
+            orderBy: [{ avgRating: "desc" }, { resolvedCount: "desc" }],
+        });
+
+        // Top citizens by issues reported + resolved
+        const citizens = await prisma.user.findMany({
+            where: { role: "CITIZEN" },
+            select: {
+                id: true,
+                name: true,
+                _count: { select: { issues: true, votes: true, comments: true } },
+            },
+            orderBy: { issues: { _count: "desc" } },
+            take: 20,
+        });
+
+        // Add resolution percentage to officers
+        const officersWithStats = officers.map((o) => ({
+            ...o,
+            totalRatings: o._count.ratingsReceived,
+            resolutionRate:
+                o.assignedCount > 0
+                    ? parseFloat(((o.resolvedCount / o.assignedCount) * 100).toFixed(1))
+                    : 0,
+        }));
+
+        res.json({ officers: officersWithStats, citizens });
+    } catch (error) {
+        console.error("Leaderboard error:", error);
+        res.status(500).json({ error: "Failed to fetch leaderboard" });
+    }
+};
+
+/**
+ * PUT /api/admin/users/:id/role — President can promote/demote users
+ */
+export const updateUserRole = async (req, res) => {
+    try {
+        const { role, area } = req.body;
+        const validRoles = ["CITIZEN", "OFFICER", "PRESIDENT"];
+
+        if (!validRoles.includes(role)) {
+            return res.status(400).json({ error: "Invalid role" });
+        }
+
+        const user = await prisma.user.update({
+            where: { id: req.params.id },
+            data: {
+                role,
+                ...(area && { area }),
+            },
+        });
+
+        res.json(user);
+    } catch (error) {
+        console.error("Update role error:", error);
+        res.status(500).json({ error: "Failed to update user role" });
+    }
+};
+
+/**
+ * GET /api/admin/users — List all users (for president role management)
+ */
+export const getUsers = async (req, res) => {
+    try {
+        const users = await prisma.user.findMany({
+            select: {
+                id: true,
+                name: true,
+                email: true,
+                role: true,
+                area: true,
+                avgRating: true,
+                resolvedCount: true,
+                createdAt: true,
+                _count: { select: { issues: true } },
+            },
+            orderBy: { createdAt: "desc" },
+        });
+
+        res.json(users);
+    } catch (error) {
+        console.error("Get users error:", error);
+        res.status(500).json({ error: "Failed to fetch users" });
+    }
+};
+
+/**
+ * GET /api/issues/stats — Public analytics (no auth)
  */
 export const getAnalytics = async (req, res) => {
     try {
-        const [
-            totalIssues,
-            byCategory,
-            byStatus,
-            recentIssues,
-            topVotedIssues,
-        ] = await Promise.all([
-            prisma.issue.count(),
-            prisma.issue.groupBy({ by: ["category"], _count: { id: true } }),
-            prisma.issue.groupBy({ by: ["status"], _count: { id: true } }),
-            prisma.issue.findMany({
-                orderBy: { createdAt: "desc" },
-                take: 5,
-                include: { createdBy: { select: { name: true } } },
-            }),
-            prisma.issue.findMany({
-                orderBy: { votes: "desc" },
-                take: 5,
-                include: { createdBy: { select: { name: true } } },
-            }),
-        ]);
+        const [totalIssues, byCategory, byStatus, recentIssues, topVotedIssues] =
+            await Promise.all([
+                prisma.issue.count(),
+                prisma.issue.groupBy({ by: ["category"], _count: { id: true } }),
+                prisma.issue.groupBy({ by: ["status"], _count: { id: true } }),
+                prisma.issue.findMany({
+                    orderBy: { createdAt: "desc" },
+                    take: 5,
+                    include: { createdBy: { select: { name: true } } },
+                }),
+                prisma.issue.findMany({
+                    orderBy: { votes: "desc" },
+                    take: 5,
+                    include: { createdBy: { select: { name: true } } },
+                }),
+            ]);
 
-        const resolvedCount = byStatus.find((s) => s.status === "RESOLVED")?._count?.id || 0;
-        const resolutionRate = totalIssues > 0 ? ((resolvedCount / totalIssues) * 100).toFixed(1) : 0;
+        const resolvedCount =
+            byStatus.find((s) => s.status === "RESOLVED")?._count?.id || 0;
+        const resolutionRate =
+            totalIssues > 0 ? ((resolvedCount / totalIssues) * 100).toFixed(1) : 0;
 
         res.json({
             totalIssues,

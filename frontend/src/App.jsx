@@ -6,6 +6,7 @@ import Dashboard from './pages/Dashboard'
 import IssueDetails from './pages/IssueDetails'
 import AdminDashboard from './pages/AdminDashboard'
 import MapExplorer from './pages/MapExplorer'
+import Leaderboard from './pages/Leaderboard'
 
 function ProtectedRoute({ children }) {
     return (
@@ -34,6 +35,7 @@ export default function App() {
                 />
                 <Route path="/issues/:id" element={<IssueDetails />} />
                 <Route path="/map" element={<MapExplorer />} />
+                <Route path="/leaderboard" element={<Leaderboard />} />
                 <Route
                     path="/admin"
                     element={

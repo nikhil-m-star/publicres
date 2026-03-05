@@ -3,12 +3,8 @@ import { useAuth } from '@clerk/clerk-react'
 import { useEffect } from 'react'
 import { api, setAuthToken } from '../api/client'
 
-/**
- * Hook to sync Clerk auth token with API client.
- */
 export function useAuthSync() {
     const { getToken, isSignedIn } = useAuth()
-
     useEffect(() => {
         const syncToken = async () => {
             if (isSignedIn) {
@@ -22,20 +18,13 @@ export function useAuthSync() {
     }, [getToken, isSignedIn])
 }
 
-/**
- * Fetch all issues with optional filters.
- */
 export function useIssues(params = {}) {
-    const { isSignedIn } = useAuth()
     return useQuery({
         queryKey: ['issues', params],
         queryFn: () => api.getIssues(params),
     })
 }
 
-/**
- * Fetch a single issue by ID.
- */
 export function useIssue(id) {
     return useQuery({
         queryKey: ['issue', id],
@@ -44,32 +33,22 @@ export function useIssue(id) {
     })
 }
 
-/**
- * Create a new issue (with image upload support).
- */
 export function useCreateIssue() {
     const queryClient = useQueryClient()
     const { getToken } = useAuth()
-
     return useMutation({
         mutationFn: async (formData) => {
             const token = await getToken()
             setAuthToken(token)
             return api.createIssue(formData)
         },
-        onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: ['issues'] })
-        },
+        onSuccess: () => queryClient.invalidateQueries({ queryKey: ['issues'] }),
     })
 }
 
-/**
- * Toggle vote on an issue.
- */
 export function useVoteIssue() {
     const queryClient = useQueryClient()
     const { getToken } = useAuth()
-
     return useMutation({
         mutationFn: async (id) => {
             const token = await getToken()
@@ -83,32 +62,38 @@ export function useVoteIssue() {
     })
 }
 
-/**
- * Add a comment to an issue.
- */
 export function useAddComment() {
     const queryClient = useQueryClient()
     const { getToken } = useAuth()
-
     return useMutation({
         mutationFn: async ({ id, comment }) => {
             const token = await getToken()
             setAuthToken(token)
             return api.addComment({ id, comment })
         },
+        onSuccess: (_, { id }) => queryClient.invalidateQueries({ queryKey: ['issue', id] }),
+    })
+}
+
+export function useRateOfficer() {
+    const queryClient = useQueryClient()
+    const { getToken } = useAuth()
+    return useMutation({
+        mutationFn: async ({ id, score, feedback }) => {
+            const token = await getToken()
+            setAuthToken(token)
+            return api.rateOfficer({ id, score, feedback })
+        },
         onSuccess: (_, { id }) => {
             queryClient.invalidateQueries({ queryKey: ['issue', id] })
+            queryClient.invalidateQueries({ queryKey: ['leaderboard'] })
         },
     })
 }
 
-/**
- * Admin: update issue status.
- */
 export function useUpdateStatus() {
     const queryClient = useQueryClient()
     const { getToken } = useAuth()
-
     return useMutation({
         mutationFn: async ({ id, status, department }) => {
             const token = await getToken()
@@ -122,12 +107,8 @@ export function useUpdateStatus() {
     })
 }
 
-/**
- * Admin: fetch analytics data.
- */
 export function useAnalytics() {
     const { getToken } = useAuth()
-
     return useQuery({
         queryKey: ['analytics'],
         queryFn: async () => {
@@ -138,12 +119,44 @@ export function useAnalytics() {
     })
 }
 
-/**
- * Public: fetch stats for landing page (no auth).
- */
 export function useStats() {
     return useQuery({
         queryKey: ['stats'],
         queryFn: () => api.getStats(),
+    })
+}
+
+export function useLeaderboard() {
+    return useQuery({
+        queryKey: ['leaderboard'],
+        queryFn: () => api.getLeaderboard(),
+    })
+}
+
+export function useUsers() {
+    const { getToken } = useAuth()
+    return useQuery({
+        queryKey: ['users'],
+        queryFn: async () => {
+            const token = await getToken()
+            setAuthToken(token)
+            return api.getUsers()
+        },
+    })
+}
+
+export function useUpdateUserRole() {
+    const queryClient = useQueryClient()
+    const { getToken } = useAuth()
+    return useMutation({
+        mutationFn: async ({ id, role, area }) => {
+            const token = await getToken()
+            setAuthToken(token)
+            return api.updateUserRole({ id, role, area })
+        },
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ['users'] })
+            queryClient.invalidateQueries({ queryKey: ['leaderboard'] })
+        },
     })
 }

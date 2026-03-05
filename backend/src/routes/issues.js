@@ -7,7 +7,9 @@ import {
     getIssueById,
     voteOnIssue,
     addComment,
+    rateOfficer,
     getAnalytics,
+    getLeaderboard,
 } from "../controllers/issueController.js";
 
 const router = Router();
@@ -17,6 +19,9 @@ router.get("/", getIssues);
 
 // Public: Get analytics/stats for landing page
 router.get("/stats", getAnalytics);
+
+// Public: Leaderboard
+router.get("/leaderboard", getLeaderboard);
 
 // Public: Get single issue
 router.get("/:id", getIssueById);
@@ -29,5 +34,8 @@ router.post("/:id/vote", requireAuth, voteOnIssue);
 
 // Protected: Comment on issue
 router.post("/:id/comment", requireAuth, addComment);
+
+// Protected: Rate officer on resolved issue
+router.post("/:id/rate", requireAuth, rateOfficer);
 
 export default router;
