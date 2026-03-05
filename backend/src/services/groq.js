@@ -3,10 +3,23 @@ import dotenv from "dotenv";
 
 dotenv.config();
 
-// The Groq client initialized using the API key provided
-const groq = new Groq({
-    apiKey: process.env.GROQ_API_KEY,
-});
+let groqClient = null;
+let warnedMissingKey = false;
+
+function getGroqClient() {
+    const apiKey = process.env.GROQ_API_KEY;
+    if (!apiKey) {
+        if (!warnedMissingKey) {
+            console.warn("GROQ_API_KEY is missing; Groq-powered features are disabled.");
+            warnedMissingKey = true;
+        }
+        return null;
+    }
+    if (!groqClient) {
+        groqClient = new Groq({ apiKey });
+    }
+    return groqClient;
+}
 
 /**
  * Assess the intensity of a reported issue based on its title and description.
@@ -18,6 +31,8 @@ const groq = new Groq({
 export async function assessIntensity(title, description, category) {
     try {
         if (category === "BRIBERY") return 10; // Bribery is always max severity
+        const groq = getGroqClient();
+        if (!groq) return 5;
 
         const prompt = `
 You are a civic issue severity evaluator. Read the following issue and assign it a severity score from 1 to 10.
@@ -56,6 +71,8 @@ export async function checkDuplicate(newTitle, newDescription, recentIssues) {
     if (!recentIssues || recentIssues.length === 0) return { isDuplicate: false };
 
     try {
+        const groq = getGroqClient();
+        if (!groq) return { isDuplicate: false };
         // Prepare list of existing issues
         const issueList = recentIssues.map((issue, index) =>
             `ID: ${issue.id}\nTitle: ${issue.title}\nDescription: ${issue.description}\n`
@@ -102,6 +119,13 @@ export async function generateCityReport(cityName, recentIssues, reqProtocol, re
     }
 
     try {
+        const groq = getGroqClient();
+        if (!groq) {
+            const issueList = recentIssues.map((issue) =>
+                `- [${issue.title}](/issues/${issue.id}) (Category: ${issue.category}, Status: ${issue.status})`
+            ).join("\n");
+            return `## Recent Issues in ${cityName}\n\n${issueList}\n\nOverall civic health: **Unknown (AI report unavailable)**.`;
+        }
         const issueList = recentIssues.map((issue) =>
             `- [${issue.title}](/issues/${issue.id}) (Category: ${issue.category}, Status: ${issue.status}) - ${issue.description.substring(0, 100)}...`
         ).join("\n");
