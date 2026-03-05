@@ -49,8 +49,8 @@ function RatingDialog({ issue, onClose }) {
                         >
                             <Star
                                 className={`w-10 h-10 transition-colors ${i <= (hover || score)
-                                        ? 'text-amber-400 fill-amber-400'
-                                        : 'text-gray-200'
+                                    ? 'text-amber-400 fill-amber-400'
+                                    : 'text-gray-200'
                                     }`}
                             />
                         </button>
@@ -141,7 +141,7 @@ export default function IssueDetails() {
                     {/* Image */}
                     {issue.imageUrl && (
                         <div className="rounded-2xl overflow-hidden shadow-lg">
-                            <img src={issue.imageUrl} alt={issue.title} className="w-full h-72 object-cover" />
+                            <img src={issue.imageUrl} alt={issue.title} className="w-full h-72 object-cover" onError={(e) => { e.target.style.display = 'none' }} />
                         </div>
                     )}
 
@@ -244,8 +244,8 @@ export default function IssueDetails() {
                             onClick={handleVote}
                             disabled={!isSignedIn || voteIssue.isPending}
                             className={`w-full flex items-center justify-center gap-2 py-2.5 rounded-xl font-semibold text-sm transition-all ${issue.hasVoted
-                                    ? 'bg-civic-50 text-civic-700 border border-civic-200 hover:bg-civic-100'
-                                    : 'btn-primary'
+                                ? 'bg-civic-50 text-civic-700 border border-civic-200 hover:bg-civic-100'
+                                : 'btn-primary'
                                 } disabled:opacity-50`}
                         >
                             {voteIssue.isPending ? (

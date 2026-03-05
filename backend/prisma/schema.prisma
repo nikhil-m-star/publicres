@@ -132,8 +132,8 @@ model Rating {
   feedback  String?
   createdAt DateTime @default(now())
 
-  issue   Issue  @relation(fields: [issueId], references: [id], onDelete: Cascade)
-  issueId String
+  issue   Issue?  @relation(fields: [issueId], references: [id], onDelete: Cascade)
+  issueId String?
 
   givenBy   User   @relation("RatingGiver", fields: [givenById], references: [id])
   givenById String
@@ -141,6 +141,6 @@ model Rating {
   officer   User   @relation("RatingReceiver", fields: [officerId], references: [id])
   officerId String
 
-  @@unique([issueId, givenById]) // one rating per issue per user
+  @@unique([issueId, givenById]) // one rating per issue per user (Postgres allows multiple nulls)
   @@map("ratings")
 }

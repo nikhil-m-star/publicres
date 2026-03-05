@@ -802,3 +802,60 @@ export const getAnalytics = async (req, res) => {
         res.status(500).json({ error: "Failed to fetch analytics" });
     }
 };
+
+/**
+ * POST /api/admin/users/:id/rate — Citizen rates an officer generally from the leaderboard
+ */
+export const rateOfficerGeneral = async (req, res) => {
+    try {
+        const { score, feedback } = req.body;
+        const officerId = req.params.id;
+        const userId = req.user.id; // rater
+
+        if (!score || score < 1 || score > 5) {
+            return res.status(400).json({ error: "Rating must be 1-5" });
+        }
+
+        // Validate officer
+        const officer = await prisma.user.findUnique({
+            where: { id: officerId }
+        });
+
+        if (!officer || (officer.role !== "OFFICER" && officer.role !== "PRESIDENT")) {
+            return res.status(404).json({ error: "Officer not found" });
+        }
+
+        // Create rating (no issue fixed link)
+        const rating = await prisma.rating.create({
+            data: {
+                score,
+                feedback,
+                givenById: userId,
+                officerId: officerId,
+            },
+        });
+
+        // Recalculate officer's average rating
+        const allRatings = await prisma.rating.aggregate({
+            where: { officerId },
+            _avg: { score: true },
+            _count: { score: true },
+        });
+
+        await prisma.user.update({
+            where: { id: officerId },
+            data: {
+                avgRating: allRatings._avg.score || 0,
+            },
+        });
+
+        res.json({
+            rating,
+            officerAvgRating: allRatings._avg.score,
+            totalRatings: allRatings._count.score,
+        });
+    } catch (error) {
+        console.error("General rate officer error:", error);
+        res.status(500).json({ error: "Failed to rate officer" });
+    }
+};

@@ -37,22 +37,23 @@ export default function IssueCard({ issue }) {
                             src={issue.imageUrl}
                             alt={issue.title}
                             className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                            onError={(e) => { e.target.style.display = 'none' }}
                         />
                         <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent" />
                         <span
                             className={`absolute top-3 right-3 status-badge ${issue.status === 'REPORTED'
-                                    ? 'status-reported'
-                                    : issue.status === 'IN_PROGRESS'
-                                        ? 'status-in_progress'
-                                        : 'status-resolved'
+                                ? 'status-reported'
+                                : issue.status === 'IN_PROGRESS'
+                                    ? 'status-in_progress'
+                                    : 'status-resolved'
                                 }`}
                         >
                             <span
                                 className={`w-1.5 h-1.5 rounded-full ${issue.status === 'REPORTED'
-                                        ? 'bg-red-500'
-                                        : issue.status === 'IN_PROGRESS'
-                                            ? 'bg-amber-500'
-                                            : 'bg-emerald-500'
+                                    ? 'bg-red-500'
+                                    : issue.status === 'IN_PROGRESS'
+                                        ? 'bg-amber-500'
+                                        : 'bg-emerald-500'
                                     }`}
                             />
                             {statusLabels[issue.status]}
@@ -69,18 +70,18 @@ export default function IssueCard({ issue }) {
                         {!issue.imageUrl && (
                             <span
                                 className={`status-badge ${issue.status === 'REPORTED'
-                                        ? 'status-reported'
-                                        : issue.status === 'IN_PROGRESS'
-                                            ? 'status-in_progress'
-                                            : 'status-resolved'
+                                    ? 'status-reported'
+                                    : issue.status === 'IN_PROGRESS'
+                                        ? 'status-in_progress'
+                                        : 'status-resolved'
                                     }`}
                             >
                                 <span
                                     className={`w-1.5 h-1.5 rounded-full ${issue.status === 'REPORTED'
-                                            ? 'bg-red-500'
-                                            : issue.status === 'IN_PROGRESS'
-                                                ? 'bg-amber-500'
-                                                : 'bg-emerald-500'
+                                        ? 'bg-red-500'
+                                        : issue.status === 'IN_PROGRESS'
+                                            ? 'bg-amber-500'
+                                            : 'bg-emerald-500'
                                         }`}
                                 />
                                 {statusLabels[issue.status]}

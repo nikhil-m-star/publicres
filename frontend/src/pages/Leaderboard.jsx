@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { Trophy, Star, Award, Users, TrendingUp, ChevronDown } from 'lucide-react'
-import { useLeaderboard } from '../hooks/useIssues'
+import { useLeaderboard, useRateOfficerGeneral } from '../hooks/useIssues'
+import { useUser } from '@clerk/clerk-react'
 
 const StarRating = ({ rating, size = 'sm' }) => {
     const full = Math.floor(rating)
@@ -13,10 +14,10 @@ const StarRating = ({ rating, size = 'sm' }) => {
                 <Star
                     key={i}
                     className={`${sizeClass} ${i <= full
-                            ? 'text-amber-400 fill-amber-400'
-                            : i === full + 1 && half
-                                ? 'text-amber-400 fill-amber-200'
-                                : 'text-gray-200'
+                        ? 'text-amber-400 fill-amber-400'
+                        : i === full + 1 && half
+                            ? 'text-amber-400 fill-amber-200'
+                            : 'text-gray-200'
                         }`}
                 />
             ))}
@@ -37,9 +38,84 @@ const roleTitles = {
     OFFICER: '🛡️ Officer',
 }
 
+function GeneralRatingDialog({ officer, onClose }) {
+    const [score, setScore] = useState(0)
+    const [hover, setHover] = useState(0)
+    const [feedback, setFeedback] = useState('')
+    const rateMutation = useRateOfficerGeneral()
+
+    const handleSubmit = () => {
+        if (score === 0) return
+        rateMutation.mutate(
+            { id: officer.id, score, feedback: feedback.trim() || undefined },
+            { onSuccess: onClose }
+        )
+    }
+
+    return (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm p-4">
+            <div className="bg-white rounded-2xl shadow-2xl w-full max-w-sm p-6 animate-fade-in">
+                <h3 className="text-lg font-bold text-gray-900 mb-1">Rate Officer</h3>
+                <p className="text-sm text-gray-500 mb-5">Leave a rating for <strong>{officer.name}</strong> based on their overall civic service.</p>
+
+                {/* Stars */}
+                <div className="flex justify-center gap-1.5 mb-5">
+                    {[1, 2, 3, 4, 5].map((i) => (
+                        <button
+                            key={i}
+                            onClick={() => setScore(i)}
+                            onMouseEnter={() => setHover(i)}
+                            onMouseLeave={() => setHover(0)}
+                            className="transition-transform hover:scale-110"
+                        >
+                            <Star
+                                className={`w-10 h-10 transition-colors ${i <= (hover || score)
+                                    ? 'text-amber-400 fill-amber-400'
+                                    : 'text-gray-200'
+                                    }`}
+                            />
+                        </button>
+                    ))}
+                </div>
+                <p className="text-center text-sm text-gray-500 mb-4">
+                    {score === 1 && '😞 Poor'}
+                    {score === 2 && '😐 Below Average'}
+                    {score === 3 && '🙂 Average'}
+                    {score === 4 && '😊 Good'}
+                    {score === 5 && '🌟 Excellent'}
+                </p>
+
+                {/* Feedback */}
+                <textarea
+                    value={feedback}
+                    onChange={(e) => setFeedback(e.target.value)}
+                    placeholder="Optional feedback..."
+                    rows={2}
+                    className="input-field resize-none text-sm mb-4"
+                />
+
+                <div className="flex gap-2">
+                    <button onClick={onClose} className="flex-1 py-2.5 rounded-xl text-sm font-medium border border-gray-200 text-gray-600 hover:bg-gray-50 transition-colors">
+                        Cancel
+                    </button>
+                    <button
+                        onClick={handleSubmit}
+                        disabled={score === 0 || rateMutation.isPending}
+                        className="flex-1 btn-primary text-sm disabled:opacity-50"
+                    >
+                        {rateMutation.isPending ? 'Submitting...' : 'Submit Rating'}
+                    </button>
+                </div>
+            </div>
+        </div>
+    )
+}
+
 export default function Leaderboard() {
     const { data, isLoading } = useLeaderboard()
+    const { isSignedIn } = useUser()
     const [tab, setTab] = useState('officers')
+    const [selectedOfficerForRating, setSelectedOfficerForRating] = useState(null)
 
     const officers = data?.officers || []
     const citizens = data?.citizens || []
@@ -73,8 +149,8 @@ export default function Leaderboard() {
                 <button
                     onClick={() => setTab('officers')}
                     className={`px-6 py-2.5 rounded-xl text-sm font-semibold transition-all ${tab === 'officers'
-                            ? 'bg-civic-600 text-white shadow-lg shadow-civic-500/25'
-                            : 'bg-white border border-gray-200 text-gray-600 hover:border-gray-300'
+                        ? 'bg-civic-600 text-white shadow-lg shadow-civic-500/25'
+                        : 'bg-white border border-gray-200 text-gray-600 hover:border-gray-300'
                         }`}
                 >
                     <Award className="w-4 h-4 inline mr-1.5" />
@@ -83,8 +159,8 @@ export default function Leaderboard() {
                 <button
                     onClick={() => setTab('citizens')}
                     className={`px-6 py-2.5 rounded-xl text-sm font-semibold transition-all ${tab === 'citizens'
-                            ? 'bg-civic-600 text-white shadow-lg shadow-civic-500/25'
-                            : 'bg-white border border-gray-200 text-gray-600 hover:border-gray-300'
+                        ? 'bg-civic-600 text-white shadow-lg shadow-civic-500/25'
+                        : 'bg-white border border-gray-200 text-gray-600 hover:border-gray-300'
                         }`}
                 >
                     <Users className="w-4 h-4 inline mr-1.5" />
@@ -113,6 +189,7 @@ export default function Leaderboard() {
                                         <th className="px-6 py-3.5 text-xs font-semibold text-gray-500 uppercase tracking-wider">Rating</th>
                                         <th className="px-6 py-3.5 text-xs font-semibold text-gray-500 uppercase tracking-wider">Resolved</th>
                                         <th className="px-6 py-3.5 text-xs font-semibold text-gray-500 uppercase tracking-wider">Resolution %</th>
+                                        <th className="px-6 py-3.5 text-xs font-semibold text-gray-500 uppercase tracking-wider text-right">Actions</th>
                                     </tr>
                                 </thead>
                                 <tbody className="divide-y divide-gray-50">
@@ -120,9 +197,9 @@ export default function Leaderboard() {
                                         <tr key={officer.id} className="hover:bg-gray-50/50 transition-colors">
                                             <td className="px-6 py-4">
                                                 <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold ${i === 0 ? 'bg-amber-100 text-amber-700' :
-                                                        i === 1 ? 'bg-gray-100 text-gray-600' :
-                                                            i === 2 ? 'bg-orange-100 text-orange-700' :
-                                                                'bg-gray-50 text-gray-400'
+                                                    i === 1 ? 'bg-gray-100 text-gray-600' :
+                                                        i === 2 ? 'bg-orange-100 text-orange-700' :
+                                                            'bg-gray-50 text-gray-400'
                                                     }`}>
                                                     {i + 1}
                                                 </div>
@@ -156,6 +233,18 @@ export default function Leaderboard() {
                                                     </div>
                                                     <span className="text-sm font-semibold text-gray-700">{officer.resolutionRate}%</span>
                                                 </div>
+                                            </td>
+                                            <td className="px-6 py-4 text-right">
+                                                {isSignedIn ? (
+                                                    <button
+                                                        onClick={() => setSelectedOfficerForRating(officer)}
+                                                        className="text-xs font-semibold text-civic-600 hover:text-civic-800 bg-civic-50 hover:bg-civic-100 px-3 py-1.5 rounded-lg transition-colors"
+                                                    >
+                                                        Rate
+                                                    </button>
+                                                ) : (
+                                                    <span className="text-xs text-gray-400" title="Sign in to rate">Sign in</span>
+                                                )}
                                             </td>
                                         </tr>
                                     ))}
@@ -192,9 +281,9 @@ export default function Leaderboard() {
                                         <tr key={citizen.id} className="hover:bg-gray-50/50 transition-colors">
                                             <td className="px-6 py-4">
                                                 <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold ${i === 0 ? 'bg-amber-100 text-amber-700' :
-                                                        i === 1 ? 'bg-gray-100 text-gray-600' :
-                                                            i === 2 ? 'bg-orange-100 text-orange-700' :
-                                                                'bg-gray-50 text-gray-400'
+                                                    i === 1 ? 'bg-gray-100 text-gray-600' :
+                                                        i === 2 ? 'bg-orange-100 text-orange-700' :
+                                                            'bg-gray-50 text-gray-400'
                                                     }`}>
                                                     {i + 1}
                                                 </div>
@@ -210,6 +299,14 @@ export default function Leaderboard() {
                         </div>
                     )}
                 </div>
+            )}
+
+            {/* Rating Modal */}
+            {selectedOfficerForRating && (
+                <GeneralRatingDialog
+                    officer={selectedOfficerForRating}
+                    onClose={() => setSelectedOfficerForRating(null)}
+                />
             )}
         </div>
     )

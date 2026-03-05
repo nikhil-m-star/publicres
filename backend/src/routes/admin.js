@@ -6,6 +6,7 @@ import {
     getAdminIssues,
     updateUserRole,
     getUsers,
+    rateOfficerGeneral
 } from "../controllers/issueController.js";
 import {
     verifyByEmail,
@@ -35,6 +36,9 @@ router.put("/users/:id/role", requireAuth, requirePresident, updateUserRole);
 
 // President only: List all users
 router.get("/users", requireAuth, requirePresident, getUsers);
+
+// Any user: Rate an officer generally
+router.post("/users/:id/rate", requireAuth, rateOfficerGeneral);
 
 // Officer/President: Get analytics
 router.get("/analytics", requireAuth, requireOfficer, getAdminAnalytics);

@@ -48,6 +48,7 @@ export const api = {
     // President: user management
     getUsers: () => client.get('/admin/users').then((r) => r.data),
     updateUserRole: ({ id, role, area }) => client.put(`/admin/users/${id}/role`, { role, area }).then((r) => r.data),
+    rateOfficerGeneral: ({ id, score, feedback }) => client.post(`/admin/users/${id}/rate`, { score, feedback }).then((r) => r.data),
 
     // Notifications
     getNotifications: () => client.get('/admin/notifications').then((r) => r.data),

@@ -120,6 +120,21 @@ export function useRateOfficer() {
     })
 }
 
+export function useRateOfficerGeneral() {
+    const queryClient = useQueryClient()
+    const { getToken } = useAuth()
+    return useMutation({
+        mutationFn: async ({ id, score, feedback }) => {
+            const token = await getToken()
+            setAuthToken(token)
+            return api.rateOfficerGeneral({ id, score, feedback })
+        },
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ['leaderboard'] })
+        },
+    })
+}
+
 export function useUpdateStatus() {
     const queryClient = useQueryClient()
     const { getToken } = useAuth()

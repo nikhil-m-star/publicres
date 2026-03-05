@@ -54,6 +54,7 @@ export default function AdminIssueTable({ issues = [] }) {
                                             src={issue.imageUrl}
                                             alt=""
                                             className="w-10 h-10 rounded-lg object-cover"
+                                            onError={(e) => { e.target.style.display = 'none' }}
                                         />
                                     )}
                                     <div>
