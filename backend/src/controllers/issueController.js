@@ -9,16 +9,20 @@ const prisma = new PrismaClient();
  */
 export const checkDuplicateIssue = async (req, res) => {
     try {
-        const { title, description, city } = req.body;
+        const { title, description, city, area } = req.body;
 
         if (!title || !description) {
             return res.status(400).json({ error: "Title and description required for duplicate check" });
         }
 
+        const assignedCity = city || "Bengaluru";
+        const assignedArea = typeof area === "string" && area.trim() ? area.trim() : null;
+
         // Fetch recent issues from the same city (last 7 days)
         const recentIssues = await prisma.issue.findMany({
             where: {
-                city: city || "Bengaluru",
+                city: assignedCity,
+                ...(assignedArea ? { area: assignedArea } : {}),
                 createdAt: { gte: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000) },
                 status: { not: "RESOLVED" }
             },
@@ -39,17 +43,22 @@ export const checkDuplicateIssue = async (req, res) => {
  */
 export const getCityReport = async (req, res) => {
     try {
-        const city = req.query.city || "Bengaluru";
+        const city = (req.query.city || "Bengaluru").toString();
+        const area = typeof req.query.area === "string" && req.query.area.trim() ? req.query.area.trim() : null;
 
         // Fetch up to 50 recent issues to summarize
         const recentIssues = await prisma.issue.findMany({
-            where: { city },
+            where: {
+                city,
+                ...(area ? { area } : {}),
+            },
             orderBy: { createdAt: "desc" },
             take: 50,
             select: { id: true, title: true, description: true, category: true, status: true }
         });
 
-        const reportMarkdown = await groqGenerateCityReport(city, recentIssues);
+        const reportLabel = area || city;
+        const reportMarkdown = await groqGenerateCityReport(reportLabel, recentIssues);
 
         res.json({ city, reportMarkdown });
     } catch (error) {
@@ -63,7 +72,7 @@ export const getCityReport = async (req, res) => {
  */
 export const createIssue = async (req, res) => {
     try {
-        const { title, description, category, latitude, longitude, city } = req.body;
+        const { title, description, category, latitude, longitude, city, area } = req.body;
 
         if (!title || !description || !category || !latitude || !longitude) {
             return res.status(400).json({ error: "All fields are required" });
@@ -87,6 +96,7 @@ export const createIssue = async (req, res) => {
                 latitude: parseFloat(latitude),
                 longitude: parseFloat(longitude),
                 city: assignedCity,
+                ...(area && { area }),
                 imageUrl,
                 intensity,
                 createdById: req.user.id,
@@ -136,11 +146,12 @@ export const createIssue = async (req, res) => {
  */
 export const getIssues = async (req, res) => {
     try {
-        const { category, status, search, page = 1, limit = 20 } = req.query;
+        const { category, status, search, page = 1, limit = 20, area } = req.query;
 
         const where = {};
         if (category) where.category = category;
         if (status) where.status = status;
+        if (area) where.area = area;
         if (search) {
             where.OR = [
                 { title: { contains: search, mode: "insensitive" } },
@@ -177,6 +188,55 @@ export const getIssues = async (req, res) => {
     } catch (error) {
         console.error("Get issues error:", error);
         res.status(500).json({ error: "Failed to fetch issues" });
+    }
+};
+
+/**
+ * GET /api/issues/mine — Get issues created by the current user
+ */
+export const getMyIssues = async (req, res) => {
+    try {
+        const { category, status, search, page = 1, limit = 20 } = req.query;
+
+        const where = { createdById: req.user.id };
+        if (category) where.category = category;
+        if (status) where.status = status;
+        if (search) {
+            where.OR = [
+                { title: { contains: search, mode: "insensitive" } },
+                { description: { contains: search, mode: "insensitive" } },
+            ];
+        }
+
+        const skip = (parseInt(page) - 1) * parseInt(limit);
+
+        const [issues, total] = await Promise.all([
+            prisma.issue.findMany({
+                where,
+                include: {
+                    createdBy: { select: { id: true, name: true } },
+                    assignedTo: { select: { id: true, name: true, area: true } },
+                    _count: { select: { comments: true, voteRecords: true } },
+                },
+                orderBy: { createdAt: "desc" },
+                skip,
+                take: parseInt(limit),
+            }),
+            prisma.issue.count({ where }),
+        ]);
+
+        res.json({
+            issues,
+            pagination: {
+                page: parseInt(page),
+                limit: parseInt(limit),
+                total,
+                pages: Math.ceil(total / parseInt(limit)),
+            },
+        });
+    } catch (error) {
+        console.error("Get my issues error:", error);
+        res.status(500).json({ error: "Failed to fetch your issues" });
     }
 };
 

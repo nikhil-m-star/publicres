@@ -17,7 +17,7 @@ export default function CityReport() {
         setError("");
         setReport(null);
         try {
-            const data = await api.getCityReport(area);
+            const data = await api.getCityReport({ area, city: 'Bengaluru' });
             setReport(data.reportMarkdown);
         } catch (err) {
             console.error(err);
@@ -32,9 +32,9 @@ export default function CityReport() {
             <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
                 {/* Header */}
                 <div className="mb-8">
-                    <Link to="/dashboard" className="inline-flex items-center text-sm font-medium text-gray-500 hover:text-gray-900 mb-4 transition-colors">
+                    <Link to="/#reports" className="inline-flex items-center text-sm font-medium text-gray-500 hover:text-gray-900 mb-4 transition-colors">
                         <ArrowLeft className="w-4 h-4 mr-1" />
-                        Back to Dashboard
+                        Back to Reports
                     </Link>
                     <div className="flex items-center gap-3 text-civic-700">
                         <div className="w-12 h-12 bg-purple-100 rounded-2xl flex items-center justify-center shrink-0">

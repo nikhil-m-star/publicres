@@ -9,13 +9,15 @@ import {
 import {
     verifyByEmail,
     getNotifications,
-    markNotificationAsRead
+    markNotificationAsRead,
+    getMe
 } from "../controllers/userController.js";
 
 const router = Router();
 
 // Citizen -> Admin promotion (auto-verified by bmsce.ac.in email domain)
 router.post("/verify-email", requireAuth, verifyByEmail);
+router.get("/me", requireAuth, getMe);
 
 // Officer/President: Notifications
 router.get("/notifications", requireAuth, requireOfficer, getNotifications);

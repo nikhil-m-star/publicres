@@ -63,7 +63,7 @@ export default function Navbar() {
                                 className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${isActive('/dashboard') ? 'bg-civic-50 text-civic-700' : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
                                     }`}
                             >
-                                Dashboard
+                                My Reports
                             </Link>
                             <Link
                                 to="/profile"
@@ -143,7 +143,7 @@ export default function Navbar() {
                                 className="block px-4 py-2.5 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-50"
                                 onClick={() => setMobileOpen(false)}
                             >
-                                Dashboard
+                                My Reports
                             </Link>
                             <Link
                                 to="/profile"

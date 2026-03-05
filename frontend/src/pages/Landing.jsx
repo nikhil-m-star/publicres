@@ -1,8 +1,10 @@
-import { Link } from 'react-router-dom'
+import { useEffect } from 'react'
+import { Link, useLocation } from 'react-router-dom'
 import { SignedOut, SignInButton } from '@clerk/clerk-react'
 import { MapPin, AlertTriangle, CheckCircle, Users, ArrowRight, Shield, Eye, ThumbsUp, Clock, TrendingUp } from 'lucide-react'
 import { useIssues, useStats } from '../hooks/useIssues'
 import IssueMap from '../components/IssueMap'
+import ReportsBoard from '../components/ReportsBoard'
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell } from 'recharts'
 
 const features = [
@@ -38,9 +40,19 @@ const statusNames = { REPORTED: 'Reported', IN_PROGRESS: 'In Progress', RESOLVED
 const categoryNames = { POTHOLE: 'Pothole', GARBAGE: 'Garbage', STREETLIGHT: 'Streetlight', WATER_LEAK: 'Water Leak', OTHER: 'Other' }
 
 export default function Landing() {
+    const location = useLocation()
     const { data } = useIssues({ limit: 50 })
     const { data: stats } = useStats()
     const issues = data?.issues || []
+
+    useEffect(() => {
+        if (!location.hash) return
+        const id = location.hash.replace('#', '')
+        const el = document.getElementById(id)
+        if (el) {
+            el.scrollIntoView({ behavior: 'smooth', block: 'start' })
+        }
+    }, [location.hash])
 
     const totalIssues = stats?.totalIssues || 0
     const resolvedCount = stats?.byStatus?.find((s) => s.status === 'RESOLVED')?.count || 0
@@ -89,7 +101,7 @@ export default function Landing() {
                         </p>
 
                         <div className="flex flex-wrap gap-4">
-                            <Link to="/dashboard" className="btn-primary text-base flex items-center gap-2">
+                            <Link to="/#reports" className="btn-primary text-base flex items-center gap-2">
                                 Report an Issue
                                 <ArrowRight className="w-4 h-4" />
                             </Link>
@@ -154,6 +166,15 @@ export default function Landing() {
                         <p className="text-sm text-gray-500">Coverage Area</p>
                     </div>
                 </div>
+            </section>
+
+            {/* Reports */}
+            <section id="reports" className="page-container py-16 scroll-mt-24">
+                <ReportsBoard
+                    scope="all"
+                    title="Community Reports"
+                    subtitle="Browse recent issues, filter by category, or report a new one."
+                />
             </section>
 
             {/* Analytics Charts */}

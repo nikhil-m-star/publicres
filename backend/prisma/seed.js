@@ -314,6 +314,7 @@ async function main() {
                 latitude: lat,
                 longitude: lng,
                 imageUrl: item.imageUrl,
+                area: item.area,
                 createdById: citizen.id,
                 createdAt: createdAt,
                 assignedToId: item.status !== "REPORTED" ? officer.id : null,

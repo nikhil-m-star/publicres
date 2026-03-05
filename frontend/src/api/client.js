@@ -20,13 +20,14 @@ export const setAuthToken = (token) => {
 export const api = {
     // Issues
     getIssues: (params) => client.get('/issues', { params }).then((r) => r.data),
+    getMyIssues: (params) => client.get('/issues/mine', { params }).then((r) => r.data),
     getIssue: (id) => client.get(`/issues/${id}`).then((r) => r.data),
     createIssue: (formData) =>
         client.post('/issues', formData, { headers: { 'Content-Type': 'multipart/form-data' } }).then((r) => r.data),
 
     // Public stats & Reports
     getStats: () => client.get('/issues/stats').then((r) => r.data),
-    getCityReport: (city) => client.get('/issues/city-report', { params: { city } }).then((r) => r.data),
+    getCityReport: ({ area, city }) => client.get('/issues/city-report', { params: { area, city } }).then((r) => r.data),
 
     // Public leaderboard
     getLeaderboard: () => client.get('/issues/leaderboard').then((r) => r.data),
@@ -44,6 +45,7 @@ export const api = {
     updateStatus: ({ id, status, department }) =>
         client.put(`/admin/issues/${id}/status`, { status, department }).then((r) => r.data),
     getAnalytics: () => client.get('/admin/analytics').then((r) => r.data),
+    getMe: () => client.get('/admin/me').then((r) => r.data),
 
     // President: user management
     getUsers: () => client.get('/admin/users').then((r) => r.data),
@@ -54,7 +56,7 @@ export const api = {
     markNotificationRead: (id) => client.put(`/admin/notifications/${id}/read`).then((r) => r.data),
 
     // Email Domain Admin Verification
-    verifyByEmail: ({ requestedRole, area }) => client.post('/admin/verify-email', { requestedRole, area }).then((r) => r.data),
+    verifyByEmail: () => client.post('/admin/verify-email').then((r) => r.data),
 }
 
 export default client

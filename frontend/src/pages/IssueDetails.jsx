@@ -110,7 +110,7 @@ export default function IssueDetails() {
         return (
             <div className="page-container text-center py-20">
                 <p className="text-gray-500 mb-4">Issue not found</p>
-                <Link to="/dashboard" className="btn-primary">Back to Dashboard</Link>
+                <Link to="/#reports" className="btn-primary">Back to Reports</Link>
             </div>
         )
     }
@@ -128,11 +128,11 @@ export default function IssueDetails() {
         <div className="page-container max-w-4xl">
             {/* Back */}
             <Link
-                to="/dashboard"
+                to="/#reports"
                 className="inline-flex items-center gap-1.5 text-sm text-gray-500 hover:text-gray-700 mb-6 transition-colors"
             >
                 <ArrowLeft className="w-4 h-4" />
-                Back to Dashboard
+                Back to Reports
             </Link>
 
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">

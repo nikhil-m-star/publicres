@@ -60,6 +60,7 @@ model Issue {
   category    Category
   status      Status   @default(REPORTED)
   city        String   @default("Bengaluru")
+  area        String?
   latitude    Float
   longitude   Float
   imageUrl    String?

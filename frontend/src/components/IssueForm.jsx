@@ -110,6 +110,7 @@ export default function IssueForm({ onSuccess }) {
         formData.append('latitude', position[0])
         formData.append('longitude', position[1])
         if (address?.city) formData.append('city', address.city)
+        if (address?.area) formData.append('area', address.area)
         if (imageFile) formData.append('image', imageFile)
 
         try {
@@ -140,7 +141,12 @@ export default function IssueForm({ onSuccess }) {
             const res = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:5000/api'}/issues/check-duplicate`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ title, description, city: address?.city || 'Bengaluru' })
+                body: JSON.stringify({
+                    title,
+                    description,
+                    city: address?.city || 'Bengaluru',
+                    area: address?.area || '',
+                })
             });
             const data = await res.json();
 

@@ -103,7 +103,7 @@ export async function generateCityReport(cityName, recentIssues, reqProtocol, re
 
     try {
         const issueList = recentIssues.map((issue) =>
-            `- [${issue.title}](/issue/${issue.id}) (Category: ${issue.category}, Status: ${issue.status}) - ${issue.description.substring(0, 100)}...`
+            `- [${issue.title}](/issues/${issue.id}) (Category: ${issue.category}, Status: ${issue.status}) - ${issue.description.substring(0, 100)}...`
         ).join("\n");
 
         const prompt = `

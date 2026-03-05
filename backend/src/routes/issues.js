@@ -11,7 +11,8 @@ import {
     getAnalytics,
     getLeaderboard,
     checkDuplicateIssue,
-    getCityReport
+    getCityReport,
+    getMyIssues
 } from "../controllers/issueController.js";
 
 const router = Router();
@@ -27,6 +28,9 @@ router.get("/leaderboard", getLeaderboard);
 
 // Public: Get AI City Report
 router.get("/city-report", getCityReport);
+
+// Protected: Get issues created by the current user
+router.get("/mine", requireAuth, getMyIssues);
 
 // Public: Check Dupes via Post
 router.post("/check-duplicate", checkDuplicateIssue);

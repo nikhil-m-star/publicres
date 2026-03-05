@@ -25,6 +25,22 @@ export function useIssues(params = {}) {
     })
 }
 
+export function useIssuesScope(scope = 'all', params = {}) {
+    const { getToken, isSignedIn } = useAuth()
+    return useQuery({
+        queryKey: ['issues', scope, params],
+        queryFn: async () => {
+            if (scope === 'mine') {
+                const token = await getToken()
+                setAuthToken(token)
+                return api.getMyIssues(params)
+            }
+            return api.getIssues(params)
+        },
+        enabled: scope !== 'mine' || isSignedIn,
+    })
+}
+
 export function useIssue(id) {
     return useQuery({
         queryKey: ['issue', id],
