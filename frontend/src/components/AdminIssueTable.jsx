@@ -54,7 +54,10 @@ export default function AdminIssueTable({ issues = [] }) {
                                             src={issue.imageUrl}
                                             alt=""
                                             className="w-10 h-10 rounded-lg object-cover"
-                                            onError={(e) => { e.target.style.display = 'none' }}
+                                            onError={(e) => {
+                                                e.target.onerror = null;
+                                                e.target.src = `https://picsum.photos/seed/${issue.id}/100/100`;
+                                            }}
                                         />
                                     )}
                                     <div>

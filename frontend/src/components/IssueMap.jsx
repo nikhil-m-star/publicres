@@ -168,6 +168,10 @@ export default function IssueMap({
                             src={issue.imageUrl}
                             alt={issue.title}
                             className="w-full h-24 object-cover rounded-lg mb-2"
+                            onError={(e) => {
+                                e.target.onerror = null;
+                                e.target.src = `https://picsum.photos/seed/${issue.id}/400/300`;
+                            }}
                         />
                     )}
                     <h4 className="font-semibold text-sm mb-0.5">{issue.title}</h4>
@@ -179,10 +183,10 @@ export default function IssueMap({
                         <div className="flex items-center gap-3">
                             <span
                                 className={`text-xs font-medium px-2 py-0.5 rounded-full ${issue.status === 'REPORTED'
-                                        ? 'bg-red-100 text-red-700'
-                                        : issue.status === 'IN_PROGRESS'
-                                            ? 'bg-amber-100 text-amber-700'
-                                            : 'bg-emerald-100 text-emerald-700'
+                                    ? 'bg-red-100 text-red-700'
+                                    : issue.status === 'IN_PROGRESS'
+                                        ? 'bg-amber-100 text-amber-700'
+                                        : 'bg-emerald-100 text-emerald-700'
                                     }`}
                             >
                                 {statusLabels[issue.status]}
