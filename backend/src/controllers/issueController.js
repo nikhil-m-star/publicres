@@ -16,6 +16,7 @@ export const checkDuplicateIssue = async (req, res) => {
         }
 
         const assignedCity = city || "Bengaluru";
+        const normalizedArea = typeof area === "string" && area.trim().length > 0 ? area.trim() : null;
         const assignedArea = typeof area === "string" && area.trim() ? area.trim() : null;
 
         // Fetch recent issues from the same city (last 7 days)
@@ -96,7 +97,7 @@ export const createIssue = async (req, res) => {
                 latitude: parseFloat(latitude),
                 longitude: parseFloat(longitude),
                 city: assignedCity,
-                ...(area && { area }),
+                ...(normalizedArea ? { area: normalizedArea } : {}),
                 imageUrl,
                 intensity,
                 createdById: req.user.id,
@@ -113,22 +114,26 @@ export const createIssue = async (req, res) => {
             const admins = await prisma.user.findMany({
                 where: {
                     role: { in: ["PRESIDENT", "OFFICER"] },
+                    city: assignedCity,
                 }
             });
 
-            // For bribery, alert everyone. For severe issues, alert local officers + president
+            // For bribery, alert everyone in the city. For severe issues, alert president + local area officers.
             const targets = category === "BRIBERY"
                 ? admins
-                : admins.filter(a => a.role === "PRESIDENT" || (a.city === assignedCity));
+                : admins.filter((a) =>
+                    a.role === "PRESIDENT" || (normalizedArea ? a.area === normalizedArea : a.role === "OFFICER")
+                );
 
             if (targets.length > 0) {
+                const locationLabel = normalizedArea ? `${normalizedArea}, ${assignedCity}` : assignedCity;
                 await prisma.notification.createMany({
-                    data: targets.map(admin => ({
+                    data: targets.map((admin) => ({
                         userId: admin.id,
                         issueId: issue.id,
                         message: category === "BRIBERY"
-                            ? `🚨 URGENT: New Bribery Report filed in ${assignedCity}.`
-                            : `⚠️ High Intensity Alert (Score: ${intensity}/10): ${title} in ${assignedCity}.`,
+                            ? `🚨 URGENT: New Bribery Report filed in ${locationLabel}.`
+                            : `⚠️ High Intensity Alert (Score: ${intensity}/10): ${title} in ${locationLabel}.`,
                     }))
                 });
             }
@@ -188,6 +193,65 @@ export const getIssues = async (req, res) => {
     } catch (error) {
         console.error("Get issues error:", error);
         res.status(500).json({ error: "Failed to fetch issues" });
+    }
+};
+
+/**
+ * GET /api/admin/issues — Officer/President scoped issue list
+ */
+export const getAdminIssues = async (req, res) => {
+    try {
+        const { category, status, search, page = 1, limit = 20 } = req.query;
+
+        const where = {};
+        if (category) where.category = category;
+        if (status) where.status = status;
+        if (search) {
+            where.OR = [
+                { title: { contains: search, mode: "insensitive" } },
+                { description: { contains: search, mode: "insensitive" } },
+            ];
+        }
+
+        if (req.user?.role === "OFFICER") {
+            if (!req.user.area) {
+                return res.json({
+                    issues: [],
+                    pagination: { page: parseInt(page), limit: parseInt(limit), total: 0, pages: 0 },
+                });
+            }
+            where.area = req.user.area;
+        }
+
+        const skip = (parseInt(page) - 1) * parseInt(limit);
+
+        const [issues, total] = await Promise.all([
+            prisma.issue.findMany({
+                where,
+                include: {
+                    createdBy: { select: { id: true, name: true } },
+                    assignedTo: { select: { id: true, name: true, area: true } },
+                    _count: { select: { comments: true, voteRecords: true } },
+                },
+                orderBy: { createdAt: "desc" },
+                skip,
+                take: parseInt(limit),
+            }),
+            prisma.issue.count({ where }),
+        ]);
+
+        res.json({
+            issues,
+            pagination: {
+                page: parseInt(page),
+                limit: parseInt(limit),
+                total,
+                pages: Math.ceil(total / parseInt(limit)),
+            },
+        });
+    } catch (error) {
+        console.error("Get admin issues error:", error);
+        res.status(500).json({ error: "Failed to fetch admin issues" });
     }
 };
 
@@ -423,6 +487,22 @@ export const updateStatus = async (req, res) => {
             },
         });
 
+        if (existingIssue.createdById) {
+            const statusLabel =
+                status === "IN_PROGRESS"
+                    ? "In Progress"
+                    : status === "RESOLVED"
+                        ? "Resolved"
+                        : "Reported";
+            await prisma.notification.create({
+                data: {
+                    userId: existingIssue.createdById,
+                    issueId: issue.id,
+                    message: `Update: Your report "${issue.title}" is now ${statusLabel}.`,
+                },
+            });
+        }
+
         res.json(issue);
     } catch (error) {
         console.error("Update status error:", error);
@@ -609,6 +689,70 @@ export const getUsers = async (req, res) => {
     } catch (error) {
         console.error("Get users error:", error);
         res.status(500).json({ error: "Failed to fetch users" });
+    }
+};
+
+/**
+ * GET /api/admin/analytics — Officer/President analytics (area-scoped for officers)
+ */
+export const getAdminAnalytics = async (req, res) => {
+    try {
+        const where = {};
+        if (req.user?.role === "OFFICER") {
+            if (!req.user.area) {
+                return res.json({
+                    totalIssues: 0,
+                    resolutionRate: 0,
+                    byCategory: [],
+                    byStatus: [],
+                    recentIssues: [],
+                    topVotedIssues: [],
+                });
+            }
+            where.area = req.user.area;
+        }
+
+        const [totalIssues, byCategory, byStatus, recentIssues, topVotedIssues] =
+            await Promise.all([
+                prisma.issue.count({ where }),
+                prisma.issue.groupBy({ by: ["category"], where, _count: { id: true } }),
+                prisma.issue.groupBy({ by: ["status"], where, _count: { id: true } }),
+                prisma.issue.findMany({
+                    where,
+                    orderBy: { createdAt: "desc" },
+                    take: 5,
+                    include: { createdBy: { select: { name: true } } },
+                }),
+                prisma.issue.findMany({
+                    where,
+                    orderBy: { votes: "desc" },
+                    take: 5,
+                    include: { createdBy: { select: { name: true } } },
+                }),
+            ]);
+
+        const resolvedCount =
+            byStatus.find((s) => s.status === "RESOLVED")?._count?.id || 0;
+        const resolutionRate =
+            totalIssues > 0 ? ((resolvedCount / totalIssues) * 100).toFixed(1) : 0;
+
+        res.json({
+            totalIssues,
+            resolutionRate: parseFloat(resolutionRate),
+            byCategory: byCategory.map((c) => ({
+                category: c.category,
+                count: c._count.id,
+            })),
+            byStatus: byStatus.map((s) => ({
+                status: s.status,
+                count: s._count.id,
+            })),
+            recentIssues,
+            topVotedIssues,
+        });
+    } catch (error) {
+        console.error("Admin analytics error:", error);
+        res.status(500).json({ error: "Failed to fetch admin analytics" });
     }
 };
 

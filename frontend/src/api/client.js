@@ -44,6 +44,7 @@ export const api = {
     // Admin
     updateStatus: ({ id, status, department }) =>
         client.put(`/admin/issues/${id}/status`, { status, department }).then((r) => r.data),
+    getAdminIssues: (params) => client.get('/admin/issues', { params }).then((r) => r.data),
     getAnalytics: () => client.get('/admin/analytics').then((r) => r.data),
     getMe: () => client.get('/admin/me').then((r) => r.data),
 

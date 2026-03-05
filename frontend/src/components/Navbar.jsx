@@ -3,8 +3,10 @@ import { SignedIn, SignedOut, SignInButton, UserButton } from '@clerk/clerk-reac
 import { Menu, X, Shield, MapPin, Map, Trophy, Sparkles } from 'lucide-react'
 import { useState } from 'react'
 import NotificationsDropdown from './NotificationsDropdown'
+import { useAuthSync } from '../hooks/useIssues'
 
 export default function Navbar() {
+    useAuthSync()
     const [mobileOpen, setMobileOpen] = useState(false)
     const location = useLocation()
 
@@ -85,7 +87,7 @@ export default function Navbar() {
                         </SignedOut>
                         <SignedIn>
                             <div className="flex items-center gap-3 pr-2">
-                                <NotificationsDropdown userRole="UNKNOWN_TRY_FETCH" />
+                                <NotificationsDropdown />
                                 <UserButton
                                     appearance={{
                                         elements: {

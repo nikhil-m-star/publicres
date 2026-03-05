@@ -25,6 +25,19 @@ export function useIssues(params = {}) {
     })
 }
 
+export function useAdminIssues(params = {}) {
+    const { getToken, isSignedIn } = useAuth()
+    return useQuery({
+        queryKey: ['admin-issues', params],
+        queryFn: async () => {
+            const token = await getToken()
+            setAuthToken(token)
+            return api.getAdminIssues(params)
+        },
+        enabled: isSignedIn,
+    })
+}
+
 export function useIssuesScope(scope = 'all', params = {}) {
     const { getToken, isSignedIn } = useAuth()
     return useQuery({

@@ -1,16 +1,17 @@
 import { useState } from 'react'
-import { BarChart3, AlertTriangle, CheckCircle, Clock, Search, TrendingUp } from 'lucide-react'
-import { useIssues, useAnalytics, useAuthSync } from '../hooks/useIssues'
+import { BarChart3, AlertTriangle, CheckCircle, Clock, Search, TrendingUp, Bell } from 'lucide-react'
+import { useAdminIssues, useAnalytics, useAuthSync } from '../hooks/useIssues'
 import AdminIssueTable from '../components/AdminIssueTable'
 import AnalyticsCharts from '../components/AnalyticsCharts'
+import NotificationsPanel from '../components/NotificationsPanel'
 
 export default function AdminDashboard() {
     useAuthSync()
 
     const [filters, setFilters] = useState({ category: '', status: '', search: '' })
-    const [activeTab, setActiveTab] = useState('issues') // 'issues' | 'analytics'
+    const [activeTab, setActiveTab] = useState('issues') // 'issues' | 'analytics' | 'notifications'
 
-    const { data, isLoading } = useIssues({ ...filters, limit: 50 })
+    const { data, isLoading } = useAdminIssues({ ...filters, limit: 50 })
     const { data: analytics } = useAnalytics()
     const issues = data?.issues || []
 
@@ -98,10 +99,22 @@ export default function AdminDashboard() {
                     <BarChart3 className="w-3.5 h-3.5" />
                     Analytics
                 </button>
+                <button
+                    onClick={() => setActiveTab('notifications')}
+                    className={`px-5 py-2 rounded-lg text-sm font-medium transition-all flex items-center gap-1.5 ${activeTab === 'notifications'
+                            ? 'bg-white text-gray-900 shadow-sm'
+                            : 'text-gray-500 hover:text-gray-700'
+                        }`}
+                >
+                    <Bell className="w-3.5 h-3.5" />
+                    Notifications
+                </button>
             </div>
 
             {activeTab === 'analytics' ? (
                 <AnalyticsCharts data={analytics} />
+            ) : activeTab === 'notifications' ? (
+                <NotificationsPanel />
             ) : (
                 <>
                     {/* Filters */}

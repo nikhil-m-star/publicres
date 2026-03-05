@@ -111,6 +111,7 @@ export default function IssueForm({ onSuccess }) {
         formData.append('longitude', position[1])
         if (address?.city) formData.append('city', address.city)
         if (address?.area) formData.append('area', address.area)
+        if (address?.area) formData.append('area', address.area)
         if (imageFile) formData.append('image', imageFile)
 
         try {

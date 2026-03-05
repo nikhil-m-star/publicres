@@ -2,7 +2,8 @@ import { Router } from "express";
 import { requireAuth, requireOfficer, requirePresident } from "../middleware/clerkAuth.js";
 import {
     updateStatus,
-    getAnalytics,
+    getAdminAnalytics,
+    getAdminIssues,
     updateUserRole,
     getUsers,
 } from "../controllers/issueController.js";
@@ -20,11 +21,14 @@ router.post("/verify-email", requireAuth, verifyByEmail);
 router.get("/me", requireAuth, getMe);
 
 // Officer/President: Notifications
-router.get("/notifications", requireAuth, requireOfficer, getNotifications);
-router.put("/notifications/:id/read", requireAuth, requireOfficer, markNotificationAsRead);
+router.get("/notifications", requireAuth, getNotifications);
+router.put("/notifications/:id/read", requireAuth, markNotificationAsRead);
 
 // Officer/President: Update issue status
 router.put("/issues/:id/status", requireAuth, requireOfficer, updateStatus);
+
+// Officer/President: Scoped issues list
+router.get("/issues", requireAuth, requireOfficer, getAdminIssues);
 
 // President only: Manage user roles (promote/demote)
 router.put("/users/:id/role", requireAuth, requirePresident, updateUserRole);
@@ -33,6 +37,6 @@ router.put("/users/:id/role", requireAuth, requirePresident, updateUserRole);
 router.get("/users", requireAuth, requirePresident, getUsers);
 
 // Officer/President: Get analytics
-router.get("/analytics", requireAuth, requireOfficer, getAnalytics);
+router.get("/analytics", requireAuth, requireOfficer, getAdminAnalytics);
 
 export default router;
