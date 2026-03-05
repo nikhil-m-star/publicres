@@ -22,7 +22,7 @@ export default function NotificationsDropdown() {
         }
     });
 
-    if (!shouldFetch) return null;
+    if (isError) return null;
 
     const notifications = data?.notifications || [];
     const unreadCount = data?.unreadCount || 0;

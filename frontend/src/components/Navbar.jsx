@@ -2,12 +2,10 @@ import { Link, useLocation } from 'react-router-dom'
 import { SignedIn, SignedOut, SignInButton, UserButton } from '@clerk/clerk-react'
 import { Menu, X, Shield, MapPin, Map, Trophy, Sparkles } from 'lucide-react'
 import { useState } from 'react'
-import CityReportModal from './CityReportModal'
 import NotificationsDropdown from './NotificationsDropdown'
 
 export default function Navbar() {
     const [mobileOpen, setMobileOpen] = useState(false)
-    const [reportOpen, setReportOpen] = useState(false)
     const location = useLocation()
 
     const isActive = (path) => location.pathname === path
@@ -51,13 +49,14 @@ export default function Navbar() {
                             <Trophy className="w-3.5 h-3.5" />
                             Leaderboard
                         </Link>
-                        <button
-                            onClick={() => setReportOpen(true)}
-                            className="px-4 py-2 rounded-lg text-sm font-medium transition-colors flex items-center gap-1.5 text-civic-600 hover:text-civic-700 hover:bg-civic-50/50"
+                        <Link
+                            to="/report"
+                            className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors flex items-center gap-1.5 ${isActive('/report') ? 'bg-purple-50 text-purple-700' : 'text-purple-600 hover:text-purple-700 hover:bg-purple-50'
+                                }`}
                         >
-                            <Sparkles className="w-3.5 h-3.5 text-purple-500" />
-                            City Report
-                        </button>
+                            <Sparkles className="w-3.5 h-3.5" />
+                            AI Insights
+                        </Link>
                         <SignedIn>
                             <Link
                                 to="/dashboard"
@@ -75,12 +74,12 @@ export default function Navbar() {
                                 Bribery
                             </Link>
                             <Link
-                                to="/admin"
-                                className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors flex items-center gap-1.5 ${isActive('/admin') ? 'bg-civic-50 text-civic-700' : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
+                                to="/profile"
+                                className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors flex items-center gap-1.5 ${isActive('/profile') ? 'bg-civic-50 text-civic-700' : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
                                     }`}
                             >
                                 <Shield className="w-3.5 h-3.5" />
-                                Admin
+                                Profile
                             </Link>
                         </SignedIn>
                     </div>
@@ -139,12 +138,13 @@ export default function Navbar() {
                         >
                             🏆 Leaderboard
                         </Link>
-                        <button
-                            onClick={() => { setReportOpen(true); setMobileOpen(false); }}
-                            className="block w-full text-left px-4 py-2.5 rounded-lg text-sm font-medium text-purple-600 hover:bg-purple-50"
+                        <Link
+                            to="/report"
+                            onClick={() => setMobileOpen(false)}
+                            className="block px-4 py-2.5 rounded-lg text-sm font-medium text-purple-600 hover:bg-purple-50"
                         >
-                            ✨ AI City Report
-                        </button>
+                            ✨ AI Locality Insights
+                        </Link>
                         <SignedIn>
                             <Link
                                 to="/dashboard"
@@ -161,11 +161,11 @@ export default function Navbar() {
                                 🚨 Report Bribery
                             </Link>
                             <Link
-                                to="/admin"
+                                to="/profile"
                                 className="block px-4 py-2.5 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-50"
                                 onClick={() => setMobileOpen(false)}
                             >
-                                Admin Panel
+                                Profile
                             </Link>
                             <div className="px-4 pt-2">
                                 <UserButton />
@@ -181,8 +181,6 @@ export default function Navbar() {
                     </div>
                 )}
             </div>
-
-            <CityReportModal isOpen={reportOpen} onClose={() => setReportOpen(false)} />
         </nav>
     )
 }

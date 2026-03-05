@@ -1,9 +1,9 @@
 import { useState } from 'react';
 import { api } from '../api/client';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { Shield, Key, MapPin, Loader2, CheckCircle2 } from 'lucide-react';
+import { Shield, Key, MapPin, Loader2, CheckCircle2, AlertCircle } from 'lucide-react';
 
-export default function AdminVerification() {
+export default function Profile() {
     const [otp, setOtp] = useState('');
     const [role, setRole] = useState('OFFICER');
     const [area, setArea] = useState('Bengaluru Central');
@@ -27,8 +27,12 @@ export default function AdminVerification() {
                     <div className="w-16 h-16 bg-white/20 rounded-full flex items-center justify-center mx-auto mb-4 backdrop-blur-sm">
                         <Shield className="w-8 h-8 text-white" />
                     </div>
-                    <h1 className="text-2xl font-bold text-white mb-2">Admin Verification</h1>
-                    <p className="text-civic-100">Enter your secure OTP to upgrade your account access.</p>
+                    <h1 className="text-2xl font-bold text-white mb-2">Profile Verification</h1>
+                    <p className="text-civic-100 mb-2">Enter your secure OTP to upgrade your account access.</p>
+                    <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/20 text-xs font-medium text-white border border-white/20">
+                        <AlertCircle className="w-3.5 h-3.5" />
+                        Requires a valid bmsce.ac.in email
+                    </div>
                 </div>
 
                 <div className="p-8 space-y-6">

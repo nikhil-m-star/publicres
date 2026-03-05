@@ -5,7 +5,7 @@ dotenv.config();
 
 // The Groq client initialized using the API key provided
 const groq = new Groq({
-    apiKey: process.env.GROQ_API_KEY || "",
+    apiKey: process.env.GROQ_API_KEY,
 });
 
 /**
@@ -107,14 +107,14 @@ export async function generateCityReport(cityName, recentIssues, reqProtocol, re
         ).join("\n");
 
         const prompt = `
-You are a senior civic analyst. Write a concise, professional executive summary report of the recent civic issues reported in the city of ${cityName} based on the following data.
+You are a senior civic analyst. Write a concise, professional executive summary report of the recent civic issues reported in the locality/area of '${cityName}' in Bengaluru, India based on the following data.
 Group the report logically by category (e.g., Infrastructure, Sanitation, Safety) or by severity.
 You MUST include the exact markdown links provided to reference specific issues so the users can click them.
 
 Here are the recent issues:
 ${issueList}
 
-Format the report using clean Markdown. Keep it under 400 words. Conclude with a brief summary of the overall civic health of the city.`;
+Format the report using clean Markdown. Keep it under 400 words. Conclude with a brief summary of the overall civic health of this locality.`;
 
         const chatCompletion = await groq.chat.completions.create({
             messages: [{ role: "user", content: prompt }],

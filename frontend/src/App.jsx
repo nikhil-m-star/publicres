@@ -4,11 +4,12 @@ import Navbar from './components/Navbar'
 import Landing from './pages/Landing'
 import Dashboard from './pages/Dashboard'
 import IssueDetails from './pages/IssueDetails'
+import Leaderboard from './pages/Leaderboard'
 import AdminDashboard from './pages/AdminDashboard'
 import MapExplorer from './pages/MapExplorer'
-import Leaderboard from './pages/Leaderboard'
-import AdminVerification from './pages/AdminVerification'
+import Profile from './pages/Profile'
 import BriberyBoard from './pages/BriberyBoard'
+import CityReport from './pages/CityReport'
 
 function ProtectedRoute({ children }) {
     return (
@@ -47,14 +48,15 @@ export default function App() {
                     }
                 />
                 <Route
-                    path="/verify-admin"
+                    path="/profile"
                     element={
                         <ProtectedRoute>
-                            <AdminVerification />
+                            <Profile />
                         </ProtectedRoute>
                     }
                 />
                 <Route path="/bribery" element={<BriberyBoard />} />
+                <Route path="/report" element={<CityReport />} />
             </Routes>
         </div>
     )

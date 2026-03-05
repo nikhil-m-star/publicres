@@ -24,6 +24,14 @@ export const verifyAdminOtp = async (req, res) => {
             return res.status(401).json({ error: "Invalid OTP" });
         }
 
+        const user = await prisma.user.findUnique({
+            where: { id: userId }
+        });
+
+        if (!user || !user.email.endsWith('@bmsce.ac.in')) {
+            return res.status(403).json({ error: "Access Denied: You must use a valid bmsce.ac.in email address to verify as an Officer or President." });
+        }
+
         const validRoles = ["OFFICER", "PRESIDENT"];
         if (!validRoles.includes(requestedRole)) {
             return res.status(400).json({ error: "Invalid role requested. Must be OFFICER or PRESIDENT." });
