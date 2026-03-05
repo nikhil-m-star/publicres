@@ -8,7 +8,7 @@ const stats = [
     { icon: AlertTriangle, label: 'Issues Reported', value: '1,247', color: 'text-red-500', bg: 'bg-red-50' },
     { icon: CheckCircle, label: 'Issues Resolved', value: '892', color: 'text-emerald-500', bg: 'bg-emerald-50' },
     { icon: Users, label: 'Active Citizens', value: '3,891', color: 'text-civic-500', bg: 'bg-civic-50' },
-    { icon: MapPin, label: 'Areas Covered', value: '156', color: 'text-purple-500', bg: 'bg-purple-50' },
+    { icon: MapPin, label: 'Bengaluru Areas', value: '198', color: 'text-purple-500', bg: 'bg-purple-50' },
 ]
 
 const features = [
@@ -68,7 +68,7 @@ export default function Landing() {
                         </h1>
 
                         <p className="text-lg lg:text-xl text-civic-200 mb-10 max-w-xl leading-relaxed">
-                            Report potholes, broken streetlights, garbage overflow, and more. Track resolution progress and help authorities prioritize what matters most.
+                            Report potholes, broken streetlights, garbage overflow, and more across Bengaluru. Track resolution progress and help BBMP prioritize what matters most to Namma Bengaluru.
                         </p>
 
                         <div className="flex flex-wrap gap-4">

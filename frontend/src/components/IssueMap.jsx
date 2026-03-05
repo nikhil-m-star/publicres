@@ -6,6 +6,10 @@ import 'leaflet/dist/leaflet.css'
 import { useState, useEffect } from 'react'
 import { Crosshair, ThumbsUp, MessageCircle } from 'lucide-react'
 
+// Bengaluru center coordinates
+export const BENGALURU_CENTER = [12.9716, 77.5946]
+export const BENGALURU_ZOOM = 12
+
 // Custom colored markers
 const createIcon = (color) =>
     new L.DivIcon({
@@ -30,7 +34,6 @@ const userIcon = new L.DivIcon({
     width: 20px; height: 20px; border-radius: 50%;
     background: #3b82f6; border: 4px solid white;
     box-shadow: 0 0 0 3px rgba(59,130,246,0.3), 0 2px 8px rgba(0,0,0,0.3);
-    animation: pulse 2s ease-in-out infinite;
   "></div>`,
     iconSize: [20, 20],
     iconAnchor: [10, 10],
@@ -79,12 +82,31 @@ const createClusterIcon = (cluster) => {
     })
 }
 
+// Reverse geocode using Nominatim (free, no API key needed)
+export async function reverseGeocode(lat, lng) {
+    try {
+        const res = await fetch(
+            `https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}&zoom=16&addressdetails=1`,
+            { headers: { 'Accept-Language': 'en' } }
+        )
+        const data = await res.json()
+        const addr = data.address || {}
+        const area = addr.suburb || addr.neighbourhood || addr.village || addr.town || addr.city_district || ''
+        const road = addr.road || ''
+        const city = addr.city || addr.state_district || 'Bengaluru'
+        const display = [road, area, city].filter(Boolean).join(', ')
+        return { display, area, road, city, raw: data }
+    } catch {
+        return { display: `${lat.toFixed(4)}, ${lng.toFixed(4)}`, area: '', road: '', city: '' }
+    }
+}
+
 // Component to fly to user location
 function FlyToLocation({ position }) {
     const map = useMap()
     useEffect(() => {
         if (position) {
-            map.flyTo(position, 14, { duration: 1.5 })
+            map.flyTo(position, 15, { duration: 1.5 })
         }
     }, [position, map])
     return null
@@ -92,8 +114,8 @@ function FlyToLocation({ position }) {
 
 export default function IssueMap({
     issues = [],
-    center = [20.5937, 78.9629],
-    zoom = 5,
+    center = BENGALURU_CENTER,
+    zoom = BENGALURU_ZOOM,
     height = '400px',
     showControls = false,
     showLegend = true,
@@ -103,6 +125,21 @@ export default function IssueMap({
     const [locating, setLocating] = useState(false)
     const [flyTo, setFlyTo] = useState(null)
 
+    // Auto-detect location on mount when controls are shown
+    useEffect(() => {
+        if (showControls && navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(
+                (pos) => {
+                    const loc = [pos.coords.latitude, pos.coords.longitude]
+                    setUserPosition(loc)
+                    setFlyTo(loc)
+                },
+                () => { },
+                { enableHighAccuracy: true, timeout: 8000 }
+            )
+        }
+    }, [showControls])
+
     const handleLocateMe = () => {
         if (!navigator.geolocation) return
         setLocating(true)
@@ -110,7 +147,7 @@ export default function IssueMap({
             (pos) => {
                 const loc = [pos.coords.latitude, pos.coords.longitude]
                 setUserPosition(loc)
-                setFlyTo(loc)
+                setFlyTo([...loc])
                 setLocating(false)
             },
             () => setLocating(false),
@@ -179,7 +216,6 @@ export default function IssueMap({
 
                 {flyTo && <FlyToLocation position={flyTo} />}
 
-                {/* Markers — clustered or plain */}
                 {enableClustering ? (
                     <MarkerClusterGroup
                         chunkedLoading
@@ -194,7 +230,6 @@ export default function IssueMap({
                     markers
                 )}
 
-                {/* User location */}
                 {userPosition && (
                     <>
                         <Marker position={userPosition} icon={userIcon}>
