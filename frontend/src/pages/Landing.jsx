@@ -1,7 +1,7 @@
 import { useEffect } from 'react'
 import { Link, useLocation } from 'react-router-dom'
 import { SignedOut, SignInButton } from '@clerk/clerk-react'
-import { MapPin, AlertTriangle, CheckCircle, Users, ArrowRight, Shield, Eye, ThumbsUp, Clock, TrendingUp } from 'lucide-react'
+import { MapPin, AlertTriangle, CheckCircle, ArrowRight, Shield, Eye, ThumbsUp, Clock, TrendingUp } from 'lucide-react'
 import { useIssues, useStats } from '../hooks/useIssues'
 import IssueMap from '../components/IssueMap'
 import ReportsBoard from '../components/ReportsBoard'
@@ -10,32 +10,28 @@ import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContaine
 const features = [
     {
         icon: MapPin,
-        title: 'Pin on Map',
-        description: 'Auto-detect your location in Bengaluru and report issues right where you are.',
-        gradient: 'from-red-500 to-orange-500',
+        title: 'Drop a Pin',
+        description: 'Mark the exact spot so crews can find it fast.',
     },
     {
         icon: Eye,
-        title: 'Track Progress',
-        description: 'Follow your reported issues from submission through resolution.',
-        gradient: 'from-civic-500 to-blue-500',
+        title: 'Follow Along',
+        description: 'Track updates from report to resolution.',
     },
     {
         icon: ThumbsUp,
-        title: 'Upvote & Comment',
-        description: 'Support important issues and collaborate with your community.',
-        gradient: 'from-emerald-500 to-teal-500',
+        title: 'Boost Priority',
+        description: 'Upvote issues your neighborhood cares about.',
     },
     {
         icon: Shield,
-        title: 'Admin Dashboard',
-        description: 'City authorities manage, prioritize, and resolve issues efficiently.',
-        gradient: 'from-purple-500 to-pink-500',
+        title: 'City Response',
+        description: 'Officials triage, assign, and close issues visibly.',
     },
 ]
 
-const STATUS_COLORS = ['#ef4444', '#f59e0b', '#22c55e']
-const CATEGORY_COLORS = ['#f97316', '#22c55e', '#eab308', '#3b82f6', '#6b7280']
+const STATUS_COLORS = ['#b45309', '#a16207', '#4d7c0f']
+const CATEGORY_COLORS = ['#a16207', '#4d7c0f', '#8b5a2b', '#6b7280', '#b45309']
 const statusNames = { REPORTED: 'Reported', IN_PROGRESS: 'In Progress', RESOLVED: 'Resolved' }
 const categoryNames = { POTHOLE: 'Pothole', GARBAGE: 'Garbage', STREETLIGHT: 'Streetlight', WATER_LEAK: 'Water Leak', OTHER: 'Other' }
 
@@ -72,122 +68,123 @@ export default function Landing() {
     }))
 
     return (
-        <div className="min-h-screen">
+        <div className="min-h-screen bg-[color:var(--earth-50)] text-civic-900">
             {/* Hero */}
-            <section className="relative overflow-hidden bg-gradient-to-br from-civic-950 via-civic-900 to-civic-800 text-white">
-                <div className="absolute inset-0 overflow-hidden">
-                    <div className="absolute -top-40 -right-40 w-96 h-96 bg-civic-500/20 rounded-full blur-3xl" />
-                    <div className="absolute -bottom-40 -left-40 w-96 h-96 bg-blue-500/10 rounded-full blur-3xl" />
-                    <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-civic-400/5 rounded-full blur-3xl" />
+            <section className="relative overflow-hidden">
+                <div className="absolute inset-0">
+                    <div className="absolute -top-24 -right-24 w-80 h-80 rounded-full bg-civic-100/70 blur-3xl" />
+                    <div className="absolute top-20 -left-20 w-64 h-64 rounded-full bg-[color:var(--earth-accent)]/20 blur-3xl" />
                 </div>
 
-                <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24 lg:py-32">
-                    <div className="max-w-3xl">
-                        <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/10 backdrop-blur-sm border border-white/10 text-sm mb-8">
-                            <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-                            Namma Bengaluru — Open civic platform
+                <div className="page-container relative pt-16 pb-8">
+                    <div className="max-w-2xl space-y-6">
+                        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/70 border border-civic-200 text-xs text-civic-800 shadow-sm animate-float-slow">
+                            <span className="w-2 h-2 rounded-full bg-[color:var(--earth-accent)]" />
+                            Namma Bengaluru — Civic fixes made simple
                         </div>
 
-                        <h1 className="text-5xl lg:text-7xl font-bold leading-tight mb-6">
-                            Your City.
-                            <br />
-                            <span className="bg-gradient-to-r from-civic-300 to-blue-300 bg-clip-text text-transparent">
-                                Your Voice.
-                            </span>
+                        <h1 className="text-4xl sm:text-5xl font-semibold leading-tight">
+                            Fixes, not fuss.
+                            <span className="block text-civic-700">Report issues with a friendly nudge.</span>
                         </h1>
 
-                        <p className="text-lg lg:text-xl text-civic-200 mb-10 max-w-xl leading-relaxed">
-                            Report potholes, broken streetlights, garbage overflow, and more across Bengaluru. Track resolution progress and help BBMP prioritize what matters most to Namma Bengaluru.
+                        <p className="text-lg text-civic-700 leading-relaxed">
+                            Spot a pothole, broken light, or garbage pile? Drop a quick report and watch the city respond.
                         </p>
 
-                        <div className="flex flex-wrap gap-4">
-                            <Link to="/#reports" className="btn-primary text-base flex items-center gap-2">
+                        <div className="flex flex-wrap gap-3">
+                            <Link to="/#reports" className="btn-primary flex items-center gap-2 hover:rotate-[-1deg]">
                                 Report an Issue
                                 <ArrowRight className="w-4 h-4" />
                             </Link>
                             <SignedOut>
                                 <SignInButton mode="modal">
-                                    <button className="btn-secondary text-base !bg-white/10 !text-white !border-white/20 hover:!bg-white/20">
+                                    <button className="btn-secondary hover:rotate-[1deg]">
                                         Sign In
                                     </button>
                                 </SignInButton>
                             </SignedOut>
                         </div>
-                    </div>
-                </div>
 
-                {/* Wave divider */}
-                <div className="absolute bottom-0 left-0 right-0">
-                    <svg viewBox="0 0 1440 80" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path
-                            d="M0 32L48 37.3C96 43 192 53 288 53.3C384 53 480 43 576 42.7C672 43 768 53 864 58.7C960 64 1056 64 1152 58.7C1248 53 1344 43 1392 37.3L1440 32V80H1392C1344 80 1248 80 1152 80C1056 80 960 80 864 80C768 80 672 80 576 80C480 80 384 80 288 80C192 80 96 80 48 80H0V32Z"
-                            fill="#f8fafc"
-                        />
-                    </svg>
+                        <div className="flex flex-wrap gap-2 pt-2 text-sm">
+                            <span className="chip">Potholes</span>
+                            <span className="chip">Streetlights</span>
+                            <span className="chip">Garbage</span>
+                            <span className="chip">Water leaks</span>
+                        </div>
+                    </div>
                 </div>
             </section>
 
-            {/* Live Stats */}
-            <section className="page-container -mt-4">
-                <div className="grid grid-cols-2 lg:grid-cols-5 gap-4">
-                    <div className="card p-5 text-center group hover:scale-[1.02] transition-transform">
-                        <div className="w-12 h-12 bg-civic-50 rounded-xl flex items-center justify-center mx-auto mb-3">
-                            <AlertTriangle className="w-6 h-6 text-civic-500" />
+            {/* Quick Stats */}
+            <section className="page-container">
+                <div className="flex flex-wrap gap-4">
+                    <div className="card p-4 flex-1 min-w-[210px] group hover:-translate-y-1 hover:rotate-[0.4deg]">
+                        <div className="flex items-center gap-3">
+                            <div className="w-10 h-10 rounded-full bg-civic-100 flex items-center justify-center">
+                                <AlertTriangle className="w-5 h-5 text-civic-700 group-hover:animate-wiggle" />
+                            </div>
+                            <div>
+                                <p className="text-2xl font-semibold">{totalIssues}</p>
+                                <p className="text-sm text-civic-700">Total issues</p>
+                            </div>
                         </div>
-                        <p className="text-2xl font-bold text-gray-900 mb-1">{totalIssues}</p>
-                        <p className="text-sm text-gray-500">Total Issues</p>
                     </div>
-                    <div className="card p-5 text-center group hover:scale-[1.02] transition-transform">
-                        <div className="w-12 h-12 bg-red-50 rounded-xl flex items-center justify-center mx-auto mb-3">
-                            <Clock className="w-6 h-6 text-red-500" />
+                    <div className="card p-4 flex-1 min-w-[210px] group hover:-translate-y-1 hover:rotate-[-0.4deg]">
+                        <div className="flex items-center gap-3">
+                            <div className="w-10 h-10 rounded-full bg-amber-50 flex items-center justify-center">
+                                <Clock className="w-5 h-5 text-amber-700 group-hover:animate-wiggle" />
+                            </div>
+                            <div>
+                                <p className="text-2xl font-semibold">{unresolvedCount}</p>
+                                <p className="text-sm text-civic-700">Unresolved</p>
+                            </div>
                         </div>
-                        <p className="text-2xl font-bold text-red-600 mb-1">{unresolvedCount}</p>
-                        <p className="text-sm text-gray-500">Unresolved</p>
                     </div>
-                    <div className="card p-5 text-center group hover:scale-[1.02] transition-transform">
-                        <div className="w-12 h-12 bg-emerald-50 rounded-xl flex items-center justify-center mx-auto mb-3">
-                            <CheckCircle className="w-6 h-6 text-emerald-500" />
+                    <div className="card p-4 flex-1 min-w-[210px] group hover:-translate-y-1 hover:rotate-[0.3deg]">
+                        <div className="flex items-center gap-3">
+                            <div className="w-10 h-10 rounded-full bg-lime-50 flex items-center justify-center">
+                                <CheckCircle className="w-5 h-5 text-lime-700 group-hover:animate-wiggle" />
+                            </div>
+                            <div>
+                                <p className="text-2xl font-semibold">{resolvedCount}</p>
+                                <p className="text-sm text-civic-700">Resolved</p>
+                            </div>
                         </div>
-                        <p className="text-2xl font-bold text-emerald-600 mb-1">{resolvedCount}</p>
-                        <p className="text-sm text-gray-500">Resolved</p>
                     </div>
-                    <div className="card p-5 text-center group hover:scale-[1.02] transition-transform">
-                        <div className="w-12 h-12 bg-purple-50 rounded-xl flex items-center justify-center mx-auto mb-3">
-                            <TrendingUp className="w-6 h-6 text-purple-500" />
+                    <div className="card p-4 flex-1 min-w-[210px] group hover:-translate-y-1 hover:rotate-[-0.3deg]">
+                        <div className="flex items-center gap-3">
+                            <div className="w-10 h-10 rounded-full bg-civic-100 flex items-center justify-center">
+                                <TrendingUp className="w-5 h-5 text-civic-700 group-hover:animate-wiggle" />
+                            </div>
+                            <div>
+                                <p className="text-2xl font-semibold">{resolutionRate}%</p>
+                                <p className="text-sm text-civic-700">Resolution rate</p>
+                            </div>
                         </div>
-                        <p className="text-2xl font-bold text-purple-600 mb-1">{resolutionRate}%</p>
-                        <p className="text-sm text-gray-500">Resolution Rate</p>
-                    </div>
-                    <div className="card p-5 text-center group hover:scale-[1.02] transition-transform">
-                        <div className="w-12 h-12 bg-amber-50 rounded-xl flex items-center justify-center mx-auto mb-3">
-                            <MapPin className="w-6 h-6 text-amber-500" />
-                        </div>
-                        <p className="text-2xl font-bold text-amber-600 mb-1">Bengaluru</p>
-                        <p className="text-sm text-gray-500">Coverage Area</p>
                     </div>
                 </div>
             </section>
 
             {/* Reports */}
-            <section id="reports" className="page-container py-16 scroll-mt-24">
-                <ReportsBoard
-                    scope="all"
-                    title="Community Reports"
-                    subtitle="Browse recent issues, filter by category, or report a new one."
-                />
+            <section id="reports" className="page-container scroll-mt-24 space-y-4">
+                <div>
+                    <h2 className="text-3xl font-semibold text-civic-900">Community Reports</h2>
+                    <p className="text-civic-700">Browse recent issues, filter by category, or report a new one.</p>
+                </div>
+                <ReportsBoard scope="all" />
             </section>
 
             {/* Analytics Charts */}
             {totalIssues > 0 && (
-                <section className="page-container py-12">
-                    <div className="text-center mb-8">
-                        <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-3">Live Analytics</h2>
-                        <p className="text-gray-500">Real-time civic issue data for Bengaluru</p>
+                <section className="page-container space-y-6">
+                    <div>
+                        <h2 className="text-3xl font-semibold text-civic-900">Quick Insights</h2>
+                        <p className="text-civic-700">A calm snapshot of what needs attention.</p>
                     </div>
-                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                        {/* Status pie */}
-                        <div className="card p-6">
-                            <h3 className="font-semibold text-gray-900 mb-4">Resolved vs Unresolved</h3>
+                    <div className="flex flex-wrap gap-6">
+                        <div className="card p-6 flex-1 min-w-[280px]">
+                            <h3 className="font-semibold text-civic-900 mb-4">Resolved vs Unresolved</h3>
                             <div className="h-56">
                                 <ResponsiveContainer width="100%" height="100%">
                                     <PieChart>
@@ -208,9 +205,9 @@ export default function Landing() {
                                     </PieChart>
                                 </ResponsiveContainer>
                             </div>
-                            <div className="flex justify-center gap-4 mt-2">
+                            <div className="flex flex-wrap gap-3 mt-2 text-xs text-civic-700">
                                 {statusData.map((s) => (
-                                    <div key={s.name} className="flex items-center gap-1.5 text-xs text-gray-600">
+                                    <div key={s.name} className="flex items-center gap-1.5">
                                         <div className="w-2.5 h-2.5 rounded-full" style={{ background: s.fill }} />
                                         {s.name} ({s.value})
                                     </div>
@@ -218,13 +215,12 @@ export default function Landing() {
                             </div>
                         </div>
 
-                        {/* Category bar */}
-                        <div className="card p-6">
-                            <h3 className="font-semibold text-gray-900 mb-4">Issues by Category</h3>
+                        <div className="card p-6 flex-1 min-w-[280px]">
+                            <h3 className="font-semibold text-civic-900 mb-4">Issues by Category</h3>
                             <div className="h-56">
                                 <ResponsiveContainer width="100%" height="100%">
-                                    <BarChart data={categoryData} barSize={36}>
-                                        <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9" />
+                                    <BarChart data={categoryData} barSize={32}>
+                                        <CartesianGrid strokeDasharray="3 3" stroke="#e7ddc8" />
                                         <XAxis dataKey="name" tick={{ fontSize: 11 }} />
                                         <YAxis allowDecimals={false} tick={{ fontSize: 11 }} />
                                         <Tooltip contentStyle={{ borderRadius: '12px', border: 'none', boxShadow: '0 4px 12px rgba(0,0,0,0.1)' }} />
@@ -242,56 +238,48 @@ export default function Landing() {
             )}
 
             {/* Features */}
-            <section className="page-container py-20">
-                <div className="text-center mb-14">
-                    <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-4">
-                        How It Works
-                    </h2>
-                    <p className="text-gray-500 max-w-xl mx-auto">
-                        A simple, powerful platform connecting Bengaluru citizens with BBMP for faster issue resolution.
-                    </p>
+            <section className="page-container space-y-6">
+                <div>
+                    <h2 className="text-3xl font-semibold text-civic-900">How It Works</h2>
+                    <p className="text-civic-700">A simple flow from report to resolution.</p>
                 </div>
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                <div className="flex flex-wrap gap-4">
                     {features.map((feature, i) => (
-                        <div key={i} className="card p-6 group hover:scale-[1.02] transition-transform">
-                            <div className={`w-12 h-12 rounded-xl bg-gradient-to-br ${feature.gradient} flex items-center justify-center mb-4 shadow-lg group-hover:shadow-xl transition-shadow`}>
-                                <feature.icon className="w-6 h-6 text-white" />
+                        <div key={i} className="card p-5 flex-1 min-w-[220px] group hover:-translate-y-1 hover:rotate-[0.4deg]">
+                            <div className="w-11 h-11 rounded-full bg-civic-100 flex items-center justify-center mb-3">
+                                <feature.icon className="w-5 h-5 text-civic-700 group-hover:animate-wiggle" />
                             </div>
-                            <h3 className="font-semibold text-gray-900 mb-2">{feature.title}</h3>
-                            <p className="text-sm text-gray-500 leading-relaxed">{feature.description}</p>
+                            <h3 className="font-semibold text-civic-900 mb-2">{feature.title}</h3>
+                            <p className="text-sm text-civic-700 leading-relaxed">{feature.description}</p>
                         </div>
                     ))}
                 </div>
             </section>
 
             {/* Map Preview */}
-            <section className="page-container pb-20">
-                <div className="text-center mb-8">
-                    <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-4">
-                        Live Issue Map — Bengaluru
-                    </h2>
-                    <p className="text-gray-500 max-w-xl mx-auto">
-                        See reported issues across Bengaluru. Red markers are new, yellow are in progress, green are resolved.
-                    </p>
+            <section className="page-container space-y-4">
+                <div>
+                    <h2 className="text-3xl font-semibold text-civic-900">Live Issue Map</h2>
+                    <p className="text-civic-700">See reports across Bengaluru at a glance.</p>
                 </div>
-                <IssueMap issues={issues} height="480px" />
+                <div className="card overflow-hidden">
+                    <IssueMap issues={issues} height="480px" />
+                </div>
             </section>
 
             {/* Footer */}
-            <footer className="bg-gray-900 text-gray-400 py-12">
-                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                    <div className="flex flex-col md:flex-row items-center justify-between gap-4">
-                        <div className="flex items-center gap-2">
-                            <div className="w-8 h-8 bg-gradient-to-br from-civic-500 to-civic-700 rounded-lg flex items-center justify-center">
-                                <MapPin className="w-4 h-4 text-white" />
-                            </div>
-                            <span className="font-bold text-white">PublicRes</span>
+            <footer className="mt-16 border-t border-civic-100 bg-white/60">
+                <div className="page-container flex flex-col md:flex-row items-center justify-between gap-3">
+                    <div className="flex items-center gap-2">
+                        <div className="w-8 h-8 rounded-lg bg-civic-700 flex items-center justify-center">
+                            <MapPin className="w-4 h-4 text-white" />
                         </div>
-                        <p className="text-sm">
-                            Built for Namma Bengaluru. Empowering civic transparency.
-                        </p>
+                        <span className="font-semibold text-civic-900">PublicRes</span>
                     </div>
+                    <p className="text-sm text-civic-700">
+                        Built for Namma Bengaluru. Calm, clear, and community-first.
+                    </p>
                 </div>
             </footer>
         </div>

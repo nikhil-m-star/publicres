@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Work+Sans:wght@400;500;600;700&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -9,12 +11,28 @@
     box-sizing: border-box;
   }
 
+  :root {
+    --earth-50: #f7f2e8;
+    --earth-100: #eee3cf;
+    --earth-200: #e0cfb2;
+    --earth-300: #c8b08a;
+    --earth-400: #ad9168;
+    --earth-500: #8f744e;
+    --earth-600: #725a3c;
+    --earth-700: #5d4830;
+    --earth-800: #443625;
+    --earth-900: #2f241b;
+    --earth-ink: #2b2118;
+    --earth-accent: #7b8d5a;
+    --earth-sun: #d4a24f;
+  }
+
   body {
-    font-family: 'Inter', system-ui, sans-serif;
+    font-family: 'Work Sans', system-ui, sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
-    background-color: #f8fafc;
-    color: #0f172a;
+    background-color: var(--earth-50);
+    color: var(--earth-ink);
   }
 
   /* Leaflet map fix */
@@ -27,19 +45,19 @@
 
 @layer components {
   .btn-primary {
-    @apply bg-civic-600 hover:bg-civic-700 text-white font-semibold py-2.5 px-6 rounded-xl transition-all duration-200 shadow-lg shadow-civic-600/25 hover:shadow-xl hover:shadow-civic-600/30 active:scale-[0.98];
+    @apply bg-civic-700 hover:bg-civic-800 text-white font-semibold py-2.5 px-5 rounded-full transition-all duration-200 shadow-sm hover:shadow-md hover:-translate-y-0.5 active:translate-y-0;
   }
 
   .btn-secondary {
-    @apply bg-white hover:bg-gray-50 text-gray-700 font-medium py-2.5 px-6 rounded-xl border border-gray-200 transition-all duration-200 hover:border-gray-300 active:scale-[0.98];
+    @apply bg-white/70 hover:bg-white text-civic-800 font-medium py-2.5 px-5 rounded-full border border-civic-200 transition-all duration-200 hover:border-civic-300 hover:-translate-y-0.5 active:translate-y-0;
   }
 
   .card {
-    @apply bg-white rounded-2xl border border-gray-100 shadow-sm hover:shadow-md transition-all duration-300;
+    @apply bg-white/70 rounded-2xl border border-civic-100 shadow-sm hover:shadow-md transition-all duration-300;
   }
 
   .card-glass {
-    @apply bg-white/70 backdrop-blur-xl rounded-2xl border border-white/20 shadow-xl;
+    @apply bg-white/60 backdrop-blur-xl rounded-2xl border border-white/40 shadow-lg;
   }
 
   .status-badge {
@@ -63,10 +81,14 @@
   }
 
   .input-field {
-    @apply w-full px-4 py-3 rounded-xl border border-gray-200 bg-white focus:outline-none focus:ring-2 focus:ring-civic-500/30 focus:border-civic-500 transition-all duration-200 text-sm;
+    @apply w-full px-4 py-3 rounded-xl border border-civic-200 bg-white/80 focus:outline-none focus:ring-2 focus:ring-civic-400/40 focus:border-civic-500 transition-all duration-200 text-sm;
   }
 
   .page-container {
-    @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8;
+    @apply max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-10;
+  }
+
+  .chip {
+    @apply inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium bg-civic-100 text-civic-800 border border-civic-200 transition-transform duration-200 hover:-translate-y-0.5;
   }
 }

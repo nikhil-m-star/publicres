@@ -46,8 +46,8 @@ export default function ReportsBoard({
                             <button
                                 onClick={() => setShowForm(!showForm)}
                                 className={`flex items-center gap-2 text-sm font-semibold px-5 py-2.5 rounded-xl transition-all ${showForm
-                                        ? 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-                                        : 'btn-primary'
+                                    ? 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                                    : 'btn-primary'
                                     }`}
                             >
                                 {showForm ? (

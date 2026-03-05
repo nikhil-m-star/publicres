@@ -8,17 +8,17 @@ export default {
         extend: {
             colors: {
                 civic: {
-                    50: '#eef7ff',
-                    100: '#d9edff',
-                    200: '#bce0ff',
-                    300: '#8ecdff',
-                    400: '#59b0ff',
-                    500: '#338dff',
-                    600: '#1a6df5',
-                    700: '#1357e1',
-                    800: '#1647b6',
-                    900: '#183f8f',
-                    950: '#142857',
+                    50: '#f7f2e8',
+                    100: '#eee3cf',
+                    200: '#e0cfb2',
+                    300: '#c8b08a',
+                    400: '#ad9168',
+                    500: '#8f744e',
+                    600: '#725a3c',
+                    700: '#5d4830',
+                    800: '#443625',
+                    900: '#2f241b',
+                    950: '#1f1812',
                 },
                 status: {
                     reported: '#ef4444',
@@ -27,12 +27,14 @@ export default {
                 },
             },
             fontFamily: {
-                sans: ['Inter', 'system-ui', 'sans-serif'],
+                sans: ['Work Sans', 'system-ui', 'sans-serif'],
             },
             animation: {
                 'fade-in': 'fadeIn 0.5s ease-out',
                 'slide-up': 'slideUp 0.5s ease-out',
                 'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                wiggle: 'wiggle 0.35s ease-in-out',
+                'float-slow': 'float 6s ease-in-out infinite',
             },
             keyframes: {
                 fadeIn: {
@@ -42,6 +44,14 @@ export default {
                 slideUp: {
                     '0%': { opacity: '0', transform: 'translateY(20px)' },
                     '100%': { opacity: '1', transform: 'translateY(0)' },
+                },
+                wiggle: {
+                    '0%, 100%': { transform: 'rotate(0deg)' },
+                    '50%': { transform: 'rotate(2deg)' },
+                },
+                float: {
+                    '0%, 100%': { transform: 'translateY(0px)' },
+                    '50%': { transform: 'translateY(-6px)' },
                 },
             },
         },
