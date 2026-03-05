@@ -2,8 +2,6 @@ import { PrismaClient } from "@prisma/client";
 
 const prisma = new PrismaClient();
 
-const TARGET_COUNT = 10;
-
 const bengaluruLocations = [
     { name: "Koramangala", lat: 12.9352, lng: 77.6245 },
     { name: "Indiranagar", lat: 12.9784, lng: 77.6408 },
@@ -29,93 +27,113 @@ const departmentByCategory = {
 const issueSeeds = [
     {
         title: "Massive pothole on 100 Feet Road",
-        description: "A huge crater has formed near the junction. Two-wheelers are struggling to navigate safely, especially at night.",
+        description: "A huge crater has formed near the junction. Two-wheelers are struggling to navigate safely, especially at night. Several accidents have been narrowly avoided.",
         category: "POTHOLE",
         area: "Indiranagar",
-        imageUrl: "https://picsum.photos/seed/pothole1/800/600",
-        daysAgo: 2,
-        intensity: 7,
+        status: "RESOLVED",
+        imageUrl: "https://image.pollinations.ai/prompt/A%20deep%20dangerous%20pothole%20on%20an%20asphalt%20city%20street?width=800&height=600&nologo=true",
+        daysAgo: 14,
+        intensity: 8,
     },
     {
         title: "Garbage overflow near BDA Complex",
-        description: "The main garbage bins haven't been cleared for a week. The waste is spilling onto the footpath causing a severe stench.",
+        description: "The main garbage bins haven't been cleared for a week. The waste is spilling onto the footpath causing a severe stench and attracting stray animals.",
         category: "GARBAGE",
         area: "Koramangala",
-        imageUrl: "https://picsum.photos/seed/garbage1/800/600",
+        status: "IN_PROGRESS",
+        imageUrl: "https://image.pollinations.ai/prompt/A%20large%20pile%20of%20stinking%20garbage%20overflowing%20from%20a%20green%20bin%20onto%20the%20sidewalk?width=800&height=600&nologo=true",
         daysAgo: 5,
         intensity: 6,
     },
     {
         title: "Broken streetlight in 4th Block",
-        description: "Entire stretch of the road is pitch dark. This is a severe safety hazard for pedestrians walking home.",
+        description: "Entire stretch of the road is pitch dark. This is a severe safety hazard for pedestrians walking home from the metro station.",
         category: "STREETLIGHT",
         area: "Jayanagar",
-        imageUrl: "https://picsum.photos/seed/streetlight1/800/600",
+        status: "REPORTED",
+        imageUrl: "https://image.pollinations.ai/prompt/A%20broken%20unlit%20streetlight%20at%20night%20on%20a%20dark%20creepy%20street?width=800&height=600&nologo=true",
         daysAgo: 1,
         intensity: 8,
     },
     {
         title: "Major pipe burst flooding the road",
-        description: "Underground BWSSB water pipe has burst. Thousands of liters of clean water are being wasted and flooding the intersection.",
+        description: "Underground BWSSB water pipe has burst. Thousands of liters of clean water are being wasted and flooding the intersection, causing major traffic jams.",
         category: "WATER_LEAK",
         area: "Whitefield",
-        imageUrl: "https://picsum.photos/seed/water1/800/600",
+        status: "RESOLVED",
+        imageUrl: "https://image.pollinations.ai/prompt/A%20burst%20underground%20water%20pipe%20flooding%20a%20city%20road%20with%20clean%20water?width=800&height=600&nologo=true",
         daysAgo: 12,
         intensity: 9,
     },
     {
-        title: "Broken footpath tiles",
-        description: "Pedestrian walkway tiles are completely shattered here making it impossible for senior citizens to walk.",
-        category: "OTHER",
-        area: "Malleshwaram",
-        imageUrl: "https://picsum.photos/seed/path1/800/600",
-        daysAgo: 20,
-        intensity: 5,
-    },
-    {
         title: "Construction debris dumped on road",
-        description: "A local contractor dumped a truckload of cement rubble and sand right on the side of the main road.",
+        description: "A local contractor dumped a truckload of cement rubble and sand right on the side of the main road, completely blocking the left lane.",
         category: "GARBAGE",
         area: "HSR Layout",
-        imageUrl: "https://picsum.photos/seed/debris1/800/600",
-        daysAgo: 3,
+        status: "RESOLVED",
+        imageUrl: "https://image.pollinations.ai/prompt/Construction%20debris%20and%20broken%20bricks%20dumped%20illegally%20on%20the%20side%20of%20a%20road?width=800&height=600&nologo=true",
+        daysAgo: 20,
         intensity: 6,
     },
     {
         title: "Deep pothole hidden by rainwater",
-        description: "This pothole gets filled with rain and becomes completely invisible. Several accidents have happened already.",
+        description: "This pothole gets filled with rain and becomes completely invisible. Several two-wheelers have skidded here today.",
         category: "POTHOLE",
         area: "BTM Layout",
-        imageUrl: "https://picsum.photos/seed/pothole2/800/600",
+        status: "REPORTED",
+        imageUrl: "https://image.pollinations.ai/prompt/A%20deep%20pothole%20on%20a%20street%20filled%20with%20muddy%20rainwater?width=800&height=600&nologo=true",
+        daysAgo: 0,
+        intensity: 7,
+    },
+    {
+        title: "Continuous sewage leak into residential area",
+        description: "Foul-smelling raw sewage water has been flowing onto the street for three days straight. Urgent health risk for children playing nearby.",
+        category: "WATER_LEAK",
+        area: "JP Nagar",
+        status: "IN_PROGRESS",
+        imageUrl: "https://image.pollinations.ai/prompt/Raw%20sewage%20water%20leaking%20and%20flowing%20onto%20a%20residential%20city%20street?width=800&height=600&nologo=true",
+        daysAgo: 4,
+        intensity: 10,
+    },
+    {
+        title: "Flickering street lamps on main avenue",
+        description: "Three adjacent street lamps keep flickering on and off all night like a strobe light, causing severe distraction to drivers.",
+        category: "STREETLIGHT",
+        area: "Rajajinagar",
+        status: "RESOLVED",
+        imageUrl: "https://image.pollinations.ai/prompt/A%20flickering%20faulty%20streetlight%20on%20a%20highway%20at%20night?width=800&height=600&nologo=true",
+        daysAgo: 25,
+        intensity: 5,
+    },
+    {
+        title: "Fallen tree blocking the cross road",
+        description: "A large branch snapped during last night's storm and is blocking one lane completely. Traffic is backing up.",
+        category: "OTHER",
+        area: "Malleshwaram",
+        status: "REPORTED",
+        imageUrl: "https://image.pollinations.ai/prompt/A%20large%20fallen%20tree%20blocking%20a%20residential%20city%20road%20after%20a%20storm?width=800&height=600&nologo=true",
         daysAgo: 1,
         intensity: 7,
     },
     {
-        title: "Continuous sewage leak",
-        description: "Foul-smelling sewage water has been flowing onto the street for three days straight. Urgent health risk.",
-        category: "WATER_LEAK",
-        area: "Marathahalli",
-        imageUrl: "https://picsum.photos/seed/water2/800/600",
-        daysAgo: 4,
+        title: "Series of potholes near metro pillar 45",
+        description: "The road surface has completely eroded near the pillar. Traffic slows to a crawl creating a massive bottleneck during peak hours.",
+        category: "POTHOLE",
+        area: "Jayanagar",
+        status: "IN_PROGRESS",
+        imageUrl: "https://image.pollinations.ai/prompt/A%20terrible%20damaged%20city%20road%20full%20of%20multiple%20deep%20potholes?width=800&height=600&nologo=true",
+        daysAgo: 3,
         intensity: 8,
     },
     {
-        title: "Flickering street lamps",
-        description: "Three adjacent street lamps keep flickering on and off all night like a strobe light.",
-        category: "STREETLIGHT",
-        area: "Rajajinagar",
-        imageUrl: "https://picsum.photos/seed/streetlight2/800/600",
-        daysAgo: 15,
-        intensity: 6,
-    },
-    {
-        title: "Fallen tree blocking the cross road",
-        description: "A large branch snapped during last night's storm and is blocking one lane completely.",
-        category: "OTHER",
-        area: "JP Nagar",
-        imageUrl: "https://picsum.photos/seed/tree1/800/600",
-        daysAgo: 0,
-        intensity: 6,
+        title: "Illegal garbage dumping yard",
+        description: "An empty lot has been turned into an illegal dumping ground by commercial trucks in the middle of the night.",
+        category: "GARBAGE",
+        area: "Whitefield",
+        status: "REPORTED",
+        imageUrl: "https://image.pollinations.ai/prompt/A%20huge%20illegal%20garbage%20dumping%20ground%20in%20an%20empty%20city%20lot?width=800&height=600&nologo=true",
+        daysAgo: 1,
+        intensity: 7,
     },
 ];
 
@@ -124,14 +142,21 @@ const officerData = [
     { name: "Suresh Gowda", area: "Indiranagar" },
     { name: "Lakshmi Devi", area: "Jayanagar" },
     { name: "Anil Reddy", area: "Whitefield" },
+    { name: "Vikram Bhat", area: "Marathahalli" },
+    { name: "Deepak Kumar", area: "HSR Layout" },
+    { name: "Ayesha Khan", area: "BTM Layout" },
+    { name: "Rahul Singh", area: "Rajajinagar" },
+    { name: "Sneha Nair", area: "Malleshwaram" },
+    { name: "Amit Desai", area: "JP Nagar" },
 ];
 
 const citizenData = [
     { name: "Aarav Patel" },
     { name: "Nisha Rao" },
-    { name: "Vikram Singh" },
-    { name: "Divya Menon" },
     { name: "Arjun Shetty" },
+    { name: "Divya Menon" },
+    { name: "Kiran Kumar" },
+    { name: "Meera Reddy" },
 ];
 
 const commentMessages = [
@@ -145,6 +170,8 @@ const commentMessages = [
     "Sewage smell is unbearable in this stretch.",
     "Street lamps flicker all night; very unsafe.",
     "Fallen tree is causing a traffic bottleneck.",
+    "This officer always asks for bribes, action is needed.",
+    "I've also experienced this, it's terrible.",
 ];
 
 const ratingFeedbacks = [
@@ -187,7 +214,7 @@ function dateFromDaysAgo(daysAgo, index) {
 }
 
 async function main() {
-    console.log("🌱 Starting seed...\n");
+    console.log("🌱 Starting realistic seed...\n");
 
     // Clean existing data
     await prisma.notification.deleteMany();
@@ -247,24 +274,30 @@ async function main() {
     }
     console.log(`👥 Created ${citizens.length} citizens\n`);
 
-    // — Create Issues (Exactly 10 with images) —
+    // — Create Issues —
     const issues = [];
     for (let i = 0; i < issueSeeds.length; i++) {
         const item = issueSeeds[i];
         const locationDef = bengaluruLocations.find((l) => l.name === item.area) || bengaluruLocations[0];
         const citizen = citizens[i % citizens.length];
-        const officer = officers.find((o) => o.area === item.area) || officers[i % officers.length];
+        const officer = officers.find((o) => o.area === item.area) || randomPick(officers);
 
         const createdAt = dateFromDaysAgo(item.daysAgo, i);
         const lat = locationDef.lat + randomFloat(-0.003, 0.003);
         const lng = locationDef.lng + randomFloat(-0.003, 0.003);
+
+        const resolved = item.status === "RESOLVED";
+        const in_progress = item.status === "IN_PROGRESS";
+
+        // Bribery issues go to president if no area or if severe, let's keep assignment realistic
+        const assignedOfficerId = item.category === "BRIBERY" && item.intensity >= 9 ? president.id : officer.id;
 
         const issue = await prisma.issue.create({
             data: {
                 title: item.title,
                 description: item.description,
                 category: item.category,
-                status: "RESOLVED",
+                status: item.status,
                 city: "Bengaluru",
                 area: item.area,
                 latitude: lat,
@@ -274,20 +307,20 @@ async function main() {
                 intensity: item.intensity,
                 createdById: citizen.id,
                 createdAt,
-                assignedToId: officer.id,
-                resolvedById: officer.id,
+                assignedToId: (resolved || in_progress) ? assignedOfficerId : null,
+                resolvedById: resolved ? assignedOfficerId : null,
                 votes: 0,
             },
         });
         issues.push(issue);
     }
-    console.log(`📋 Created exactly ${issues.length} issues with image URLs\n`);
+    console.log(`📋 Created exactly ${issues.length} realistic issues with AI-generated thumbnails\n`);
 
-    // — Create Comments (Exactly 10) —
+    // — Create Comments —
     let commentCount = 0;
-    for (let i = 0; i < TARGET_COUNT; i++) {
+    for (let i = 0; i < issues.length * 2; i++) {
         const issue = issues[i % issues.length];
-        const commenter = i % 3 === 0 ? randomPick(officers) : citizens[i % citizens.length];
+        const commenter = i % 4 === 0 ? randomPick(officers) : citizens[i % citizens.length];
         await prisma.comment.create({
             data: {
                 comment: commentMessages[i % commentMessages.length],
@@ -300,17 +333,25 @@ async function main() {
     }
     console.log(`💬 Created ${commentCount} comments`);
 
-    // — Create Votes (Exactly 10) —
+    // — Create Votes —
     let voteCount = 0;
     const voteCountsByIssue = new Map();
-    for (let i = 0; i < issues.length; i++) {
-        const issue = issues[i];
+    for (let i = 0; i < issues.length * 4; i++) {
+        const issue = issues[i % issues.length];
         const voter = citizens[i % citizens.length];
-        await prisma.vote.create({
-            data: { issueId: issue.id, userId: voter.id },
+
+        // Check if vote already exists for this issue+user manually
+        const existingVote = await prisma.vote.findFirst({
+            where: { issueId: issue.id, userId: voter.id }
         });
-        voteCount++;
-        voteCountsByIssue.set(issue.id, (voteCountsByIssue.get(issue.id) || 0) + 1);
+
+        if (!existingVote) {
+            await prisma.vote.create({
+                data: { issueId: issue.id, userId: voter.id },
+            });
+            voteCount++;
+            voteCountsByIssue.set(issue.id, (voteCountsByIssue.get(issue.id) || 0) + 1);
+        }
     }
     for (const issue of issues) {
         await prisma.issue.update({
@@ -320,11 +361,13 @@ async function main() {
     }
     console.log(`👍 Created ${voteCount} votes`);
 
-    // — Create Ratings (Exactly 10) —
+    // — Create Ratings (Only for RESOLVED issues) —
     let ratingCount = 0;
     for (let i = 0; i < issues.length; i++) {
         const issue = issues[i];
-        const officerId = issue.resolvedById || issue.assignedToId;
+        if (issue.status !== "RESOLVED") continue;
+
+        const officerId = issue.resolvedById;
         if (!officerId) continue;
 
         await prisma.rating.create({
@@ -341,10 +384,10 @@ async function main() {
     }
     console.log(`⭐ Created ${ratingCount} ratings`);
 
-    // — Create Notifications (Exactly 10) —
+    // — Create Notifications —
     let notificationCount = 0;
     const recipients = [president, ...officers];
-    for (let i = 0; i < TARGET_COUNT; i++) {
+    for (let i = 0; i < issues.length * 2; i++) {
         const issue = issues[i % issues.length];
         const recipient = recipients[i % recipients.length];
         const severityLabel = issue.intensity >= 8 ? "High intensity" : "New";
