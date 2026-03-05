@@ -576,10 +576,10 @@ video {
   --earth-100: #f9e6b8;
   --earth-ink: #f6efe4;
   --earth-muted: #c9b9a3;
-  --earth-moss: #8fa14b;
-  --earth-ember: #ff8f3d;
-  --earth-ember-soft: rgba(255, 143, 61, 0.15);
-  --earth-moss-soft: rgba(143, 161, 75, 0.2);
+  --earth-moss: #19b7d4;
+  --earth-ember: #23e3ff;
+  --earth-ember-soft: rgba(35, 227, 255, 0.18);
+  --earth-moss-soft: rgba(25, 183, 212, 0.22);
 }
 
 body {
