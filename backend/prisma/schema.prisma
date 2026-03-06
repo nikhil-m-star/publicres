@@ -8,6 +8,112 @@ datasource db {
   directUrl = env("DIRECT_URL")
 }
 
+model User {
+  id              String         @id @default(cuid())
+  clerkId         String         @unique
+  name            String
+  email           String         @unique
+  role            Role           @default(CITIZEN)
+  city            String?        @default("Bengaluru")
+  area            String?
+  avgRating       Float          @default(0)
+  resolvedCount   Int            @default(0)
+  assignedCount   Int            @default(0)
+  createdAt       DateTime       @default(now())
+  comments        Comment[]
+  assignedIssues  Issue[]        @relation("AssignedIssues")
+  issues          Issue[]        @relation("CreatedIssues")
+  resolvedIssues  Issue[]        @relation("ResolvedIssues")
+  notifications   Notification[]
+  ratingsGiven    Rating[]       @relation("RatingGiver")
+  ratingsReceived Rating[]       @relation("RatingReceiver")
+  votes           Vote[]
+
+  @@map("users")
+}
+
+model Issue {
+  id            String         @id @default(cuid())
+  title         String
+  description   String
+  category      Category
+  status        Status         @default(REPORTED)
+  city          String         @default("Bengaluru")
+  area          String?
+  latitude      Float
+  longitude     Float
+  imageUrl      String?
+  department    String?
+  intensity     Float?
+  votes         Int            @default(0)
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+  createdById   String
+  assignedToId  String?
+  resolvedById  String?
+  comments      Comment[]
+  assignedTo    User?          @relation("AssignedIssues", fields: [assignedToId], references: [id])
+  createdBy     User           @relation("CreatedIssues", fields: [createdById], references: [id])
+  resolvedBy    User?          @relation("ResolvedIssues", fields: [resolvedById], references: [id])
+  notifications Notification[]
+  ratings       Rating[]
+  voteRecords   Vote[]
+
+  @@map("issues")
+}
+
+model Notification {
+  id        String   @id @default(cuid())
+  message   String
+  isRead    Boolean  @default(false)
+  createdAt DateTime @default(now())
+  userId    String
+  issueId   String?
+  issue     Issue?   @relation(fields: [issueId], references: [id])
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("notifications")
+}
+
+model Vote {
+  id      String @id @default(cuid())
+  issueId String
+  userId  String
+  issue   Issue  @relation(fields: [issueId], references: [id], onDelete: Cascade)
+  user    User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([issueId, userId])
+  @@map("votes")
+}
+
+model Comment {
+  id        String   @id @default(cuid())
+  comment   String
+  createdAt DateTime @default(now())
+  issueId   String
+  userId    String
+  issue     Issue    @relation(fields: [issueId], references: [id], onDelete: Cascade)
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("comments")
+}
+
+model Rating {
+  id        String   @id @default(cuid())
+  score     Int
+  feedback  String?
+  createdAt DateTime @default(now())
+  issueId   String?
+  givenById String
+  officerId String
+  givenBy   User     @relation("RatingGiver", fields: [givenById], references: [id])
+  issue     Issue?   @relation(fields: [issueId], references: [id], onDelete: Cascade)
+  officer   User     @relation("RatingReceiver", fields: [officerId], references: [id])
+
+  @@unique([issueId, givenById])
+  @@map("ratings")
+}
+
 enum Role {
   CITIZEN
   OFFICER
@@ -27,121 +133,4 @@ enum Status {
   REPORTED
   IN_PROGRESS
   RESOLVED
-}
-
-model User {
-  id            String    @id @default(cuid())
-  clerkId       String    @unique
-  name          String
-  email         String    @unique
-  role          Role      @default(CITIZEN)
-  city          String?   @default("Bengaluru") // Defaulting to Bengaluru for now
-  area          String?   // Officer's assigned area
-  avgRating     Float     @default(0)
-  resolvedCount Int       @default(0)
-  assignedCount Int       @default(0)
-  createdAt     DateTime  @default(now())
-
-  issues         Issue[]   @relation("CreatedIssues")
-  assignedIssues Issue[]   @relation("AssignedIssues")
-  resolvedIssues Issue[]   @relation("ResolvedIssues")
-  votes          Vote[]
-  comments       Comment[]
-  ratingsGiven   Rating[]  @relation("RatingGiver")
-  ratingsReceived Rating[] @relation("RatingReceiver")
-  notifications  Notification[]
-
-  @@map("users")
-}
-
-model Issue {
-  id          String   @id @default(cuid())
-  title       String
-  description String
-  category    Category
-  status      Status   @default(REPORTED)
-  city        String   @default("Bengaluru")
-  area        String?
-  latitude    Float
-  longitude   Float
-  imageUrl    String?
-  department  String?
-  intensity   Float?   // AI scored 1-10
-  votes       Int      @default(0)
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-
-  createdBy    User    @relation("CreatedIssues", fields: [createdById], references: [id])
-  createdById  String
-
-  assignedTo   User?   @relation("AssignedIssues", fields: [assignedToId], references: [id])
-  assignedToId String?
-
-  resolvedBy   User?   @relation("ResolvedIssues", fields: [resolvedById], references: [id])
-  resolvedById String?
-
-  voteRecords Vote[]
-  comments    Comment[]
-  ratings     Rating[]
-  notifications Notification[]
-
-  @@map("issues")
-}
-
-model Notification {
-  id        String   @id @default(cuid())
-  message   String
-  isRead    Boolean  @default(false)
-  createdAt DateTime @default(now())
-
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId    String
-
-  issue     Issue?   @relation(fields: [issueId], references: [id], onDelete: SetNull)
-  issueId   String?
-
-  @@map("notifications")
-}
-
-model Vote {
-  id      String @id @default(cuid())
-  issue   Issue  @relation(fields: [issueId], references: [id], onDelete: Cascade)
-  issueId String
-  user    User   @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId  String
-
-  @@unique([issueId, userId])
-  @@map("votes")
-}
-
-model Comment {
-  id        String   @id @default(cuid())
-  comment   String
-  createdAt DateTime @default(now())
-
-  issue   Issue  @relation(fields: [issueId], references: [id], onDelete: Cascade)
-  issueId String
-  user    User   @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId  String
-
-  @@map("comments")
-}
-
-model Rating {
-  id        String   @id @default(cuid())
-  score     Int      // 1-5 stars
-  feedback  String?
-  createdAt DateTime @default(now())
-
-  issue   Issue?  @relation(fields: [issueId], references: [id], onDelete: Cascade)
-  issueId String?
-
-  givenBy   User   @relation("RatingGiver", fields: [givenById], references: [id])
-  givenById String
-
-  officer   User   @relation("RatingReceiver", fields: [officerId], references: [id])
-  officerId String
-
-  @@unique([issueId, givenById]) // one rating per issue per user (Postgres allows multiple nulls)
-  @@map("ratings")
 }
