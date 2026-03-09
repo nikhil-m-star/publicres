@@ -85,147 +85,62 @@ export default function Profile() {
     return (
         <div className="min-h-[100dvh] w-full flex flex-col items-center justify-center p-4">
             <div className="bg-white max-w-md w-full rounded-2xl shadow-xl overflow-hidden border border-gray-100">
-                {/* Header - Changes based on role */}
-                {roleKey === 'CITIZEN' && !success ? (
-                    <div className="bg-civic-600 p-8 text-center">
-                        <div className="w-16 h-16 bg-white/20 rounded-full flex items-center justify-center mx-auto mb-4 backdrop-blur-sm">
-                            <Shield className="w-8 h-8 text-white" />
-                        </div>
-                        <h1 className="text-2xl font-bold text-white mb-2">Profile Verification</h1>
-                        <p className="text-civic-100 mb-2 font-medium">Auto-recognize your role using your email domain.</p>
-                        <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/20 text-xs font-medium text-white border border-white/20">
-                            <AlertCircle className="w-3.5 h-3.5" />
-                            Requires a valid bmsce.ac.in email
-                        </div>
+                {/* Simplified Header - Always Blue */}
+                <div className="bg-civic-600 p-8 text-center">
+                    <div className="w-16 h-16 bg-white/20 rounded-full flex items-center justify-center mx-auto mb-4 backdrop-blur-sm">
+                        <Shield className="w-8 h-8 text-white" />
                     </div>
-                ) : (
-                    <div className="bg-gray-900 p-8 text-center relative overflow-hidden">
-                        <div className="absolute top-0 right-0 w-32 h-32 bg-ember-500/10 rounded-full -mr-16 -mt-16 blur-3xl"></div>
-                        <div className="absolute bottom-0 left-0 w-24 h-24 bg-civic-500/10 rounded-full -ml-12 -mb-12 blur-2xl"></div>
-                        <div className="w-16 h-16 bg-gradient-to-br from-gray-800 to-gray-900 rounded-2xl flex items-center justify-center mx-auto mb-4 border border-gray-700 shadow-lg">
-                            <RoleIcon className={`w-8 h-8 ${roleKey === 'CITIZEN' ? 'text-gray-400' : 'text-ember-400'}`} />
-                        </div>
-                        <h1 className="text-2xl font-bold text-white mb-1">
-                            {roleKey === 'CITIZEN' ? 'User Profile' : 'Account Dashboard'}
-                        </h1>
-                        <p className="text-gray-400 text-sm font-medium">
-                            {roleKey === 'CITIZEN' ? 'Citizen Account' : `${roleMeta.label} Status Active`}
-                        </p>
+                    <h1 className="text-2xl font-bold text-white mb-2">Profile Verification</h1>
+                    <p className="text-civic-100 mb-2 font-medium">Auto-recognize your role using your email domain.</p>
+                    <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/20 text-xs font-medium text-white border border-white/20">
+                        <AlertCircle className="w-3.5 h-3.5" />
+                        Requires a valid bmsce.ac.in email
                     </div>
-                )}
+                </div>
 
                 <div className="p-8 space-y-6">
-                    {/* User Identity Details Card */}
-                    <div className="rounded-2xl border border-gray-100 bg-gray-50/60 p-5">
+                    {/* Simplified User Card */}
+                    <div className="rounded-2xl border border-gray-100 bg-gray-50/60 p-4">
                         <div className="flex items-center gap-4">
-                            <div className="w-14 h-14 rounded-2xl bg-white flex items-center justify-center border border-gray-200 shadow-sm overflow-hidden">
-                                {isSignedIn ? (
-                                    <img
-                                        src={user?.imageUrl || `https://api.dicebear.com/7.x/initials/svg?seed=${user?.name || 'User'}`}
-                                        alt="Avatar"
-                                        className="w-full h-full object-cover"
-                                    />
-                                ) : (
-                                    <User className="w-7 h-7 text-gray-300" />
-                                )}
+                            <div className="w-12 h-12 rounded-xl bg-white flex items-center justify-center border border-gray-200">
+                                <RoleIcon className="w-6 h-6 text-gray-700" />
                             </div>
                             <div className="flex-1">
-                                <div className="flex items-center gap-2 mb-1">
-                                    <h2 className="text-lg font-bold text-gray-900">{user?.name || 'User'}</h2>
-                                    <span className={`text-[10px] uppercase tracking-wider font-extrabold px-2 py-0.5 rounded-md border ${roleMeta.badge}`}>
+                                <div className="flex items-center gap-2 flex-wrap">
+                                    <h2 className="text-base font-semibold text-gray-900">User Card</h2>
+                                    <span className={`text-xs font-medium px-2.5 py-1 rounded-full border ${roleMeta.badge}`}>
                                         {roleMeta.label}
                                     </span>
                                 </div>
                                 {meQuery.isLoading ? (
-                                    <div className="h-4 w-32 bg-gray-200 animate-pulse rounded"></div>
+                                    <p className="text-sm text-gray-500 mt-1">Loading profile…</p>
                                 ) : (
-                                    <div className="space-y-1">
-                                        <div className="flex items-center gap-2 text-xs text-gray-500">
-                                            <Mail className="w-3.5 h-3.5" />
-                                            <span>{user?.email || 'No email provided'}</span>
+                                    <div className="mt-2 space-y-1 text-sm text-gray-600">
+                                        <div className="flex items-center gap-2">
+                                            <User className="w-4 h-4 text-gray-400" />
+                                            <span className="font-medium text-gray-700">{user?.name || 'User'}</span>
                                         </div>
-                                        <div className="flex items-center gap-2 text-xs text-gray-500">
-                                            <Calendar className="w-3.5 h-3.5" />
-                                            <span>Member since {formatDate(user?.createdAt)}</span>
+                                        <div className="flex items-center gap-2">
+                                            <Mail className="w-4 h-4 text-gray-400" />
+                                            <span>{user?.email || '—'}</span>
                                         </div>
                                     </div>
                                 )}
                             </div>
                         </div>
-
-                        {/* Performance Dashboard for Verified Roles */}
-                        {roleKey !== 'CITIZEN' && !meQuery.isLoading && (
-                            <div className="mt-6 pt-6 border-t border-gray-200/60">
-                                <div className="flex items-center justify-between mb-4">
-                                    <h3 className="text-xs font-bold text-gray-900 uppercase tracking-widest flex items-center gap-2">
-                                        <BarChart3 className="w-3.5 h-3.5 text-ember-500" />
-                                        Performance Stats
-                                    </h3>
-                                    <div className="text-[10px] font-bold text-ember-600 bg-ember-50 px-2 py-0.5 rounded-full border border-ember-100 uppercase">
-                                        Official Data
-                                    </div>
-                                </div>
-                                <div className="grid grid-cols-2 gap-3">
-                                    <div className="bg-white rounded-xl p-3 border border-gray-100 shadow-sm">
-                                        <div className="flex items-center gap-2 mb-1.5">
-                                            <div className="w-6 h-6 bg-green-50 rounded-lg flex items-center justify-center">
-                                                <CheckSquare className="w-3.5 h-3.5 text-green-600" />
-                                            </div>
-                                            <span className="text-[10px] font-bold text-gray-500 uppercase">Resolved</span>
-                                        </div>
-                                        <div className="text-2xl font-black text-gray-900 leading-none">{user?.resolvedCount || 0}</div>
-                                    </div>
-                                    <div className="bg-white rounded-xl p-3 border border-gray-100 shadow-sm">
-                                        <div className="flex items-center gap-2 mb-1.5">
-                                            <div className="w-6 h-6 bg-blue-50 rounded-lg flex items-center justify-center">
-                                                <Shield className="w-3.5 h-3.5 text-blue-600" />
-                                            </div>
-                                            <span className="text-[10px] font-bold text-gray-500 uppercase">Assigned</span>
-                                        </div>
-                                        <div className="text-2xl font-black text-gray-900 leading-none">{user?.assignedCount || 0}</div>
-                                    </div>
-                                    <div className="col-span-2 bg-gray-900 rounded-xl p-4 border border-gray-800 shadow-lg mt-1">
-                                        <div className="flex items-center justify-between">
-                                            <div>
-                                                <div className="flex items-center gap-2 mb-2">
-                                                    <Star className="w-3.5 h-3.5 text-ember-500 fill-ember-500" />
-                                                    <span className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">Public Service Rating</span>
-                                                </div>
-                                                <div className="flex items-baseline gap-1">
-                                                    <span className="text-3xl font-black text-white italic tracking-tighter">
-                                                        {user?.avgRating > 0 ? user.avgRating.toFixed(1) : '5.0'}
-                                                    </span>
-                                                    <span className="text-xs font-bold text-gray-500">/ 5.0</span>
-                                                </div>
-                                            </div>
-                                            <div className="flex gap-0.5 bg-gray-800/50 p-2 rounded-lg border border-gray-700">
-                                                {[1, 2, 3, 4, 5].map((star) => (
-                                                    <Star
-                                                        key={star}
-                                                        className={`w-4 h-4 ${star <= Math.round(user?.avgRating || 5) ? 'text-ember-400 fill-ember-400' : 'text-gray-700'}`}
-                                                    />
-                                                ))}
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        )}
                     </div>
 
                     {/* Verification Actions / Status */}
                     {success ? (
-                        <div className="text-center animate-fade-in space-y-4 py-6 px-4 bg-green-50 rounded-2xl border border-green-100">
-                            <div className="w-16 h-16 bg-green-500 rounded-full flex items-center justify-center mx-auto shadow-lg shadow-green-200">
-                                <CheckCircle2 className="w-8 h-8 text-white" />
-                            </div>
-                            <h2 className="text-xl font-bold text-gray-900 tracking-tight">System Access Upgraded</h2>
-                            <div className="text-green-700 text-sm space-y-1 leading-relaxed">
-                                <p>You have been officially recognized.</p>
+                        <div className="text-center animate-fade-in space-y-4 py-4">
+                            <CheckCircle2 className="w-16 h-16 text-green-500 mx-auto" />
+                            <h2 className="text-xl font-semibold text-gray-900">Verification Successful</h2>
+                            <div className="text-gray-500 space-y-1">
+                                <p>Your account has been upgraded successfully.</p>
                                 {verificationResult?.assignedRole && (
-                                    <p className="font-bold">
-                                        Role: {verificationResult.assignedRole}
-                                        {verificationResult.assignedArea ? ` · Area: ${verificationResult.assignedArea}` : ''}
+                                    <p className="text-sm text-gray-600">
+                                        Assigned: <span className="font-semibold">{verificationResult.assignedRole}</span>
+                                        {verificationResult.assignedArea ? ` · ${verificationResult.assignedArea}` : ''}
                                     </p>
                                 )}
                             </div>
@@ -238,36 +153,35 @@ export default function Profile() {
                             }}
                             className="space-y-5"
                         >
-                            <div className="rounded-xl border border-dashed border-gray-200 bg-gray-50/50 p-4 text-[13px] text-gray-600 leading-relaxed italic">
-                                <div className="flex gap-3">
-                                    <Shield className="w-5 h-5 text-civic-500 shrink-0 mt-0.5" />
-                                    <div>
-                                        <p className="font-bold text-gray-800 not-italic">Officer & President Privileges</p>
-                                        <p className="mt-1">Verified members gain access to incident resolution tools, analytics dashboard, and direct civic reporting.</p>
-                                    </div>
-                                </div>
+                            <div className="rounded-xl border border-dashed border-gray-200 bg-white p-4 text-sm text-gray-600">
+                                <p className="font-medium text-gray-800">Automatic verification</p>
+                                <p className="mt-1">If your email matches the officer directory, your role and area will be assigned automatically.</p>
                             </div>
 
                             {verifyMutation.isError && (
-                                <div className="flex items-center gap-2 text-red-600 text-[13px] font-bold bg-red-50 p-3 rounded-xl border border-red-100">
-                                    <AlertCircle className="w-4 h-4" />
-                                    {verifyMutation.error?.response?.data?.error || "Email verification failed"}
-                                </div>
+                                <p className="text-red-500 text-sm text-center bg-red-50 py-2 rounded-lg">
+                                    {verifyMutation.error?.response?.data?.error || "Verification failed"}
+                                </p>
                             )}
 
                             <button
                                 type="submit"
                                 disabled={verifyMutation.isPending}
-                                className="w-full btn-primary py-4 rounded-xl flex items-center justify-center gap-2 transform active:scale-[0.98] transition-all shadow-lg shadow-civic-200"
+                                className="w-full btn-primary py-3 flex items-center justify-center gap-2"
                             >
-                                {verifyMutation.isPending ? <Loader2 className="w-5 h-5 animate-spin" /> : <Sparkles className="w-5 h-5 text-white/80" />}
-                                <span className="font-extrabold uppercase tracking-widest text-sm">
-                                    {verifyMutation.isPending ? 'Verifying...' : 'Verify & Upgrade Now'}
-                                </span>
+                                {verifyMutation.isPending ? <Loader2 className="w-5 h-5 animate-spin" /> : <Shield className="w-5 h-5 text-white/80" />}
+                                {verifyMutation.isPending ? 'Verifying...' : 'Verify & Upgrade'}
                             </button>
                         </form>
                     ) : (
-                        <div className="space-y-3">
+                        <div className="space-y-3 pt-2">
+                            <div className="rounded-xl border border-green-200 bg-green-50 p-6 text-center shadow-sm">
+                                <Shield className="w-12 h-12 text-green-500 mx-auto mb-3" />
+                                <h3 className="text-lg font-semibold text-green-900 mb-1">Account Verified</h3>
+                                <p className="text-sm text-green-700">
+                                    You are signed in as an official <strong>{roleMeta.label}</strong>.
+                                </p>
+                            </div>
                             <button
                                 onClick={() => navigate('/admin')}
                                 className="w-full bg-gray-900 text-white py-4 rounded-xl font-bold flex items-center justify-center gap-2 hover:bg-black transition-all shadow-xl active:scale-[0.98]"
@@ -275,9 +189,6 @@ export default function Profile() {
                                 <BarChart3 className="w-5 h-5 text-ember-400" />
                                 Go to Command Center
                             </button>
-                            <p className="text-[11px] text-center text-gray-400 font-medium italic">
-                                Your account is authorized for administrative actions.
-                            </p>
                         </div>
                     )}
                 </div>
