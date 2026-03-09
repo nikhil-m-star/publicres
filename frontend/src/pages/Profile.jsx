@@ -31,9 +31,9 @@ export default function Profile() {
         onSuccess: (data) => {
             setSuccess(true);
             setVerificationResult(data);
-            queryClient.invalidateQueries({ queryKey: ['me'] }); // if applicable, to hard-refresh user state
-            // Use client-side routing instead of full page reload
-            setTimeout(() => navigate('/admin'), 2000);
+            queryClient.invalidateQueries({ queryKey: ['me'] });
+            // Revert back to the profile view after showing success message
+            setTimeout(() => setSuccess(false), 3000);
         }
     });
 
@@ -47,7 +47,7 @@ export default function Profile() {
     const RoleIcon = roleMeta.icon;
 
     return (
-        <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
+        <div className="min-h-[calc(100vh-140px)] flex flex-col items-center justify-center p-4 mt-8 mb-16">
             <div className="bg-white max-w-md w-full rounded-2xl shadow-xl overflow-hidden border border-gray-100">
                 <div className="bg-civic-600 p-8 text-center">
                     <div className="w-16 h-16 bg-white/20 rounded-full flex items-center justify-center mx-auto mb-4 backdrop-blur-sm">
@@ -111,7 +111,7 @@ export default function Profile() {
                             <CheckCircle2 className="w-16 h-16 text-green-500 mx-auto" />
                             <h2 className="text-xl font-semibold text-gray-900">Verification Successful</h2>
                             <div className="text-gray-500 space-y-1">
-                                <p>Your account has been upgraded. Redirecting to Admin Panel...</p>
+                                <p>Your account has been upgraded successfully.</p>
                                 {verificationResult?.assignedRole && (
                                     <p className="text-sm text-gray-600">
                                         Assigned: <span className="font-semibold">{verificationResult.assignedRole}</span>
