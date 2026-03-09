@@ -123,6 +123,14 @@ export default function Profile() {
                                 )}
                             </div>
                         </div>
+                    ) : roleKey !== 'CITIZEN' ? (
+                        <div className="rounded-xl border border-green-200 bg-green-50 p-6 text-center shadow-sm">
+                            <Shield className="w-12 h-12 text-green-500 mx-auto mb-3" />
+                            <h3 className="text-lg font-semibold text-green-900 mb-1">Account Verified</h3>
+                            <p className="text-sm text-green-700">
+                                You are currently signed in as an official <strong>{roleMeta.label}</strong> for <strong>{user?.area || user?.city || 'your region'}</strong>.
+                            </p>
+                        </div>
                     ) : (
                         <form
                             onSubmit={(e) => {
