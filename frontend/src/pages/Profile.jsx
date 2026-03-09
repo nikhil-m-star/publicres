@@ -26,7 +26,7 @@ export default function Profile() {
         mutationFn: async () => {
             const token = await getToken();
             setAuthToken(token);
-            return api.verifyByEmail();
+            return api.verifyByEmail({});
         },
         onSuccess: (data) => {
             setSuccess(true);
@@ -34,6 +34,12 @@ export default function Profile() {
             queryClient.invalidateQueries({ queryKey: ['me'] });
             // Revert back to the profile view after showing success message
             setTimeout(() => setSuccess(false), 3000);
+        },
+        onError: (error) => {
+            console.error("Verification failed:", error);
+            if (error.response) {
+                console.error("Response data:", error.response.data);
+            }
         }
     });
 
@@ -47,7 +53,7 @@ export default function Profile() {
     const RoleIcon = roleMeta.icon;
 
     return (
-        <div className="min-h-[calc(100vh-140px)] flex flex-col items-center justify-center p-4 mt-8 mb-16">
+        <div className="min-h-[100dvh] w-full flex flex-col items-center justify-center p-4">
             <div className="bg-white max-w-md w-full rounded-2xl shadow-xl overflow-hidden border border-gray-100">
                 <div className="bg-civic-600 p-8 text-center">
                     <div className="w-16 h-16 bg-white/20 rounded-full flex items-center justify-center mx-auto mb-4 backdrop-blur-sm">
@@ -155,8 +161,8 @@ export default function Profile() {
                                 disabled={verifyMutation.isPending}
                                 className="w-full btn-primary py-3 flex items-center justify-center gap-2"
                             >
-                                {verifyMutation.isPending && <Loader2 className="w-5 h-5 animate-spin" />}
-                                Verify & Upgrade
+                                {verifyMutation.isPending ? <Loader2 className="w-5 h-5 animate-spin" /> : <Shield className="w-5 h-5 text-white/80" />}
+                                {verifyMutation.isPending ? 'Verifying...' : 'Verify & Upgrade'}
                             </button>
                         </form>
                     )}

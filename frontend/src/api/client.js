@@ -55,7 +55,7 @@ export const api = {
     markNotificationRead: (id) => client.put(`/admin/notifications/${id}/read`).then((r) => r.data),
 
     // Email Domain Admin Verification
-    verifyByEmail: (payload) => client.post('/admin/verify-email', payload).then((r) => r.data),
+    verifyByEmail: (payload = {}) => client.post('/admin/verify-email', payload).then((r) => r.data),
 }
 
 export default client
