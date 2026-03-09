@@ -3239,7 +3239,11 @@ h3,
   }
 
   .app-shell {
-    padding-bottom: calc(85px + env(safe-area-inset-bottom));
+    padding-bottom: calc(110px + env(safe-area-inset-bottom));
+  }
+
+  .footer {
+    display: none;
   }
 
   .mobile-nav {
