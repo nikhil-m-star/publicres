@@ -32,10 +32,9 @@ export default function Profile() {
             setSuccess(true);
             setVerificationResult(data);
             queryClient.invalidateQueries({ queryKey: ['me'] });
-            // Revert back and redirect to dashboard after showing success message briefly
+            // Revert back and show the updated profile profile after success message briefly
             setTimeout(() => {
                 setSuccess(false);
-                navigate('/dashboard');
             }, 800);
         },
         onError: (error) => {
