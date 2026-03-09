@@ -1,18 +1,46 @@
 import { Link, useLocation } from 'react-router-dom'
 import { SignedIn, SignedOut, SignInButton, UserButton } from '@clerk/clerk-react'
 import { Menu, X, Shield, MapPin, Map, Trophy, Sparkles, Home, User } from 'lucide-react'
+import { useState, useEffect } from 'react'
 import NotificationsDropdown from './NotificationsDropdown'
 import { useAuthSync } from '../hooks/useIssues'
 
 export default function Navbar() {
     useAuthSync()
     const location = useLocation()
+    const [isVisible, setIsVisible] = useState(true)
+    const [lastScrollY, setLastScrollY] = useState(0)
+
+    useEffect(() => {
+        const handleScroll = () => {
+            const currentScrollY = window.scrollY
+
+            // Only apply hide/show logic on mobile screens
+            if (window.innerWidth <= 900) {
+                if (currentScrollY > lastScrollY && currentScrollY > 60) {
+                    // Scrolling down
+                    setIsVisible(false)
+                } else {
+                    // Scrolling up
+                    setIsVisible(true)
+                }
+            } else {
+                // Always visible on desktop
+                setIsVisible(true)
+            }
+
+            setLastScrollY(currentScrollY)
+        }
+
+        window.addEventListener('scroll', handleScroll, { passive: true })
+        return () => window.removeEventListener('scroll', handleScroll)
+    }, [lastScrollY])
 
     const isActive = (path) => location.pathname === path
 
     return (
         <>
-            <nav className="nav-shell">
+            <nav className={`nav-shell transition-transform duration-300 ${!isVisible ? '-translate-y-full' : 'translate-y-0'}`}>
                 <div className="nav-inner">
                     {/* Logo */}
                     <Link to="/" className="nav-brand">
