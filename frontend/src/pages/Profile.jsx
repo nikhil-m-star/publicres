@@ -32,8 +32,8 @@ export default function Profile() {
             setSuccess(true);
             setVerificationResult(data);
             queryClient.invalidateQueries({ queryKey: ['me'] });
-            // Revert back to the profile view after showing success message
-            setTimeout(() => setSuccess(false), 3000);
+            // Revert back to the profile view after showing success message briefly
+            setTimeout(() => setSuccess(false), 800);
         },
         onError: (error) => {
             console.error("Verification failed:", error);
