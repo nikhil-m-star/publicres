@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { api, setAuthToken } from '../api/client';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useAuth } from '@clerk/clerk-react';
-import { Shield, MapPin, Loader2, CheckCircle2, AlertCircle, User, Crown, Mail } from 'lucide-react';
+import { Shield, MapPin, Loader2, CheckCircle2, AlertCircle, User, Crown, Mail, Calendar, BarChart3, Star, CheckSquare } from 'lucide-react';
 
 export default function Profile() {
     const navigate = useNavigate();
@@ -47,11 +47,39 @@ export default function Profile() {
 
     const user = meQuery.data?.user;
     const roleKey = user?.role || 'CITIZEN';
-    const roleMeta = {
-        CITIZEN: { label: 'Citizen', badge: 'bg-gray-100 text-gray-700 border-gray-200', icon: User },
-        OFFICER: { label: 'Officer', badge: 'bg-blue-50 text-blue-700 border-blue-200', icon: Shield },
-        PRESIDENT: { label: 'President', badge: 'bg-amber-50 text-amber-700 border-amber-200', icon: Crown },
-    }[roleKey] || { label: 'Citizen', badge: 'bg-gray-100 text-gray-700 border-gray-200', icon: User };
+
+    const formatDate = (dateString) => {
+        if (!dateString) return '—';
+        return new Date(dateString).toLocaleDateString('en-US', {
+            month: 'long',
+            year: 'numeric'
+        });
+    };
+
+    const getRoleMeta = (role) => {
+        switch (role) {
+            case 'PRESIDENT':
+                return {
+                    label: 'President',
+                    icon: Crown,
+                    badge: 'bg-amber-100 text-amber-700 border-amber-200',
+                };
+            case 'OFFICER':
+                return {
+                    label: 'Officer',
+                    icon: Shield,
+                    badge: 'bg-blue-100 text-blue-700 border-blue-200',
+                };
+            default:
+                return {
+                    label: 'Citizen',
+                    icon: User,
+                    badge: 'bg-gray-100 text-gray-700 border-gray-200',
+                };
+        }
+    };
+
+    const roleMeta = getRoleMeta(roleKey);
     const RoleIcon = roleMeta.icon;
 
     return (
@@ -97,21 +125,61 @@ export default function Profile() {
                                             <span>{user?.email || '—'}</span>
                                         </div>
                                         <div className="flex items-center gap-2">
-                                            <MapPin className="w-4 h-4 text-gray-400" />
-                                            <span>{user?.area || (roleKey === 'OFFICER' ? 'Unassigned' : '—')}</span>
+                                            <Calendar className="w-4 h-4 text-gray-400" />
+                                            <span>Joined {formatDate(user?.createdAt)}</span>
                                         </div>
-                                        {roleKey !== 'CITIZEN' && (
-                                            <div className="flex items-center gap-2 pt-2 border-t border-gray-100 mt-2">
-                                                <div className="flex items-center gap-1.5 px-3 py-1.5 bg-amber-50 text-amber-700 rounded-lg">
-                                                    <span className="font-semibold text-sm">Overall Rating:</span>
-                                                    <span className="font-bold text-sm">{user?.avgRating > 0 ? user.avgRating.toFixed(1) : 'No ratings yet'}</span>
-                                                </div>
-                                            </div>
-                                        )}
                                     </div>
                                 )}
                             </div>
                         </div>
+
+                        {/* Stats Section for Officers/Presidents */}
+                        {roleKey !== 'CITIZEN' && !meQuery.isLoading && !meQuery.isError && (
+                            <div className="mt-6 pt-6 border-t border-gray-100">
+                                <h3 className="text-sm font-semibold text-gray-900 mb-4 flex items-center gap-2">
+                                    <BarChart3 className="w-4 h-4 text-ember-500" />
+                                    Performance Statistics
+                                </h3>
+                                <div className="grid grid-cols-2 gap-3">
+                                    <div className="bg-gray-50 rounded-xl p-3 border border-gray-100">
+                                        <div className="flex items-center gap-2 mb-1">
+                                            <CheckSquare className="w-3.5 h-3.5 text-green-500" />
+                                            <span className="text-[10px] uppercase tracking-wider font-bold text-gray-500">Resolved</span>
+                                        </div>
+                                        <div className="text-xl font-bold text-gray-900">{user?.resolvedCount || 0}</div>
+                                    </div>
+                                    <div className="bg-gray-50 rounded-xl p-3 border border-gray-100">
+                                        <div className="flex items-center gap-2 mb-1">
+                                            <Shield className="w-3.5 h-3.5 text-blue-500" />
+                                            <span className="text-[10px] uppercase tracking-wider font-bold text-gray-500">Assigned</span>
+                                        </div>
+                                        <div className="text-xl font-bold text-gray-900">{user?.assignedCount || 0}</div>
+                                    </div>
+                                    <div className="col-span-2 bg-gradient-to-br from-amber-50 to-orange-50 rounded-xl p-3 border border-amber-100">
+                                        <div className="flex items-center justify-between">
+                                            <div>
+                                                <div className="flex items-center gap-2 mb-1">
+                                                    <Star className="w-3.5 h-3.5 text-amber-500 fill-amber-500" />
+                                                    <span className="text-[10px] uppercase tracking-wider font-bold text-amber-700">Service Rating</span>
+                                                </div>
+                                                <div className="text-2xl font-black text-amber-900">
+                                                    {user?.avgRating > 0 ? user.avgRating.toFixed(1) : '5.0'}
+                                                    <span className="text-sm font-normal text-amber-700 ml-1">/ 5.0</span>
+                                                </div>
+                                            </div>
+                                            <div className="flex gap-0.5">
+                                                {[1, 2, 3, 4, 5].map((star) => (
+                                                    <Star
+                                                        key={star}
+                                                        className={`w-4 h-4 ${star <= Math.round(user?.avgRating || 5) ? 'text-amber-500 fill-amber-500' : 'text-amber-200'}`}
+                                                    />
+                                                ))}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        )}
                     </div>
 
                     {success ? (
