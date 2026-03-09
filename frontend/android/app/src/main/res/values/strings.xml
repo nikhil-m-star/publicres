@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">PublicRes</string>
+    <string name="title_activity_main">PublicRes</string>
+    <string name="package_name">com.publicres.app</string>
+    <string name="custom_url_scheme">com.publicres.app</string>
+</resources>

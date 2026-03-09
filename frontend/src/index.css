@@ -591,6 +591,12 @@ body {
   -moz-osx-font-smoothing: grayscale;
   background-color: var(--earth-950);
   color: var(--earth-ink);
+  overflow-x: hidden;
+  min-height: 100vh;
+}
+
+html {
+  min-height: 100%;
 }
 
 /* Leaflet map fix */
@@ -3067,6 +3073,7 @@ h3,
 .app-shell {
   min-height: 100vh;
   background: transparent;
+  padding-bottom: env(safe-area-inset-bottom);
 }
 
 .page-container {
@@ -3132,6 +3139,7 @@ h3,
   backdrop-filter: blur(18px);
   background: rgba(5, 11, 16, 0.88);
   border-bottom: 1px solid var(--line);
+  padding-top: env(safe-area-inset-top);
 }
 
 .nav-inner {
@@ -3276,8 +3284,8 @@ h3,
 
 .hero__glow {
   position: absolute;
-  width: 420px;
-  height: 420px;
+  width: min(420px, 80vw);
+  height: min(420px, 80vw);
   border-radius: 50%;
   filter: blur(120px);
   opacity: 0.75;

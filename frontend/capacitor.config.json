@@ -1,0 +1,9 @@
+{
+  "appId": "com.publicres.app",
+  "appName": "PublicRes",
+  "webDir": "dist",
+  "server": {
+    "url": "https://publicres-pied.vercel.app",
+    "cleartext": true
+  }
+}

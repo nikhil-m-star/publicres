@@ -3,6 +3,7 @@ import { Upload, MapPin, X, Loader2, Navigation, CircleDot, Trash2, Lightbulb, D
 import { MapContainer, TileLayer, Marker, useMap } from 'react-leaflet'
 import L from 'leaflet'
 import 'leaflet/dist/leaflet.css'
+import { Geolocation } from '@capacitor/geolocation'
 import { useCreateIssue } from '../hooks/useIssues'
 import { BENGALURU_CENTER, reverseGeocode } from './IssueMap'
 import { BENGALURU_AREAS } from '../data/bengaluruAreas'
@@ -53,21 +54,19 @@ export default function IssueForm({ onSuccess }) {
 
     // Auto-detect user location on mount — ENFORCED: must be at the location
     useEffect(() => {
-        if (!navigator.geolocation) {
-            setGeoStatus('error')
-            return
-        }
-        navigator.geolocation.getCurrentPosition(
-            (pos) => {
+        const fetchLocation = async () => {
+            try {
+                const pos = await Geolocation.getCurrentPosition({ enableHighAccuracy: true, timeout: 15000 })
                 const loc = [pos.coords.latitude, pos.coords.longitude]
                 setPosition(loc)
                 setFlyTarget(loc)
                 setGeoStatus('found')
                 fetchAddress(loc[0], loc[1])
-            },
-            () => setGeoStatus('denied'),
-            { enableHighAccuracy: true, timeout: 15000 }
-        )
+            } catch (e) {
+                setGeoStatus('error')
+            }
+        }
+        fetchLocation()
     }, [])
 
     const fetchAddress = async (lat, lng) => {
@@ -77,27 +76,16 @@ export default function IssueForm({ onSuccess }) {
 
     const handleRelocate = async () => {
         setGeoStatus('detecting')
-        // Check permission state first — if denied, show instructions immediately
-        if (navigator.permissions) {
-            try {
-                const perm = await navigator.permissions.query({ name: 'geolocation' })
-                if (perm.state === 'denied') {
-                    setGeoStatus('denied')
-                    return
-                }
-            } catch (_) { /* Permissions API not supported, proceed anyway */ }
+        try {
+            const pos = await Geolocation.getCurrentPosition({ enableHighAccuracy: true, timeout: 15000 })
+            const loc = [pos.coords.latitude, pos.coords.longitude]
+            setPosition(loc)
+            setFlyTarget([...loc])
+            setGeoStatus('found')
+            fetchAddress(loc[0], loc[1])
+        } catch (e) {
+            setGeoStatus('denied')
         }
-        navigator.geolocation.getCurrentPosition(
-            (pos) => {
-                const loc = [pos.coords.latitude, pos.coords.longitude]
-                setPosition(loc)
-                setFlyTarget([...loc])
-                setGeoStatus('found')
-                fetchAddress(loc[0], loc[1])
-            },
-            () => setGeoStatus('denied'),
-            { enableHighAccuracy: true, timeout: 15000 }
-        )
     }
 
     const handleImageChange = (e) => {

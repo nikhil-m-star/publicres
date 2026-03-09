@@ -5,6 +5,7 @@ import L from 'leaflet'
 import 'leaflet/dist/leaflet.css'
 import { useState, useEffect } from 'react'
 import { Crosshair, ThumbsUp, MessageCircle } from 'lucide-react'
+import { Geolocation } from '@capacitor/geolocation'
 
 // Bengaluru center coordinates
 export const BENGALURU_CENTER = [12.9716, 77.5946]
@@ -127,32 +128,33 @@ export default function IssueMap({
 
     // Auto-detect location on mount when controls are shown
     useEffect(() => {
-        if (showControls && navigator.geolocation) {
-            navigator.geolocation.getCurrentPosition(
-                (pos) => {
+        const fetchLocation = async () => {
+            if (showControls) {
+                try {
+                    const pos = await Geolocation.getCurrentPosition({ enableHighAccuracy: true, timeout: 8000 })
                     const loc = [pos.coords.latitude, pos.coords.longitude]
                     setUserPosition(loc)
                     setFlyTo(loc)
-                },
-                () => { },
-                { enableHighAccuracy: true, timeout: 8000 }
-            )
+                } catch (e) {
+                    console.error('Geolocation error:', e)
+                }
+            }
         }
+        fetchLocation()
     }, [showControls])
 
-    const handleLocateMe = () => {
-        if (!navigator.geolocation) return
+    const handleLocateMe = async () => {
         setLocating(true)
-        navigator.geolocation.getCurrentPosition(
-            (pos) => {
-                const loc = [pos.coords.latitude, pos.coords.longitude]
-                setUserPosition(loc)
-                setFlyTo([...loc])
-                setLocating(false)
-            },
-            () => setLocating(false),
-            { enableHighAccuracy: true }
-        )
+        try {
+            const pos = await Geolocation.getCurrentPosition({ enableHighAccuracy: true })
+            const loc = [pos.coords.latitude, pos.coords.longitude]
+            setUserPosition(loc)
+            setFlyTo([...loc])
+        } catch (e) {
+            console.error('Location failed', e)
+        } finally {
+            setLocating(false)
+        }
     }
 
     const markers = issues.map((issue) => (
