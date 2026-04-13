@@ -12,34 +12,19 @@ export default function Navbar() {
     const lastScrollY = useRef(0)
 
     useEffect(() => {
-        let ticking = false;
-
         const handleScroll = () => {
-            if (!ticking) {
-                window.requestAnimationFrame(() => {
-                    const currentScrollY = window.scrollY
-
-                    // Only apply hide/show logic on mobile screens
-                    if (window.innerWidth <= 900) {
-                        if (currentScrollY > lastScrollY.current + 5 && currentScrollY > 60) {
-                            // Scrolling down
-                            setIsVisible(false)
-                        } else if (currentScrollY < lastScrollY.current - 5) {
-                            // Scrolling up
-                            setIsVisible(true)
-                        }
-                    } else {
-                        // Always visible on desktop
-                        setIsVisible(true)
-                    }
-
-                    lastScrollY.current = currentScrollY
-                    ticking = false;
-                });
-                ticking = true;
+            const currentScrollY = window.scrollY
+            if (window.innerWidth <= 900) {
+                if (currentScrollY > lastScrollY.current + 5 && currentScrollY > 60) {
+                    setIsVisible(false)
+                } else if (currentScrollY < lastScrollY.current - 5) {
+                    setIsVisible(true)
+                }
+            } else {
+                setIsVisible(true)
             }
+            lastScrollY.current = currentScrollY
         }
-
         window.addEventListener('scroll', handleScroll, { passive: true })
         return () => window.removeEventListener('scroll', handleScroll)
     }, [])
@@ -47,126 +32,77 @@ export default function Navbar() {
     const isActive = (path) => location.pathname === path
 
     return (
-        <>
-            <nav className={`nav-shell transition-transform duration-300 ${!isVisible ? '-translate-y-full' : 'translate-y-0'}`}>
-                <div className="nav-inner">
-                    {/* Logo */}
-                    <Link to="/" className="nav-brand">
-                        <span className="nav-logo">
-                            <img src="/logo.png" alt="Namma Parihara" className="w-6 h-6" />
-                        </span>
-                        <span className="nav-title">Namma Parihara</span>
+        <div className={`nav-unified-container ${!isVisible ? 'nav-hidden' : ''}`}>
+            {/* Main Navigation Pill */}
+            <nav className="nav-unified glass">
+                <div className="nav-unified__inner">
+                    {/* Brand - Integrated for all views */}
+                    <Link to="/" className="nav-unified__brand">
+                        <img src="/logo.png" alt="Namma Parihara" className="nav-unified__logo" />
+                        <span className="nav-unified__title">Namma Parihara</span>
                     </Link>
 
-                    {/* Desktop nav */}
-                    <div className="nav-links">
-                        <Link
-                            to="/"
-                            className={`nav-link ${isActive('/') ? 'active' : ''} `}
-                        >
-                            Home
+                    {/* Navigation Items */}
+                    <div className="nav-unified__links">
+                        <Link to="/" className={`nav-unified__link ${isActive('/') ? 'active' : ''}`}>
+                            <Home className="w-4 h-4" />
+                            <span>Home</span>
                         </Link>
-                        <Link
-                            to="/map"
-                            className={`nav-link ${isActive('/map') ? 'active' : ''} `}
-                        >
-                            <Map className="w-3.5 h-3.5" />
-                            Map
+                        <Link to="/map" className={`nav-unified__link ${isActive('/map') ? 'active' : ''}`}>
+                            <Map className="w-4 h-4" />
+                            <span>Map</span>
                         </Link>
-                        <Link
-                            to="/leaderboard"
-                            className={`nav-link ${isActive('/leaderboard') ? 'active' : ''} `}
-                        >
-                            <Trophy className="w-3.5 h-3.5" />
-                            Leaderboard
+                        
+                        {/* Elite Floating Action */}
+                        <Link to="/report" className="nav-unified__fab" aria-label="Report">
+                            <Sparkles className="w-5 h-5" />
                         </Link>
-                        <Link
-                            to="/report"
-                            className={`nav-link accent ${isActive('/report') ? 'active' : ''} `}
-                        >
-                            <Sparkles className="w-3.5 h-3.5" />
-                            City Report
+
+                        <Link to="/leaderboard" className={`nav-unified__link ${isActive('/leaderboard') ? 'active' : ''}`}>
+                            <Trophy className="w-4 h-4" />
+                            <span>Rank</span>
                         </Link>
+
                         <SignedIn>
-                            <Link
-                                to="/dashboard"
-                                className={`nav-link ${isActive('/dashboard') ? 'active' : ''} `}
-                            >
-                                My Reports
-                            </Link>
-                            <Link
-                                to="/profile"
-                                className={`nav-link ${isActive('/profile') ? 'active' : ''} `}
-                            >
-                                <Shield className="w-3.5 h-3.5" />
-                                Profile
+                            <Link to="/profile" className={`nav-unified__link ${isActive('/profile') ? 'active' : ''}`}>
+                                <Shield className="w-4 h-4" />
+                                <span>Profile</span>
                             </Link>
                         </SignedIn>
-                    </div>
-
-                    {/* Auth */}
-                    <div className="nav-actions">
                         <SignedOut>
                             <SignInButton mode="modal">
-                                <button className="btn-primary text-sm">Sign In</button>
+                                <button className="nav-unified__link auth-btn">
+                                    <User className="w-4 h-4" />
+                                    <span>Login</span>
+                                </button>
                             </SignInButton>
                         </SignedOut>
+                    </div>
+
+                    {/* Actions & User */}
+                    <div className="nav-unified__actions">
                         <SignedIn>
-                            <div className="nav-user">
-                                <NotificationsDropdown />
-                                <UserButton
-                                    appearance={{
-                                        elements: {
-                                            avatarBox: 'w-9 h-9 ring-2 ring-ember-500/40',
-                                        },
-                                    }}
-                                />
-                            </div>
+                            <NotificationsDropdown />
+                            <UserButton
+                                appearance={{
+                                    elements: {
+                                        avatarBox: 'w-8 h-8 ring-1 ring-white/10',
+                                    },
+                                }}
+                            />
                         </SignedIn>
                     </div>
                 </div>
-            </nav>
 
-            {/* Mobile Bottom Navigation (Floating) */}
-            <nav className="mobile-nav">
-                <div className="mobile-nav-inner">
-                    <Link to="/" className={`mobile-nav-item ${isActive('/') ? 'active' : ''}`}>
-                        <Home className="w-5 h-5" />
-                        <span className="mobile-nav-label">Home</span>
-                    </Link>
-                    <Link to="/map" className={`mobile-nav-item ${isActive('/map') ? 'active' : ''}`}>
-                        <Map className="w-5 h-5" />
-                        <span className="mobile-nav-label">Map</span>
-                    </Link>
-
-                    {/* Floating Action Button for Reporting */}
-                    <Link to="/report" className="mobile-nav-fab" aria-label="City Report" title="City Report">
-                        <div className="fab-inner">
-                            <Sparkles className="w-6 h-6" />
-                        </div>
-                    </Link>
-
-                    <Link to="/leaderboard" className={`mobile-nav-item ${isActive('/leaderboard') ? 'active' : ''}`}>
-                        <Trophy className="w-5 h-5" />
-                        <span className="mobile-nav-label">Rank</span>
-                    </Link>
-
-                    <SignedIn>
-                        <Link to="/profile" className={`mobile-nav-item ${isActive('/profile') ? 'active' : ''}`}>
-                            <Shield className="w-5 h-5" />
-                            <span className="mobile-nav-label">Profile</span>
-                        </Link>
-                    </SignedIn>
-                    <SignedOut>
-                        <SignInButton mode="modal">
-                            <button className="mobile-nav-item sign-in-btn">
-                                <User className="w-5 h-5" />
-                                <span className="mobile-nav-label">Login</span>
-                            </button>
-                        </SignInButton>
-                    </SignedOut>
+                {/* Mobile Status Overlay */}
+                <div className="nav-unified__status-overlay">
+                    <div className="status-indicator">
+                        <div className="status-dot" />
+                        <span>System Live</span>
+                    </div>
                 </div>
             </nav>
-        </>
+        </div>
     )
 }
+

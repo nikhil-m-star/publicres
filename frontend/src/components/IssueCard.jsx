@@ -38,7 +38,7 @@ export default function IssueCard({ issue }) {
 
     return (
         <Link to={`/issues/${issue.id}`} className="block">
-            <div className="card p-0 overflow-hidden group cursor-pointer hover:scale-[1.01] transition-transform duration-300">
+            <div className="card glass p-0 overflow-hidden group cursor-pointer hover:scale-[1.01] transition-transform duration-300">
                 {/* Image */}
                 {issue.imageUrl && (
                     <div className="relative h-44 overflow-hidden">

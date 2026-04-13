@@ -78,7 +78,7 @@ export default function Landing() {
                         </h1>
                         <div className="hero__actions">
                             <Link to="/#reports" className="btn-primary px-8 py-4 text-lg font-bold">
-                                Report an Issue
+                                Report
                                 <ArrowRight className="w-6 h-6" />
                             </Link>
                             <SignedOut>
@@ -90,7 +90,7 @@ export default function Landing() {
                     </div>
 
                     <div className="hero__visual">
-                        <div className="radar-card">
+                        <div className="radar-card glass">
                             <div className="radar">
                                 <div className="radar__ring" />
                                 <div className="radar__ring" />
@@ -120,28 +120,28 @@ export default function Landing() {
             </section>
 
             <section className="page-container stat-strip">
-                <div className="stat-card">
+                <div className="stat-card glass">
                     <AlertTriangle className="w-5 h-5" />
                     <div>
                         <p>Total issues</p>
                         <strong>{totalIssues}</strong>
                     </div>
                 </div>
-                <div className="stat-card">
+                <div className="stat-card glass">
                     <Clock className="w-5 h-5" />
                     <div>
                         <p>Unresolved</p>
                         <strong>{unresolvedCount}</strong>
                     </div>
                 </div>
-                <div className="stat-card">
+                <div className="stat-card glass">
                     <CheckCircle className="w-5 h-5" />
                     <div>
                         <p>Resolved</p>
                         <strong>{resolvedCount}</strong>
                     </div>
                 </div>
-                <div className="stat-card">
+                <div className="stat-card glass">
                     <TrendingUp className="w-5 h-5" />
                     <div>
                         <p>Resolution rate</p>
@@ -155,7 +155,7 @@ export default function Landing() {
                     <h2>Community Reports</h2>
                     <p>Browse recent issues, filter by category, or report a new one.</p>
                 </div>
-                <div className="panel">
+                <div className="panel glass">
                     <ReportsBoard scope="all" />
                 </div>
             </section>
@@ -167,7 +167,7 @@ export default function Landing() {
                         <p>A calm snapshot of what needs attention.</p>
                     </div>
                     <div className="insight-grid">
-                        <div className="panel">
+                        <div className="panel glass">
                             <h3>Resolved vs Unresolved</h3>
                             <div className="chart-box">
                                 <ResponsiveContainer width="100%" height="100%">
@@ -199,7 +199,7 @@ export default function Landing() {
                             </div>
                         </div>
 
-                        <div className="panel">
+                        <div className="panel glass">
                             <h3>Issues by Category</h3>
                             <div className="chart-box">
                                 <ResponsiveContainer width="100%" height="100%">

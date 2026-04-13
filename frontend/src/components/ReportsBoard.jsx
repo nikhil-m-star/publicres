@@ -54,11 +54,11 @@ export default function ReportsBoard({
                             >
                                 {showForm ? (
                                     <>
-                                        <X className="w-4 h-4" /> Close Form
+                                        <X className="w-4 h-4" /> Close
                                     </>
                                 ) : (
                                     <>
-                                        <Plus className="w-4 h-4" /> Report Issue
+                                        <Plus className="w-4 h-4" /> Report
                                     </>
                                 )}
                             </button>
@@ -75,8 +75,8 @@ export default function ReportsBoard({
             {/* Report Form */}
             <SignedIn>
                 {showFormToggle && showForm && (
-                    <div className="card p-6 mb-8 animate-slide-up">
-                        <h3 className="text-lg font-semibold text-gray-900 mb-5">Report a New Issue</h3>
+                    <div className="card glass p-6 mb-8 animate-slide-up">
+                        <h3 className="text-lg font-semibold text-gray-900 mb-5">Report</h3>
                         <IssueForm onSuccess={() => setShowForm(false)} />
                     </div>
                 )}
