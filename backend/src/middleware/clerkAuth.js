@@ -1,7 +1,7 @@
 import { clerkClient, verifyToken } from "@clerk/express";
-import { PrismaClient } from "@prisma/client";
+import prisma from "../lib/prisma.js";
 
-const prisma = new PrismaClient();
+
 
 /**
  * Middleware to verify Clerk authentication and attach user to request.

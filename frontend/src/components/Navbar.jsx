@@ -85,7 +85,7 @@ export default function Navbar() {
                             className={`nav-link accent ${isActive('/report') ? 'active' : ''} `}
                         >
                             <Sparkles className="w-3.5 h-3.5" />
-                            AI Insights
+                            City Report
                         </Link>
                         <SignedIn>
                             <Link
@@ -140,7 +140,7 @@ export default function Navbar() {
                     </Link>
 
                     {/* Floating Action Button for Reporting */}
-                    <Link to="/report" className="mobile-nav-fab">
+                    <Link to="/report" className="mobile-nav-fab" aria-label="City Report" title="City Report">
                         <div className="fab-inner">
                             <Sparkles className="w-6 h-6" />
                         </div>

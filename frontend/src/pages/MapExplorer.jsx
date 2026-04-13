@@ -42,7 +42,7 @@ export default function MapExplorer() {
         <div className="h-[calc(100vh-64px)] flex relative">
             {/* Sidebar */}
             {showSidebar && (
-                <div className="w-96 bg-white border-r border-gray-100 flex flex-col z-10 shadow-lg hidden lg:flex">
+                <div className="w-96 bg-white border-r border-gray-100 flex flex-col z-10 shadow-lg absolute lg:relative h-full left-0">
                     {/* Header */}
                     <div className="p-4 border-b border-gray-100">
                         <div className="flex items-center justify-between mb-3">

@@ -113,8 +113,19 @@ export default function CityReport() {
                             </button>
                         </div>
 
-                        <div className="report-md">
-                            <ReactMarkdown
+                        {report.includes('No recent issues found') ? (
+                            <div className="text-center py-16 px-6 bg-gray-50 rounded-2xl border border-gray-100 mt-6">
+                                <div className="w-16 h-16 bg-white rounded-full flex items-center justify-center mx-auto mb-4 shadow-sm border border-gray-200">
+                                    <MapPin className="w-8 h-8 text-gray-400" />
+                                </div>
+                                <h3 className="text-xl font-bold text-gray-900 mb-2">Looking Good!</h3>
+                                <p className="text-gray-500 max-w-md mx-auto">
+                                    There are no recent civic issues reported in <span className="font-semibold text-gray-700">{area}</span>. This locality appears to be well-maintained at the moment.
+                                </p>
+                            </div>
+                        ) : (
+                            <div className="report-md mt-6">
+                                <ReactMarkdown
                                 components={{
                                     h1: ({ node, ...props }) => <h1 className="report-md__h1" {...props} />,
                                     h2: ({ node, ...props }) => <h2 className="report-md__h2" {...props} />,
@@ -137,7 +148,8 @@ export default function CityReport() {
                             >
                                 {report}
                             </ReactMarkdown>
-                        </div>
+                            </div>
+                        )}
                     </div>
                 )}
             </div>

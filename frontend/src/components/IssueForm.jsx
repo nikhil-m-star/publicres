@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from 'react'
-import { Upload, MapPin, X, Loader2, Navigation, CircleDot, Trash2, Lightbulb, Droplets, FileText, AlertTriangle, XCircle } from 'lucide-react'
+import { Upload, MapPin, X, Loader2, Navigation, CircleDot, Trash2, Lightbulb, Droplets, FileText, AlertTriangle, XCircle, ShieldAlert } from 'lucide-react'
 import { MapContainer, TileLayer, Marker, useMap } from 'react-leaflet'
 import L from 'leaflet'
 import 'leaflet/dist/leaflet.css'
@@ -32,6 +32,7 @@ const categories = [
     { value: 'GARBAGE', label: 'Garbage', icon: Trash2 },
     { value: 'STREETLIGHT', label: 'Streetlight', icon: Lightbulb },
     { value: 'WATER_LEAK', label: 'Water Leak', icon: Droplets },
+    { value: 'BRIBERY', label: 'Bribery', icon: ShieldAlert },
     { value: 'OTHER', label: 'Other', icon: FileText },
 ]
 
@@ -63,7 +64,20 @@ export default function IssueForm({ onSuccess }) {
                 setGeoStatus('found')
                 fetchAddress(loc[0], loc[1])
             } catch (e) {
-                setGeoStatus('error')
+                if (navigator.geolocation) {
+                    navigator.geolocation.getCurrentPosition(
+                        (pos) => {
+                            const loc = [pos.coords.latitude, pos.coords.longitude]
+                            setPosition(loc)
+                            setFlyTarget(loc)
+                            setGeoStatus('found')
+                            fetchAddress(loc[0], loc[1])
+                        },
+                        () => setGeoStatus('error')
+                    )
+                } else {
+                    setGeoStatus('error')
+                }
             }
         }
         fetchLocation()
@@ -84,7 +98,20 @@ export default function IssueForm({ onSuccess }) {
             setGeoStatus('found')
             fetchAddress(loc[0], loc[1])
         } catch (e) {
-            setGeoStatus('denied')
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(
+                    (pos) => {
+                        const loc = [pos.coords.latitude, pos.coords.longitude]
+                        setPosition(loc)
+                        setFlyTarget([...loc])
+                        setGeoStatus('found')
+                        fetchAddress(loc[0], loc[1])
+                    },
+                    () => setGeoStatus('denied')
+                )
+            } else {
+                setGeoStatus('denied')
+            }
         }
     }
 
@@ -201,8 +228,12 @@ export default function IssueForm({ onSuccess }) {
                             type="button"
                             onClick={() => setCategory(cat.value)}
                             className={`px-3 py-2.5 rounded-xl text-sm font-medium border transition-all ${category === cat.value
-                                ? 'bg-civic-50 border-civic-300 text-civic-700 ring-2 ring-civic-200'
-                                : 'bg-white border-gray-200 text-gray-600 hover:border-gray-300'
+                                ? cat.value === 'BRIBERY'
+                                    ? 'bg-red-50 border-red-300 text-red-700 ring-2 ring-red-200'
+                                    : 'bg-civic-50 border-civic-300 text-civic-700 ring-2 ring-civic-200'
+                                : cat.value === 'BRIBERY'
+                                    ? 'bg-white border-red-200 text-red-600 hover:border-red-300 hover:bg-red-50/50'
+                                    : 'bg-white border-gray-200 text-gray-600 hover:border-gray-300'
                                 }`}
                         >
                             <cat.icon className="w-4 h-4" />

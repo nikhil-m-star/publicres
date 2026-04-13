@@ -1,6 +1,6 @@
 import axios from 'axios'
 
-const API_URL = import.meta.env.VITE_API_URL || 'http://10.100.9.171:5000/api'
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api'
 
 const client = axios.create({
     baseURL: API_URL,
@@ -53,6 +53,7 @@ export const api = {
     // Notifications
     getNotifications: () => client.get('/admin/notifications').then((r) => r.data),
     markNotificationRead: (id) => client.put(`/admin/notifications/${id}/read`).then((r) => r.data),
+    markAllNotificationsRead: () => client.put('/admin/notifications/read-all').then((r) => r.data),
 
     // Email Domain Admin Verification
     verifyByEmail: (payload = {}) => client.post('/admin/verify-email', payload).then((r) => r.data),

@@ -136,7 +136,18 @@ export default function IssueMap({
                     setUserPosition(loc)
                     setFlyTo(loc)
                 } catch (e) {
-                    console.error('Geolocation error:', e)
+                    if (navigator.geolocation) {
+                        navigator.geolocation.getCurrentPosition(
+                            (pos) => {
+                                const loc = [pos.coords.latitude, pos.coords.longitude]
+                                setUserPosition(loc)
+                                setFlyTo(loc)
+                            },
+                            (err) => console.error('Geolocation error:', err)
+                        )
+                    } else {
+                        console.error('Geolocation error:', e)
+                    }
                 }
             }
         }
@@ -151,7 +162,18 @@ export default function IssueMap({
             setUserPosition(loc)
             setFlyTo([...loc])
         } catch (e) {
-            console.error('Location failed', e)
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(
+                    (pos) => {
+                        const loc = [pos.coords.latitude, pos.coords.longitude]
+                        setUserPosition(loc)
+                        setFlyTo([...loc])
+                    },
+                    (err) => console.error('Location failed', err)
+                )
+            } else {
+                console.error('Location failed', e)
+            }
         } finally {
             setLocating(false)
         }

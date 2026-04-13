@@ -11,7 +11,7 @@ cloudinary.config({
 const storage = multer.memoryStorage();
 export const upload = multer({
   storage,
-  limits: { fileSize: 5 * 1024 * 1024 }, // 5MB
+  limits: { fileSize: 10 * 1024 * 1024 }, // 10MB
   fileFilter: (req, file, cb) => {
     if (file.mimetype.startsWith("image/")) {
       cb(null, true);
@@ -26,21 +26,25 @@ export const upload = multer({
  * @param {Buffer} buffer - Image buffer from multer
  * @returns {Promise<string>} - Cloudinary secure URL
  */
-export const uploadImage = (buffer) => {
-  return new Promise((resolve, reject) => {
-    const stream = cloudinary.uploader.upload_stream(
-      {
-        folder: "publicres",
-        resource_type: "image",
-        transformation: [{ width: 1200, height: 800, crop: "limit" }, { quality: "auto" }],
-      },
-      (error, result) => {
-        if (error) reject(error);
-        else resolve(result.secure_url);
-      }
-    );
-    stream.end(buffer);
-  });
+export const uploadImage = async (buffer) => {
+  try {
+    return await new Promise((resolve, reject) => {
+      const stream = cloudinary.uploader.upload_stream(
+        {
+          folder: "publicres",
+          resource_type: "image",
+          transformation: [{ width: 1200, height: 800, crop: "limit" }, { quality: "auto" }],
+        },
+        (error, result) => {
+          if (error) reject(new Error(`Cloudinary upload failed: ${error.message}`));
+          else resolve(result.secure_url);
+        }
+      );
+      stream.end(buffer);
+    });
+  } catch (err) {
+    throw err;
+  }
 };
 
 export default cloudinary;

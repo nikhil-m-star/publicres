@@ -1,4 +1,5 @@
 import { Router } from "express";
+import rateLimit from "express-rate-limit";
 import { requireAuth } from "../middleware/clerkAuth.js";
 import { upload } from "../services/cloudinary.js";
 import {
@@ -17,6 +18,12 @@ import {
 
 const router = Router();
 
+const duplicateLimiter = rateLimit({
+    windowMs: 60 * 1000,
+    max: 10,
+    message: { error: "Too many requests. Please try again later." },
+});
+
 // Public: Get all issues (with optional filters)
 router.get("/", getIssues);
 
@@ -33,7 +40,7 @@ router.get("/city-report", getCityReport);
 router.get("/mine", requireAuth, getMyIssues);
 
 // Public: Check Dupes via Post
-router.post("/check-duplicate", checkDuplicateIssue);
+router.post("/check-duplicate", duplicateLimiter, checkDuplicateIssue);
 
 // Public: Get single issue
 router.get("/:id", getIssueById);

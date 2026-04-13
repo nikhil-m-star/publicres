@@ -1,21 +1,27 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { useAuth } from '@clerk/clerk-react'
-import { useEffect } from 'react'
+import { useEffect, useCallback } from 'react'
 import { api, setAuthToken } from '../api/client'
 
 export function useAuthSync() {
     const { getToken, isSignedIn } = useAuth()
-    useEffect(() => {
-        const syncToken = async () => {
-            if (isSignedIn) {
-                const token = await getToken()
-                setAuthToken(token)
-            } else {
-                setAuthToken(null)
-            }
+    
+    const syncToken = useCallback(async () => {
+        if (!isSignedIn) {
+            setAuthToken(null)
+            return
         }
+        try {
+            const token = await getToken()
+            if (token) setAuthToken(token)
+        } catch (error) {
+            console.error("Token sync failed", error)
+        }
+    }, [isSignedIn, getToken])
+
+    useEffect(() => {
         syncToken()
-    }, [getToken, isSignedIn])
+    }, [syncToken])
 }
 
 export function useIssues(params = {}) {

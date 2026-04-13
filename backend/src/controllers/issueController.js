@@ -1,8 +1,8 @@
-import { PrismaClient } from "@prisma/client";
+import prisma from "../lib/prisma.js";
 import { uploadImage } from "../services/cloudinary.js";
 import { assessIntensity, checkDuplicate as groqCheckDuplicate, generateCityReport as groqGenerateCityReport } from "../services/groq.js";
 
-const prisma = new PrismaClient();
+
 
 /**
  * POST /api/issues/check-duplicate — AI-powered semantic duplicate check
@@ -31,7 +31,11 @@ export const checkDuplicateIssue = async (req, res) => {
         });
 
         const result = await groqCheckDuplicate(title, description, recentIssues);
-        res.json(result);
+        res.json({
+            isDuplicate: result.isDuplicate,
+            matchedIssueId: result.duplicateId || null,
+            reasoning: result.reasoning || ""
+        });
     } catch (error) {
         console.error("Check duplicate error:", error);
         res.status(500).json({ error: "Failed to check duplicates" });
@@ -151,9 +155,10 @@ export const createIssue = async (req, res) => {
  */
 export const getIssues = async (req, res) => {
     try {
-        const { category, status, search, page = 1, limit = 20, area } = req.query;
+        const { category, status, search, page = 1, limit = 20, area, city } = req.query;
 
         const where = {};
+        if (city) where.city = city;
         if (category) where.category = category;
         if (status) where.status = status;
         if (area) where.area = area;
@@ -450,7 +455,7 @@ export const updateStatus = async (req, res) => {
         };
 
         // If setting to IN_PROGRESS, assign the officer
-        if (status === "IN_PROGRESS") {
+        if (status === "IN_PROGRESS" && !existingIssue.assignedToId) {
             updateData.assignedToId = req.user.id;
             // Increment assigned count for the officer
             await prisma.user.update({
@@ -824,15 +829,27 @@ export const rateOfficerGeneral = async (req, res) => {
             return res.status(404).json({ error: "Officer not found" });
         }
 
-        // Create rating (no issue fixed link)
-        const rating = await prisma.rating.create({
-            data: {
-                score,
-                feedback,
-                givenById: userId,
-                officerId: officerId,
-            },
+        // Check if rating already exists
+        const existingRating = await prisma.rating.findFirst({
+            where: { officerId, givenById: userId }
         });
+
+        let rating;
+        if (existingRating) {
+            rating = await prisma.rating.update({
+                where: { id: existingRating.id },
+                data: { score, feedback },
+            });
+        } else {
+            rating = await prisma.rating.create({
+                data: {
+                    score,
+                    feedback,
+                    givenById: userId,
+                    officerId: officerId,
+                },
+            });
+        }
 
         // Recalculate officer's average rating
         const allRatings = await prisma.rating.aggregate({

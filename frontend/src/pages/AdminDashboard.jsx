@@ -1,4 +1,7 @@
 import { useState } from 'react'
+import { Navigate } from 'react-router-dom'
+import { useQuery } from '@tanstack/react-query'
+import { api } from '../api/client'
 import { BarChart3, AlertTriangle, CheckCircle, Clock, Search, TrendingUp, Bell } from 'lucide-react'
 import { useAdminIssues, useAnalytics, useAuthSync } from '../hooks/useIssues'
 import AdminIssueTable from '../components/AdminIssueTable'
@@ -8,11 +11,17 @@ import NotificationsPanel from '../components/NotificationsPanel'
 export default function AdminDashboard() {
     useAuthSync()
 
+    const { data: me } = useQuery({ queryKey: ['me'], queryFn: api.getMe })
+
     const [filters, setFilters] = useState({ category: '', status: '', search: '' })
     const [activeTab, setActiveTab] = useState('issues') // 'issues' | 'analytics' | 'notifications'
 
     const { data, isLoading } = useAdminIssues({ ...filters, limit: 50 })
     const { data: analytics } = useAnalytics()
+
+    if (me && me.user?.role === 'CITIZEN') {
+        return <Navigate to="/" replace />
+    }
     const issues = data?.issues || []
 
     const summaryCards = [
@@ -139,6 +148,7 @@ export default function AdminDashboard() {
                             <option value="GARBAGE">Garbage</option>
                             <option value="STREETLIGHT">Streetlight</option>
                             <option value="WATER_LEAK">Water Leak</option>
+                            <option value="BRIBERY">Bribery</option>
                             <option value="OTHER">Other</option>
                         </select>
                         <select
@@ -160,7 +170,7 @@ export default function AdminDashboard() {
                                 <div className="w-8 h-8 border-3 border-civic-200 border-t-civic-600 rounded-full animate-spin" />
                             </div>
                         ) : (
-                            <AdminIssueTable issues={issues} />
+                            <AdminIssueTable issues={issues} userRole={me?.user?.role} />
                         )}
                     </div>
                 </>

@@ -1,10 +1,10 @@
-import { PrismaClient } from "@prisma/client";
+import prisma from "../lib/prisma.js";
 import dotenv from "dotenv";
 import { DEFAULT_OFFICER_AREA, findOfficerByEmail } from "../data/officerDirectory.js";
 
 dotenv.config();
 
-const prisma = new PrismaClient();
+
 
 /**
  * POST /api/admin/verify-email
@@ -65,7 +65,18 @@ export const getMe = async (req, res) => {
         const userId = req.user.id;
         const user = await prisma.user.findUnique({
             where: { id: userId },
-            select: { id: true, name: true, email: true, role: true, area: true, city: true, avgRating: true },
+            select: {
+                id: true,
+                name: true,
+                email: true,
+                role: true,
+                area: true,
+                city: true,
+                avgRating: true,
+                resolvedCount: true,
+                assignedCount: true,
+                createdAt: true
+            },
         });
 
         if (!user) {
@@ -129,5 +140,19 @@ export const markNotificationAsRead = async (req, res) => {
     } catch (error) {
         console.error("Mark notification read error:", error);
         res.status(500).json({ error: "Failed to mark as read" });
+    }
+};
+
+export const markAllNotificationsAsRead = async (req, res) => {
+    try {
+        const userId = req.user.id;
+        const updated = await prisma.notification.updateMany({
+            where: { userId, isRead: false },
+            data: { isRead: true }
+        });
+        res.json({ count: updated.count });
+    } catch (error) {
+        console.error("Mark all notifications read error:", error);
+        res.status(500).json({ error: "Failed to mark all as read" });
     }
 };

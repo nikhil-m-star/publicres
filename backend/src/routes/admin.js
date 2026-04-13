@@ -12,6 +12,7 @@ import {
     verifyByEmail,
     getNotifications,
     markNotificationAsRead,
+    markAllNotificationsAsRead,
     getMe
 } from "../controllers/userController.js";
 
@@ -23,6 +24,7 @@ router.get("/me", requireAuth, getMe);
 
 // Officer/President: Notifications
 router.get("/notifications", requireAuth, getNotifications);
+router.put("/notifications/read-all", requireAuth, markAllNotificationsAsRead);
 router.put("/notifications/:id/read", requireAuth, markNotificationAsRead);
 
 // Officer/President: Update issue status

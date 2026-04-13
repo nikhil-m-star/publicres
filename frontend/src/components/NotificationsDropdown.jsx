@@ -33,6 +33,17 @@ export default function NotificationsDropdown() {
         }
     });
 
+    const markAllReadMutation = useMutation({
+        mutationFn: async () => {
+            const token = await getToken();
+            setAuthToken(token);
+            return api.markAllNotificationsRead();
+        },
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ['notifications'] });
+        }
+    });
+
     if (isError) return null;
 
     const notifications = data?.notifications || [];
@@ -59,11 +70,22 @@ export default function NotificationsDropdown() {
                     ></div>
                     <div className="absolute right-0 mt-2 w-80 bg-white rounded-xl shadow-2xl border border-gray-100 z-50 overflow-hidden animate-fade-in">
                         <div className="bg-gray-50 px-4 py-3 border-b border-gray-100 flex items-center justify-between">
-                            <h3 className="font-semibold text-gray-800">Notifications</h3>
+                            <div className="flex items-center gap-2">
+                                <h3 className="font-semibold text-gray-800">Notifications</h3>
+                                {unreadCount > 0 && (
+                                    <span className="text-xs bg-red-100 text-red-600 px-2 py-0.5 rounded-full font-medium">
+                                        {unreadCount} unread
+                                    </span>
+                                )}
+                            </div>
                             {unreadCount > 0 && (
-                                <span className="text-xs bg-red-100 text-red-600 px-2 py-0.5 rounded-full font-medium">
-                                    {unreadCount} unread
-                                </span>
+                                <button
+                                    onClick={() => markAllReadMutation.mutate()}
+                                    className="text-xs text-civic-600 hover:text-civic-700 font-medium"
+                                    disabled={markAllReadMutation.isPending}
+                                >
+                                    Mark all read
+                                </button>
                             )}
                         </div>
 

@@ -16,7 +16,7 @@ const categoryLabels = {
     OTHER: 'Other',
 }
 
-export default function AdminIssueTable({ issues = [] }) {
+export default function AdminIssueTable({ issues = [], userRole }) {
     const updateStatus = useUpdateStatus()
 
     const handleStatusChange = async (issueId, newStatus) => {
@@ -78,7 +78,9 @@ export default function AdminIssueTable({ issues = [] }) {
                                 >
                                     <option value="REPORTED">Reported</option>
                                     <option value="IN_PROGRESS">In Progress</option>
-                                    <option value="RESOLVED">Resolved</option>
+                                    {userRole !== 'OFFICER' && (
+                                        <option value="RESOLVED">Resolved</option>
+                                    )}
                                 </select>
                             </td>
                             <td className="py-3 px-4">

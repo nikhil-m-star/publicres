@@ -90,8 +90,8 @@ New Report Title: ${newTitle}
 New Report Description: ${newDescription}
 
 Is the new report a duplicate of any recent report?
-If YES, respond in this exact JSON format: {"isDuplicate": true, "duplicateId": "the_id_of_the_matching_issue"}
-If NO, respond in this exact JSON format: {"isDuplicate": false}
+If YES, respond in this exact JSON format: {"isDuplicate": true, "duplicateId": "the_id_of_the_matching_issue", "reasoning": "one sentence explanation why it is a duplicate"}
+If NO, respond in this exact JSON format: {"isDuplicate": false, "reasoning": "one sentence explanation why it is not a duplicate"}
 Do not include any markdown formatting, backticks, or extra text. Just the JSON.`;
 
         const chatCompletion = await groq.chat.completions.create({
@@ -102,10 +102,17 @@ Do not include any markdown formatting, backticks, or extra text. Just the JSON.
         });
 
         const responseText = chatCompletion.choices[0]?.message?.content?.trim() || '{"isDuplicate": false}';
-        return JSON.parse(responseText);
+        const parsed = JSON.parse(responseText);
+        
+        // Log parse errors if any, but return safely
+        return {
+            isDuplicate: !!parsed.isDuplicate,
+            duplicateId: parsed.duplicateId || null,
+            reasoning: parsed.reasoning || ""
+        };
     } catch (error) {
         console.error("Groq Duplicate Check Error:", error);
-        return { isDuplicate: false };
+        return { isDuplicate: false, duplicateId: null, reasoning: "Error checking for duplicates" };
     }
 }
 

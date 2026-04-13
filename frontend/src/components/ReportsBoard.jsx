@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { SignedIn, SignedOut, SignInButton } from '@clerk/clerk-react'
 import { Plus, List, Map as MapIcon, X, Search } from 'lucide-react'
 import { useIssuesScope, useAuthSync } from '../hooks/useIssues'
@@ -20,6 +20,8 @@ export default function ReportsBoard({
     const [view, setView] = useState('list')
     const [filters, setFilters] = useState({ category: '', status: '', search: '' })
     const [page, setPage] = useState(1)
+
+    useEffect(() => { setPage(1) }, [filters])
 
     const { data, isLoading } = useIssuesScope(scope, { ...filters, page, limit: 12 })
     const issues = data?.issues || []
@@ -105,6 +107,7 @@ export default function ReportsBoard({
                     <option value="GARBAGE">Garbage</option>
                     <option value="STREETLIGHT">Streetlight</option>
                     <option value="WATER_LEAK">Water Leak</option>
+                    <option value="BRIBERY">Bribery</option>
                     <option value="OTHER">Other</option>
                 </select>
 
@@ -141,8 +144,27 @@ export default function ReportsBoard({
 
             {/* Content */}
             {isLoading ? (
-                <div className="flex items-center justify-center py-20">
-                    <div className="w-8 h-8 border-3 border-civic-200 border-t-civic-600 rounded-full animate-spin" />
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+                    {Array.from({ length: 6 }).map((_, i) => (
+                        <div key={i} className="bg-white border text-transparent select-none border-gray-100 rounded-2xl shadow-sm overflow-hidden animate-pulse">
+                            <div className="h-44 bg-gray-200 w-full" />
+                            <div className="p-5">
+                                <div className="flex justify-between items-start mb-3">
+                                    <div className="h-5 bg-gray-200 rounded w-1/3" />
+                                    <div className="h-5 bg-gray-200 rounded-full w-20" />
+                                </div>
+                                <div className="h-6 bg-gray-200 rounded w-3/4 mb-4" />
+                                <div className="space-y-2 mb-4">
+                                    <div className="h-4 bg-gray-200 rounded w-full" />
+                                    <div className="h-4 bg-gray-200 rounded w-5/6" />
+                                </div>
+                                <div className="flex justify-between pt-4 border-t border-gray-50">
+                                    <div className="h-4 bg-gray-200 rounded w-1/4" />
+                                    <div className="h-4 bg-gray-200 rounded w-1/4" />
+                                </div>
+                            </div>
+                        </div>
+                    ))}
                 </div>
             ) : view === 'map' ? (
                 <IssueMap issues={issues} height="550px" />

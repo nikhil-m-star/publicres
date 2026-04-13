@@ -127,10 +127,10 @@ export default function IssueDetails() {
         if (isSignedIn) voteIssue.mutate(id)
     }
 
-    // Check if current user is the reporter, allowing rating even before resolution
+    // Check if current user is the reporter and if they already gave a rating
     const isReporter = isSignedIn && clerkUser?.primaryEmailAddress?.emailAddress === issue.createdBy?.email
-    const canRate = isReporter && (!issue.ratings || issue.ratings.length === 0)
-    const existingRating = issue.ratings?.find((r) => r.givenBy?.id === issue.createdBy?.id)
+    const existingRating = issue.ratings?.find((r) => r.givenBy?.email === clerkUser?.primaryEmailAddress?.emailAddress) || issue.ratings?.find((r) => r.givenById === issue.createdBy?.id)
+    const canRate = isReporter && !existingRating && issue.status === 'RESOLVED'
 
     return (
         <div className="page-container max-w-4xl">
