@@ -42,7 +42,7 @@ export default function MapExplorer() {
         <div className="h-[calc(100vh-64px)] flex relative">
             {/* Sidebar */}
             {showSidebar && (
-                <div className="w-96 bg-white border-r border-gray-100 flex flex-col z-10 shadow-lg absolute lg:relative h-full left-0">
+                <div className={`w-96 bg-[#0a0a0a] border-r border-white/5 flex flex-col z-10 shadow-lg ${showSidebar ? 'flex' : 'hidden'} absolute lg:relative h-full left-0`}>
                     {/* Header */}
                     <div className="p-4 border-b border-gray-100">
                         <div className="flex items-center justify-between mb-3">
@@ -139,10 +139,10 @@ export default function MapExplorer() {
                 </div>
             )}
 
-            {/* Toggle sidebar button (mobile) */}
+            {/* Toggle sidebar button */}
             <button
                 onClick={() => setShowSidebar(!showSidebar)}
-                className="absolute top-4 left-4 z-[1000] lg:hidden bg-white p-2.5 rounded-xl shadow-lg border border-gray-200"
+                className="absolute top-4 left-4 z-[1000] bg-[#111111] p-2.5 rounded-xl shadow-lg border border-white/5 text-white"
             >
                 {showSidebar ? <X className="w-5 h-5" /> : <Layers className="w-5 h-5" />}
             </button>

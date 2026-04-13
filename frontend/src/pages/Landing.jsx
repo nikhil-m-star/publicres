@@ -74,33 +74,20 @@ export default function Landing() {
                 <div className="hero__glow hero__glow--moss" />
                 <div className="page-container hero__grid">
                     <div className="hero__copy">
-                        <div className="hero__badge">
-                            <Sparkles className="w-4 h-4" />
-                            Civic signal, tuned for Bengaluru
-                        </div>
                         <h1 className="hero__title">
                             Fixes, not fuss.
                             <span>Report fast. Track brighter.</span>
                         </h1>
-                        <p className="hero__subtitle">
-                            Drop a quick report, share the signal, and let the city move with clarity. A bold, friendly way to keep Bengaluru in flow.
-                        </p>
                         <div className="hero__actions">
-                            <Link to="/#reports" className="btn-primary">
+                            <Link to="/#reports" className="btn-primary px-8 py-4 text-lg font-bold">
                                 Report an Issue
-                                <ArrowRight className="w-4 h-4" />
+                                <ArrowRight className="w-6 h-6" />
                             </Link>
                             <SignedOut>
                                 <SignInButton mode="modal">
-                                    <button className="btn-secondary">Sign In</button>
+                                    <button className="btn-secondary px-8 py-4 text-lg font-bold">Sign In</button>
                                 </SignInButton>
                             </SignedOut>
-                        </div>
-                        <div className="hero__tags">
-                            <span className="chip">Potholes</span>
-                            <span className="chip">Streetlights</span>
-                            <span className="chip">Garbage</span>
-                            <span className="chip">Water leaks</span>
                         </div>
                     </div>
 
@@ -129,10 +116,6 @@ export default function Landing() {
                                     <strong>{unresolvedCount}</strong>
                                 </div>
                             </div>
-                        </div>
-                        <div className="hero__note">
-                            <AlertTriangle className="w-4 h-4" />
-                            <span>Signal spikes get routed to the nearest ward team within minutes.</span>
                         </div>
                     </div>
                 </div>
