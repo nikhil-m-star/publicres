@@ -247,7 +247,7 @@ export default function Landing() {
                     <p>See reports across Bengaluru at a glance.</p>
                 </div>
                 <div className="map-panel">
-                    <IssueMap issues={issues} height="480px" />
+                    <IssueMap issues={issues} height={window.innerWidth < 768 ? '320px' : '480px'} />
                 </div>
             </section>
 
