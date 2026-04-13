@@ -150,10 +150,10 @@ export default function Landing() {
                 </div>
             </section>
 
-            <section id="reports" className="page-container section">
-                <div className="section__head">
-                    <h2>Community Reports</h2>
-                    <p>Browse recent issues, filter by category, or report a new one.</p>
+            <section id="reports" className="page-container section py-20">
+                <div className="section__head mb-12">
+                    <h2 className="text-4xl">Community Reports</h2>
+                    <p className="text-[var(--text-muted)] text-lg">Browse recent issues, filter by category, or report a new one.</p>
                 </div>
                 <div className="panel glass">
                     <ReportsBoard scope="all" />
@@ -161,14 +161,14 @@ export default function Landing() {
             </section>
 
             {totalIssues > 0 && (
-                <section className="page-container section">
-                    <div className="section__head">
-                        <h2>Quick Insights</h2>
-                        <p>A calm snapshot of what needs attention.</p>
-                    </div>
-                    <div className="insight-grid">
-                        <div className="panel glass">
-                            <h3>Resolved vs Unresolved</h3>
+                <section className="page-container section py-20 border-t border-[var(--border-glass)]">
+                <div className="section__head mb-12">
+                    <h2 className="text-4xl">City Insights</h2>
+                    <p className="text-[var(--text-muted)] text-lg">A calm snapshot of what needs attention.</p>
+                </div>
+                <div className="insight-grid grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <div className="panel glass p-8">
+                        <h3 className="text-xl mb-6">Resolved vs Unresolved</h3>
                             <div className="chart-box">
                                 <ResponsiveContainer width="100%" height="100%">
                                     <PieChart>
