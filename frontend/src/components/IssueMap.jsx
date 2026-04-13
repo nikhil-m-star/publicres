@@ -41,9 +41,9 @@ const userIcon = new L.DivIcon({
 })
 
 const statusIcons = {
-    REPORTED: createIcon('#ef4444'),
-    IN_PROGRESS: createIcon('#f59e0b'),
-    RESOLVED: createIcon('#22c55e'),
+    REPORTED: createIcon('#00ffff'),
+    IN_PROGRESS: createIcon('#00cccc'),
+    RESOLVED: createIcon('#009999'),
 }
 
 const statusLabels = {

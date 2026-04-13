@@ -30,8 +30,8 @@ const features = [
     },
 ]
 
-const STATUS_COLORS = ['#ff8f3d', '#f0c47b', '#8fa14b']
-const CATEGORY_COLORS = ['#ff8f3d', '#8fa14b', '#d79a4e', '#6b7f35', '#f0c47b']
+const STATUS_COLORS = ['#007fff', '#00ffff', '#003333']
+const CATEGORY_COLORS = ['#00ffff', '#00cccc', '#009999', '#006666', '#003333']
 const statusNames = { REPORTED: 'Reported', IN_PROGRESS: 'In Progress', RESOLVED: 'Resolved' }
 const categoryNames = { POTHOLE: 'Pothole', GARBAGE: 'Garbage', STREETLIGHT: 'Streetlight', WATER_LEAK: 'Water Leak', OTHER: 'Other' }
 
@@ -70,8 +70,6 @@ export default function Landing() {
     return (
         <div className="landing">
             <section className="hero">
-                <div className="hero__glow hero__glow--ember" />
-                <div className="hero__glow hero__glow--moss" />
                 <div className="page-container hero__grid">
                     <div className="hero__copy">
                         <h1 className="hero__title">
