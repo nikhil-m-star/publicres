@@ -9,7 +9,25 @@ export default function Navbar() {
     useAuthSync()
     const location = useLocation()
     const [isVisible, setIsVisible] = useState(true)
+    const [openDropdown, setOpenDropdown] = useState(null)
     const lastScrollY = useRef(0)
+    const navRef = useRef(null)
+
+    useEffect(() => {
+        const handleClickOutside = (e) => {
+            if (navRef.current && !navRef.current.contains(e.target)) {
+                setOpenDropdown(null)
+            }
+        }
+        document.addEventListener('click', handleClickOutside)
+        return () => document.removeEventListener('click', handleClickOutside)
+    }, [])
+
+    const toggleDropdown = (e, name) => {
+        e.preventDefault()
+        e.stopPropagation()
+        setOpenDropdown(openDropdown === name ? null : name)
+    }
 
     useEffect(() => {
         const handleScroll = () => {
@@ -29,10 +47,15 @@ export default function Navbar() {
         return () => window.removeEventListener('scroll', handleScroll)
     }, [])
 
+    // Close any open dropdowns when clicking a route 
+    useEffect(() => {
+        setOpenDropdown(null)
+    }, [location.pathname])
+
     const isActive = (path) => location.pathname === path
 
     return (
-        <div className={`nav-unified-container ${!isVisible ? 'nav-hidden' : ''}`}>
+        <div className={`nav-unified-container ${!isVisible ? 'nav-hidden' : ''}`} ref={navRef}>
             {/* Main Navigation Pill */}
             <nav className="nav-unified glass">
                 <div className="nav-unified__inner">
@@ -54,18 +77,24 @@ export default function Navbar() {
                         </Link>
                         
                         {/* Dropdown Menu for Reports */}
-                        <div className="nav-unified__dropdown-container">
-                            <button className={`nav-unified__link ${(isActive('/submit') || isActive('/community')) ? 'active' : ''}`}>
+                        <div className={`nav-unified__dropdown-container ${openDropdown === 'reports' ? 'active-dropdown' : ''}`}
+                            onMouseEnter={() => window.innerWidth > 900 && setOpenDropdown('reports')}
+                            onMouseLeave={() => window.innerWidth > 900 && setOpenDropdown(null)}
+                        >
+                            <button
+                                onClick={(e) => toggleDropdown(e, 'reports')}
+                                className={`nav-unified__link ${(isActive('/submit') || isActive('/community')) ? 'active' : ''}`}
+                            >
                                 <FileText className="w-4 h-4" />
                                 <span>Reports</span>
-                                <ChevronDown className="w-3 h-3 ml-1 opacity-60" />
+                                <ChevronDown className={`w-3 h-3 ml-1 opacity-60 transition-transform ${openDropdown === 'reports' ? 'rotate-180' : ''}`} />
                             </button>
                             <div className="nav-unified__dropdown-menu">
-                                <Link to="/submit" className="nav-unified__dropdown-item">
+                                <Link to="/submit" className="nav-unified__dropdown-item" onClick={() => setOpenDropdown(null)}>
                                     <Plus className="w-4 h-4" />
                                     Report Issue
                                 </Link>
-                                <Link to="/community" className="nav-unified__dropdown-item">
+                                <Link to="/community" className="nav-unified__dropdown-item" onClick={() => setOpenDropdown(null)}>
                                     <Users className="w-4 h-4" />
                                     Community Reports
                                 </Link>
@@ -85,17 +114,20 @@ export default function Navbar() {
                         </div>
 
                         {/* More Menu for Mobile (Hidden on Desktop) */}
-                        <div className="nav-unified__dropdown-container sm:hidden">
-                            <button className={`nav-unified__link ${(isActive('/report') || isActive('/leaderboard')) ? 'active' : ''}`}>
+                        <div className={`nav-unified__dropdown-container sm:hidden ${openDropdown === 'more' ? 'active-dropdown' : ''}`}>
+                            <button
+                                onClick={(e) => toggleDropdown(e, 'more')}
+                                className={`nav-unified__link ${(isActive('/report') || isActive('/leaderboard')) ? 'active' : ''}`}
+                            >
                                 <MoreHorizontal className="w-4 h-4" />
                                 <span>More</span>
                             </button>
                             <div className="nav-unified__dropdown-menu dropdown-right">
-                                <Link to="/report" className={`nav-unified__dropdown-item ${isActive('/report') ? 'text-[var(--accent)] font-bold' : ''}`}>
+                                <Link to="/report" className={`nav-unified__dropdown-item ${isActive('/report') ? 'text-[var(--accent)] font-bold' : ''}`} onClick={() => setOpenDropdown(null)}>
                                     <Sparkles className="w-4 h-4" />
                                     AI Report
                                 </Link>
-                                <Link to="/leaderboard" className={`nav-unified__dropdown-item ${isActive('/leaderboard') ? 'text-[var(--accent)] font-bold' : ''}`}>
+                                <Link to="/leaderboard" className={`nav-unified__dropdown-item ${isActive('/leaderboard') ? 'text-[var(--accent)] font-bold' : ''}`} onClick={() => setOpenDropdown(null)}>
                                     <Trophy className="w-4 h-4" />
                                     Rank Leaderboard
                                 </Link>

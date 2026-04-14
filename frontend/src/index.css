@@ -4078,3 +4078,35 @@ tbody tr:hover {
     transform: translateX(0) translateY(0) !important;
   }
 }
+
+/* Ensure pages don't get hidden under fixed navigation */
+.app-shell {
+  min-height: 100vh;
+  padding-top: 90px; /* Space for desktop navbar */
+  padding-bottom: 90px; /* Space for mobile navbar */
+}
+
+@media (min-width: 901px) {
+  .app-shell {
+    padding-bottom: 20px; /* Reset bottom on desktop */
+  }
+}
+
+@media (max-width: 900px) {
+  .app-shell {
+    padding-top: 20px; /* Reset top on mobile */
+  }
+}
+
+/* Touch-friendly click overrides for dropdowns on mobile */
+.nav-unified__dropdown-container.active-dropdown .nav-unified__dropdown-menu {
+  opacity: 1 !important;
+  visibility: visible !important;
+  transform: translateX(-50%) translateY(0) !important;
+}
+
+@media (max-width: 900px) {
+  .nav-unified__dropdown-container.active-dropdown .nav-unified__dropdown-menu.dropdown-right {
+    transform: translateX(0) translateY(0) !important;
+  }
+}
