@@ -4110,3 +4110,30 @@ tbody tr:hover {
     transform: translateX(0) translateY(0) !important;
   }
 }
+
+/* Playful Interactions */
+.panel {
+    transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.3s ease;
+}
+.panel:hover {
+    transform: translateY(-4px) scale(1.01);
+    box-shadow: 0 12px 24px -10px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+}
+
+.btn-primary, .btn-secondary, .nav-unified__link {
+    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+.btn-primary:hover, .btn-secondary:hover {
+    transform: translateY(-2px) scale(1.05);
+}
+.nav-unified__link:hover:not(.active) {
+    transform: translateY(-2px);
+    color: var(--accent);
+}
+.hero__title {
+    animation: slide-pop 1s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+}
+.hero__title span {
+    display: inline-block;
+    animation: float 6s ease-in-out infinite alternate;
+}

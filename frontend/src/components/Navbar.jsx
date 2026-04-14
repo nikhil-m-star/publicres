@@ -61,7 +61,7 @@ export default function Navbar() {
                 <div className="nav-unified__inner">
                     {/* Brand - Integrated for all views */}
                     <Link to="/" className="nav-unified__brand">
-                        <img src="/logo.png" alt="Namma Parihara" className="nav-unified__logo" />
+                        <img src="/logo.png" alt="Namma Parihara" className="nav-unified__logo hidden sm:block" />
                         <span className="nav-unified__title">Namma Parihara</span>
                     </Link>
 
@@ -76,35 +76,20 @@ export default function Navbar() {
                             <span>Map</span>
                         </Link>
                         
-                        {/* Dropdown Menu for Reports */}
-                        <div className={`nav-unified__dropdown-container ${openDropdown === 'reports' ? 'active-dropdown' : ''}`}
-                            onMouseEnter={() => window.innerWidth > 900 && setOpenDropdown('reports')}
-                            onMouseLeave={() => window.innerWidth > 900 && setOpenDropdown(null)}
-                        >
-                            <button
-                                onClick={(e) => toggleDropdown(e, 'reports')}
-                                className={`nav-unified__link ${(isActive('/submit') || isActive('/community')) ? 'active' : ''}`}
-                            >
-                                <FileText className="w-4 h-4" />
-                                <span>Reports</span>
-                                <ChevronDown className={`w-3 h-3 ml-1 opacity-60 transition-transform ${openDropdown === 'reports' ? 'rotate-180' : ''}`} />
-                            </button>
-                            <div className="nav-unified__dropdown-menu">
-                                <Link to="/submit" className="nav-unified__dropdown-item" onClick={() => setOpenDropdown(null)}>
-                                    <Plus className="w-4 h-4" />
-                                    Report Issue
-                                </Link>
-                                <Link to="/community" className="nav-unified__dropdown-item" onClick={() => setOpenDropdown(null)}>
-                                    <Users className="w-4 h-4" />
-                                    Community Reports
-                                </Link>
-                            </div>
-                        </div>
+                        {/* Simple Links for Reports */}
+                        <Link to="/submit" className={`nav-unified__link ${isActive('/submit') ? 'active' : ''}`}>
+                            <Plus className="w-4 h-4" />
+                            <span>Report Issue</span>
+                        </Link>
+                        <Link to="/community" className={`nav-unified__link ${isActive('/community') ? 'active' : ''}`}>
+                            <Users className="w-4 h-4" />
+                            <span>Reports</span>
+                        </Link>
 
                         <div className="hidden sm:flex items-center gap-1">
                             <Link to="/report" className={`nav-unified__link ${isActive('/report') ? 'active' : ''}`}>
                                 <Sparkles className="w-4 h-4" />
-                                <span>AI Report</span>
+                                <span>AI</span>
                             </Link>
 
                             <Link to="/leaderboard" className={`nav-unified__link ${isActive('/leaderboard') ? 'active' : ''}`}>

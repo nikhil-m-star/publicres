@@ -72,12 +72,12 @@ export default function Landing() {
             <section className="hero">
                 <div className="page-container hero__grid">
                     <div className="hero__copy">
-                        <h1 className="hero__title">
-                            Fixes, not fuss.
-                            <span>Report fast. Track brighter.</span>
+                        <h1 className="hero__title text-6xl md:text-8xl font-black bg-gradient-to-br from-[var(--text-main)] to-[var(--text-muted)] text-transparent bg-clip-text mb-6">
+                            Namma Parihara.
+                            <span className="block text-3xl md:text-5xl font-medium mt-4">Fixes, not fuss. Report fast.</span>
                         </h1>
                         <div className="hero__actions">
-                            <Link to="/#reports" className="btn-primary px-8 py-4 text-lg font-bold">
+                            <Link to="/submit" className="btn-primary px-8 py-4 text-lg font-bold">
                                 Report
                                 <ArrowRight className="w-6 h-6" />
                             </Link>
@@ -147,16 +147,6 @@ export default function Landing() {
                         <p>Resolution rate</p>
                         <strong>{resolutionRate}%</strong>
                     </div>
-                </div>
-            </section>
-
-            <section id="reports" className="page-container section py-20">
-                <div className="section__head mb-12">
-                    <h2 className="text-4xl">Community Reports</h2>
-                    <p className="text-[var(--text-muted)] text-lg">Browse recent issues, filter by category, or report a new one.</p>
-                </div>
-                <div className="panel glass">
-                    <ReportsBoard scope="all" />
                 </div>
             </section>
 
