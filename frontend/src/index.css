@@ -4204,3 +4204,21 @@ tbody tr:hover {
 .blink-slow {
   animation: blink-slow 2s infinite;
 }
+
+/* Leaflet Dark Mode Popup Overrides */
+.leaflet-popup-content-wrapper {
+  @apply !bg-black/90 !backdrop-blur-xl !shadow-[0_0_20px_rgba(0,255,255,0.1)] !border !border-[var(--glow)]/20 !rounded-xl !p-0;
+  overflow: hidden;
+}
+
+.leaflet-popup-tip {
+  @apply !bg-black/90 !border-b !border-r !border-[var(--glow)]/20;
+}
+
+.leaflet-popup-content {
+  @apply !m-0 !w-[240px] !text-white;
+}
+
+.leaflet-popup-close-button {
+  @apply !text-white !p-2 !z-50 !hover:text-[var(--glow)] !bg-black/40 !rounded-bl-lg;
+}
