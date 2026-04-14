@@ -72,9 +72,9 @@ export default function Landing() {
             <section className="hero">
                 <div className="page-container hero__grid">
                     <div className="hero__copy">
-                        <h1 className="hero__title text-6xl md:text-8xl font-black bg-gradient-to-br from-[var(--text-main)] to-[var(--text-muted)] text-transparent bg-clip-text mb-6">
+                        <h1 className="hero__title text-6xl md:text-8xl font-black bg-gradient-to-r from-blue-400 via-teal-300 to-green-400 text-transparent bg-clip-text mb-6 drop-shadow-lg">
                             Namma Parihara.
-                            <span className="block text-3xl md:text-5xl font-medium mt-4">Fixes, not fuss. Report fast.</span>
+                            <span className="block text-3xl md:text-5xl font-semibold mt-4 text-[var(--text-main)] drop-shadow-md">Fixes, not fuss. Report fast.</span>
                         </h1>
                         <div className="hero__actions">
                             <Link to="/submit" className="btn-primary px-8 py-4 text-lg font-bold">
