@@ -86,38 +86,15 @@ export default function Navbar() {
                             <span>Reports</span>
                         </Link>
 
-                        <div className="hidden sm:flex items-center gap-1">
-                            <Link to="/report" className={`nav-unified__link ${isActive('/report') ? 'active' : ''}`}>
-                                <Sparkles className="w-4 h-4" />
-                                <span>AI</span>
-                            </Link>
+                        <Link to="/report" className={`nav-unified__link ${isActive('/report') ? 'active' : ''}`}>
+                            <Sparkles className="w-4 h-4" />
+                            <span>AI Report</span>
+                        </Link>
 
-                            <Link to="/leaderboard" className={`nav-unified__link ${isActive('/leaderboard') ? 'active' : ''}`}>
-                                <Trophy className="w-4 h-4" />
-                                <span>Rank</span>
-                            </Link>
-                        </div>
-
-                        {/* More Menu for Mobile (Hidden on Desktop) */}
-                        <div className={`nav-unified__dropdown-container sm:hidden ${openDropdown === 'more' ? 'active-dropdown' : ''}`}>
-                            <button
-                                onClick={(e) => toggleDropdown(e, 'more')}
-                                className={`nav-unified__link ${(isActive('/report') || isActive('/leaderboard')) ? 'active' : ''}`}
-                            >
-                                <MoreHorizontal className="w-4 h-4" />
-                                <span>More</span>
-                            </button>
-                            <div className="nav-unified__dropdown-menu dropdown-right">
-                                <Link to="/report" className={`nav-unified__dropdown-item ${isActive('/report') ? 'text-[var(--accent)] font-bold' : ''}`} onClick={() => setOpenDropdown(null)}>
-                                    <Sparkles className="w-4 h-4" />
-                                    AI Report
-                                </Link>
-                                <Link to="/leaderboard" className={`nav-unified__dropdown-item ${isActive('/leaderboard') ? 'text-[var(--accent)] font-bold' : ''}`} onClick={() => setOpenDropdown(null)}>
-                                    <Trophy className="w-4 h-4" />
-                                    Rank Leaderboard
-                                </Link>
-                            </div>
-                        </div>
+                        <Link to="/leaderboard" className={`nav-unified__link ${isActive('/leaderboard') ? 'active' : ''}`}>
+                            <Trophy className="w-4 h-4" />
+                            <span>Rank</span>
+                        </Link>
 
                         <SignedIn>
                             <Link to="/profile" className={`nav-unified__link ${isActive('/profile') ? 'active' : ''}`}>
