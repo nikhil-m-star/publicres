@@ -42,9 +42,9 @@ function RatingDialog({ issue, onClose }) {
 
     return (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm p-4">
-            <div className="bg-white rounded-2xl shadow-2xl w-full max-w-sm p-6 animate-fade-in">
-                <h3 className="text-lg font-bold text-gray-900 mb-1">Rate the Officer</h3>
-                <p className="text-sm text-gray-500 mb-5">How well did <strong>{officerName}</strong> resolve this issue?</p>
+            <div className="panel glass !bg-black/60 border-[var(--border-clean)] shadow-[0_10px_40px_-10px_rgba(0,0,0,0.5)] rounded-2xl shadow-2xl w-full max-w-sm p-6 animate-fade-in">
+                <h3 className="text-lg font-bold text-white mb-1">Rate the Officer</h3>
+                <p className="text-sm text-[var(--text-muted)] mb-5">How well did <strong>{officerName}</strong> resolve this issue?</p>
 
                 {/* Stars */}
                 <div className="flex justify-center gap-1.5 mb-5">
@@ -65,7 +65,7 @@ function RatingDialog({ issue, onClose }) {
                         </button>
                     ))}
                 </div>
-                <p className="text-center text-sm text-gray-500 mb-4">
+                <p className="text-center text-sm text-[var(--text-muted)] mb-4">
                     {score === 1 && 'Poor'}
                     {score === 2 && 'Below Average'}
                     {score === 3 && 'Average'}
@@ -83,7 +83,7 @@ function RatingDialog({ issue, onClose }) {
                 />
 
                 <div className="flex gap-2">
-                    <button onClick={onClose} className="flex-1 py-2.5 rounded-xl text-sm font-medium border border-gray-200 text-gray-600 hover:bg-gray-50 transition-colors">
+                    <button onClick={onClose} className="flex-1 py-2.5 rounded-xl text-sm font-medium border border-[var(--border-clean)] text-gray-600 hover:panel glass transition-colors">
                         Cancel
                     </button>
                     <button
@@ -118,7 +118,7 @@ export default function IssueDetails() {
     if (isError || !issue) {
         return (
             <div className="page-container text-center py-20">
-                <p className="text-gray-500 mb-4">Issue not found</p>
+                <p className="text-[var(--text-muted)] mb-4">Issue not found</p>
                 <Link to="/#reports" className="btn-primary">Back to Reports</Link>
             </div>
         )
@@ -134,11 +134,11 @@ export default function IssueDetails() {
     const canRate = isReporter && !existingRating && issue.status === 'RESOLVED'
 
     return (
-        <div className="page-container max-w-4xl">
+        <div className="page-container py-12 md:py-24 mt-16 max-w-5xl relative z-10 w-full min-h-screen">
             {/* Back */}
             <Link
                 to="/#reports"
-                className="inline-flex items-center gap-1.5 text-sm text-gray-500 hover:text-gray-700 mb-6 transition-colors"
+                className="inline-flex items-center gap-1.5 text-sm text-[var(--text-muted)] hover:text-[var(--text-dim)] mb-6 transition-colors"
             >
                 <ArrowLeft className="w-4 h-4" />
                 Back to Reports
@@ -165,7 +165,7 @@ export default function IssueDetails() {
                     {/* Title + Meta */}
                     <div>
                         <div className="flex items-center gap-2 mb-3">
-                            <span className="category-badge bg-gray-100 text-gray-700 border border-gray-200">
+                            <span className="category-badge bg-gray-100 text-[var(--text-dim)] border border-[var(--border-clean)]">
                                 {(() => { const CatIcon = categoryIcons[issue.category] || FileText; return <CatIcon className="w-3.5 h-3.5" />; })()}
                                 {categoryLabels[issue.category]}
                             </span>
@@ -175,12 +175,12 @@ export default function IssueDetails() {
                                 </span>
                             )}
                         </div>
-                        <h1 className="text-2xl font-bold text-gray-900 mb-2">{issue.title}</h1>
+                        <h1 className="text-2xl font-bold text-white mb-2">{issue.title}</h1>
                         <p className="text-gray-600 leading-relaxed">{issue.description}</p>
                     </div>
 
                     {/* Meta info */}
-                    <div className="flex flex-wrap items-center gap-4 text-sm text-gray-500">
+                    <div className="flex flex-wrap items-center gap-4 text-sm text-[var(--text-muted)]">
                         <span className="flex items-center gap-1.5">
                             <User className="w-4 h-4" />
                             {issue.createdBy?.name || 'Anonymous'}
@@ -194,7 +194,7 @@ export default function IssueDetails() {
                         <span className="flex items-center gap-1.5">
                             <MapPin className="w-4 h-4" />
                             {issue.area ? (
-                                <span className="font-medium text-gray-700">{issue.area}</span>
+                                <span className="font-medium text-[var(--text-dim)]">{issue.area}</span>
                             ) : (
                                 `${issue.latitude.toFixed(4)}, ${issue.longitude.toFixed(4)}`
                             )}
@@ -206,9 +206,9 @@ export default function IssueDetails() {
                         <div className="card p-4 flex items-center gap-3 bg-blue-50/50 border-blue-100">
                             <Shield className="w-5 h-5 text-blue-600" />
                             <div>
-                                <p className="text-sm font-semibold text-gray-900">Assigned to: {issue.assignedTo.name}</p>
+                                <p className="text-sm font-semibold text-white">Assigned to: {issue.assignedTo.name}</p>
                                 {issue.assignedTo.area && (
-                                    <p className="text-xs text-gray-500">{issue.assignedTo.area} • Rating: {issue.assignedTo.avgRating?.toFixed(1) || '—'}</p>
+                                    <p className="text-xs text-[var(--text-muted)]">{issue.assignedTo.area} • Rating: {issue.assignedTo.avgRating?.toFixed(1) || '—'}</p>
                                 )}
                             </div>
                         </div>
@@ -216,7 +216,7 @@ export default function IssueDetails() {
 
                     {/* Status Timeline */}
                     <div className="card p-6">
-                        <h3 className="font-semibold text-gray-900 mb-4">Status Progress</h3>
+                        <h3 className="font-semibold text-white mb-4">Status Progress</h3>
                         <StatusTimeline currentStatus={issue.status} />
                     </div>
 
@@ -225,10 +225,10 @@ export default function IssueDetails() {
                         <div className="card p-5 bg-amber-50/50 border-amber-100">
                             <div className="flex items-center justify-between">
                                 <div>
-                                    <h3 className="font-semibold text-gray-900 mb-1">
+                                    <h3 className="font-semibold text-white mb-1">
                                         {issue.status === 'RESOLVED' ? 'This issue has been resolved!' : 'Rate your reporting experience'}
                                     </h3>
-                                    <p className="text-sm text-gray-500">Rate the officer or city administration to help improve civic services.</p>
+                                    <p className="text-sm text-[var(--text-muted)]">Rate the officer or city administration to help improve civic services.</p>
                                 </div>
                                 <button onClick={() => setShowRating(true)} className="btn-primary text-sm whitespace-nowrap">
                                     <Star className="w-4 h-4 inline mr-1" />
@@ -262,8 +262,8 @@ export default function IssueDetails() {
                 <div className="space-y-5">
                     {/* Vote card */}
                     <div className="card p-6 text-center">
-                        <p className="text-3xl font-bold text-gray-900 mb-1">{issue.votes}</p>
-                        <p className="text-sm text-gray-500 mb-4">Upvotes</p>
+                        <p className="text-3xl font-bold text-white mb-1">{issue.votes}</p>
+                        <p className="text-sm text-[var(--text-muted)] mb-4">Upvotes</p>
                         <button
                             onClick={handleVote}
                             disabled={!isSignedIn || voteIssue.isPending}
@@ -284,8 +284,8 @@ export default function IssueDetails() {
 
                     {/* Location map */}
                     <div className="card overflow-hidden">
-                        <div className="p-4 border-b border-gray-100">
-                            <h3 className="font-semibold text-gray-900 text-sm">Location</h3>
+                        <div className="p-4 border-b border-[var(--border-clean)]">
+                            <h3 className="font-semibold text-white text-sm">Location</h3>
                         </div>
                         <IssueMap
                             issues={[issue]}

@@ -1,4 +1,4 @@
-import { ArrowLeft, Sparkles } from 'lucide-react'
+import { ArrowLeft, Sparkles, MapPin } from 'lucide-react'
 import { Link, useNavigate } from 'react-router-dom'
 import IssueForm from '../components/IssueForm'
 
@@ -6,23 +6,29 @@ export default function SubmitIssue() {
     const navigate = useNavigate()
 
     return (
-        <div className="page-container py-12">
-            <Link to="/map" className="inline-flex items-center gap-2 text-sm text-[var(--accent)] hover:text-white transition-colors mb-8 px-4 py-2 rounded-xl bg-[var(--accent-soft)] w-fit border border-[var(--accent-pill)]">
-                <ArrowLeft className="w-4 h-4" />
-                Back to Map
-            </Link>
-            
-            <div className="max-w-2xl mx-auto">
-                <div className="mb-8 text-center flex flex-col items-center">
-                    <div className="w-14 h-14 rounded-2xl bg-[var(--accent-soft)] border border-[var(--accent-pill)] flex items-center justify-center text-[var(--accent)] mb-4">
-                        <Sparkles className="w-7 h-7" />
+        <div className="page-container py-12 md:py-24 mt-16 md:mt-24 relative z-10 w-full min-h-screen">
+            {/* Background elements */}
+            <div className="fixed top-20 left-10 w-[500px] h-[500px] bg-[var(--glow)]/10 rounded-full blur-[120px] -z-10 pointer-events-none" />
+            <div className="fixed bottom-20 right-10 w-[400px] h-[400px] bg-blue-500/10 rounded-full blur-[100px] -z-10 pointer-events-none" />
+
+            <div className="max-w-3xl mx-auto">
+                <Link to="/map" className="inline-flex items-center gap-2 text-[var(--text-muted)] hover:text-white transition-colors mb-8 text-sm font-medium">
+                    <ArrowLeft className="w-4 h-4" />
+                    Back to Map
+                </Link>
+                
+                <div className="mb-10 text-center flex flex-col items-center">
+                    <div className="w-16 h-16 rounded-2xl panel glass flex items-center justify-center border border-[var(--border-glow)] shadow-[0_0_20px_rgba(0,255,255,0.1)] mb-6">
+                        <MapPin className="w-8 h-8 text-[var(--glow)] animate-pulse-slow" />
                     </div>
-                    <h1 className="text-3xl font-bold text-[var(--text-main)] mb-3">Report a Civic Issue</h1>
-                    <p className="text-[var(--text-muted)]">Help us improve the city by reporting potholes, garbage, streetlight failures, and more.</p>
+                    <h1 className="text-4xl md:text-5xl font-black text-white mb-4 tracking-tight">Report a Civic Issue</h1>
+                    <p className="text-[var(--text-dim)] font-medium text-lg max-w-lg">
+                        Help us improve the city by accurately reporting potholes, garbage, streetlight failures, and more.
+                    </p>
                 </div>
                 
-                <div className="card panel p-8 relative overflow-hidden">
-                    <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-[var(--accent)] to-transparent opacity-50"></div>
+                <div className="panel glass p-8 md:p-12 rounded-[2rem] border-[var(--border-clean)] relative overflow-hidden shadow-[0_10px_40px_-10px_rgba(0,0,0,0.5)]">
+                    <div className="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-[var(--glow)] to-transparent opacity-50 shadow-[0_0_15px_rgba(0,255,255,1)]"></div>
                     <IssueForm onSuccess={() => navigate('/map')} />
                 </div>
             </div>

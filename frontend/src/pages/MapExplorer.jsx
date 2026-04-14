@@ -30,7 +30,7 @@ export default function MapExplorer() {
     return (
         <div className="h-screen w-full flex flex-col relative overflow-hidden bg-black pt-[80px]">
             {/* Map Area */}
-            <div className="flex-1 relative z-0 w-full">
+            <div className="flex-1 relative z-0 w-full h-full min-h-[500px]">
                 <IssueMap
                     issues={issues}
                     height="100%"
