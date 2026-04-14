@@ -40,102 +40,103 @@ export default function MapExplorer() {
     }
 
     return (
-        <div className="h-[calc(100vh-64px)] flex relative">
+        <div className="h-[calc(100vh-64px)] flex relative overflow-hidden">
             {/* Sidebar */}
             {showSidebar && (
-                <div className={`w-96 bg-[#0a0a0a] border-r border-white/5 flex flex-col z-10 shadow-lg ${showSidebar ? 'flex' : 'hidden'} absolute lg:relative h-full left-0`}>
-                    {/* Header */}
-                    <div className="p-4 border-b border-gray-100">
-                        <div className="flex items-center justify-between mb-3">
-                            <h2 className="text-lg font-bold text-[var(--text-main)] flex items-center gap-2">
-                                <MapPin className="w-5 h-5 text-civic-600" />
-                                Issue Map
-                            </h2>
-                            <button
-                                onClick={() => setShowFilters(!showFilters)}
-                                className={`p-2 rounded-lg transition-colors ${showFilters ? 'bg-civic-50 text-civic-700' : 'hover:bg-transparent text-[var(--text-dim)]'
-                                    }`}
-                            >
-                                <Filter className="w-4 h-4" />
-                            </button>
-                        </div>
-
-                        {/* Stats bar */}
-                        <div className="flex gap-2">
-                            <div className="flex-1 bg-transparent rounded-lg px-3 py-2 text-center">
-                                <p className="text-lg font-bold text-[var(--text-main)]">{counts.total}</p>
-                                <p className="text-[10px] text-[var(--text-dim)] uppercase tracking-wider">Total</p>
-                            </div>
-                            <div className="flex-1 bg-red-50 rounded-lg px-3 py-2 text-center">
-                                <p className="text-lg font-bold text-red-600">{counts.reported}</p>
-                                <p className="text-[10px] text-red-500 uppercase tracking-wider">Open</p>
-                            </div>
-                            <div className="flex-1 bg-amber-50 rounded-lg px-3 py-2 text-center">
-                                <p className="text-lg font-bold text-amber-600">{counts.inProgress}</p>
-                                <p className="text-[10px] text-amber-500 uppercase tracking-wider">Active</p>
-                            </div>
-                            <div className="flex-1 bg-emerald-50 rounded-lg px-3 py-2 text-center">
-                                <p className="text-lg font-bold text-emerald-600">{counts.resolved}</p>
-                                <p className="text-[10px] text-emerald-500 uppercase tracking-wider">Done</p>
-                            </div>
-                        </div>
-
-                        {/* Filters */}
-                        {showFilters && (
-                            <div className="mt-3 space-y-2 animate-fade-in">
-                                <div className="relative">
-                                    <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
-                                    <input
-                                        type="text"
-                                        value={filters.city}
-                                        onChange={(e) => setFilters((f) => ({ ...f, city: e.target.value }))}
-                                        placeholder="City (e.g. Bengaluru)"
-                                        className="w-full pl-9 pr-4 py-2 bg-transparent border border-[var(--border-glass)] rounded-xl focus:border-civic-500 focus:ring-4 focus:ring-civic-500/10 outline-none transition-all text-sm mb-2"
-                                    />
-                                </div>
-                                <select
-                                    value={filters.category}
-                                    onChange={(e) => setFilters((f) => ({ ...f, category: e.target.value }))}
-                                    className="input-field text-sm py-2"
+                <div className={`w-full sm:w-[400px] panel glass lg:!bg-black/20 lg:!backdrop-blur-md lg:!border-r lg:!border-white/10 lg:!shadow-none flex flex-col z-40 transition-transform duration-300 ease-in-out ${showSidebar ? 'translate-x-0' : '-translate-x-full lg:translate-x-0 lg:w-0 lg:hidden'} absolute lg:relative h-full left-0 top-0`}>
+                    <div className={`flex flex-col h-full transition-opacity duration-300 delay-150 ${showSidebar ? 'opacity-100' : 'opacity-0 lg:opacity-100'}`}>
+                        {/* Header */}
+                        <div className="p-6 border-b border-white/5 bg-black/20">
+                            <div className="flex items-center justify-between mb-6">
+                                <h2 className="text-2xl font-black bg-gradient-to-r hover:scale-105 transition-transform from-blue-400 to-teal-300 text-transparent bg-clip-text flex items-center gap-3">
+                                    <span className="p-2 panel glass rounded-xl"><MapPin className="w-5 h-5 text-teal-300" /></span>
+                                    Namma Map
+                                </h2>
+                                <button
+                                    onClick={() => setShowFilters(!showFilters)}
+                                    className={`p-3 rounded-2xl transition-all panel ${showFilters ? 'glass ring-1 ring-teal-500/50 text-teal-300' : 'hover:glass text-[var(--text-muted)] hover:text-white'}`}
                                 >
-                                    {categories.map((c) => (
-                                        <option key={c.value} value={c.value}>{c.label}</option>
-                                    ))}
-                                </select>
-                                <div className="flex gap-2">
-                                    {statuses.map((s) => (
-                                        <button
-                                            key={s.value}
-                                            onClick={() => setFilters((f) => ({ ...f, status: f.status === s.value ? '' : s.value }))}
-                                            className={`flex-1 text-xs font-medium py-2 rounded-lg border transition-all ${filters.status === s.value
-                                                ? 'bg-civic-50 border-civic-300 text-civic-700'
-                                                : 'bg-transparent border-[var(--border-glass)] text-[var(--text-dim)] hover:border-gray-300'
-                                                }`}
-                                        >
-                                            {s.label}
-                                        </button>
-                                    ))}
+                                    <Filter className="w-5 h-5" />
+                                </button>
+                            </div>
+
+                            {/* Stats bar */}
+                            <div className="grid grid-cols-4 gap-2 mb-2">
+                                <div className="flex flex-col items-center justify-center panel glass rounded-xl py-3 border border-white/5 hover:border-white/20 transition-colors">
+                                    <p className="text-xl font-black text-white">{counts.total}</p>
+                                    <p className="text-[9px] text-white/40 font-black tracking-widest mt-1">ALL</p>
+                                </div>
+                                <div className="flex flex-col items-center justify-center panel glass !bg-red-500/10 rounded-xl py-3 border border-red-500/20 hover:border-red-500/40 transition-colors">
+                                    <p className="text-xl font-black text-red-400">{counts.reported}</p>
+                                    <p className="text-[9px] text-red-400/50 font-black tracking-widest mt-1">OPEN</p>
+                                </div>
+                                <div className="flex flex-col items-center justify-center panel glass !bg-amber-500/10 rounded-xl py-3 border border-amber-500/20 hover:border-amber-500/40 transition-colors">
+                                    <p className="text-xl font-black text-amber-400">{counts.inProgress}</p>
+                                    <p className="text-[9px] text-amber-400/50 font-black tracking-widest mt-1">DOING</p>
+                                </div>
+                                <div className="flex flex-col items-center justify-center panel glass !bg-emerald-500/10 rounded-xl py-3 border border-emerald-500/20 hover:border-emerald-500/40 transition-colors">
+                                    <p className="text-xl font-black text-emerald-400">{counts.resolved}</p>
+                                    <p className="text-[9px] text-emerald-400/50 font-black tracking-widest mt-1">DONE</p>
                                 </div>
                             </div>
-                        )}
-                    </div>
 
-                    {/* Issue list */}
-                    <div className="flex-1 overflow-y-auto p-3 space-y-3">
-                        {isLoading ? (
-                            <div className="flex items-center justify-center py-12">
-                                <PlayfulLoader text="Loading issues..." />
-                            </div>
-                        ) : issues.length === 0 ? (
-                            <div className="text-center py-12 text-[var(--text-muted)]">
-                                <MapPin className="w-8 h-8 mx-auto mb-2 opacity-30" />
-                                <p className="text-sm">No issues found</p>
-                            </div>
-                        ) : (
-                            issues.map((issue) => (
-                                <IssueCard key={issue.id} issue={issue} />
-                            ))
-                        )}
+                            {/* Filters */}
+                            {showFilters && (
+                                <div className="mt-4 space-y-3 animate-slide-pop">
+                                    <div className="relative group">
+                                        <MapPin className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-white/30 group-focus-within:text-teal-400 transition-colors" />
+                                        <input
+                                            type="text"
+                                            value={filters.city}
+                                            onChange={(e) => setFilters((f) => ({ ...f, city: e.target.value }))}
+                                            placeholder="City (e.g. Bengaluru)"
+                                            className="w-full pl-11 pr-4 py-3.5 panel glass !bg-black/40 border border-white/5 rounded-xl focus:border-teal-500/50 focus:ring-4 focus:ring-teal-500/10 outline-none transition-all text-sm text-white placeholder-white/30 font-medium"
+                                        />
+                                    </div>
+                                    <select
+                                        value={filters.category}
+                                        onChange={(e) => setFilters((f) => ({ ...f, category: e.target.value }))}
+                                        className="w-full px-4 py-3.5 panel glass !bg-black/40 border border-white/5 rounded-xl focus:border-teal-500/50 focus:ring-4 focus:ring-teal-500/10 outline-none transition-all text-sm text-white appearance-none cursor-pointer font-medium"
+                                    >
+                                        {categories.map((c) => (
+                                            <option key={c.value} value={c.value} className="bg-black text-white">{c.label}</option>
+                                        ))}
+                                    </select>
+                                    <div className="flex gap-2 p-1 panel glass rounded-xl">
+                                        {statuses.map((s) => (
+                                            <button
+                                                key={s.value}
+                                                onClick={() => setFilters((f) => ({ ...f, status: f.status === s.value ? '' : s.value }))}
+                                                className={`flex-1 text-[10px] sm:text-[11px] font-bold uppercase tracking-wider py-2.5 rounded-lg transition-all ${filters.status === s.value
+                                                    ? 'bg-teal-500/20 text-teal-300 shadow-[0_0_15px_rgba(0,255,255,0.1)]'
+                                                    : 'text-white/40 hover:text-white hover:bg-white/5'
+                                                    }`}
+                                            >
+                                                {s.label}
+                                            </button>
+                                        ))}
+                                    </div>
+                                </div>
+                            )}
+                        </div>
+
+                        {/* Issue list */}
+                        <div className="flex-1 overflow-y-auto p-4 space-y-4 scrollbar-hide pb-20">
+                            {isLoading ? (
+                                <div className="flex items-center justify-center py-12">
+                                    <PlayfulLoader text="Loading issues..." />
+                                </div>
+                            ) : issues.length === 0 ? (
+                                <div className="text-center py-12 text-[var(--text-muted)]">
+                                    <MapPin className="w-8 h-8 mx-auto mb-2 opacity-30" />
+                                    <p className="text-sm">No issues found</p>
+                                </div>
+                            ) : (
+                                issues.map((issue) => (
+                                    <IssueCard key={issue.id} issue={issue} />
+                                ))
+                            )}
+                        </div>
                     </div>
                 </div>
             )}
@@ -143,13 +144,13 @@ export default function MapExplorer() {
             {/* Toggle sidebar button */}
             <button
                 onClick={() => setShowSidebar(!showSidebar)}
-                className="absolute top-4 left-4 z-[1000] bg-[#111111] p-2.5 rounded-xl shadow-lg border border-white/5 text-white"
+                className="absolute top-6 left-6 z-[50] panel glass p-3.5 rounded-2xl shadow-xl border border-white/10 text-white hover:scale-105 active:scale-95 transition-all lg:hidden"
             >
-                {showSidebar ? <X className="w-5 h-5" /> : <Layers className="w-5 h-5" />}
+                {showSidebar ? <X className="w-6 h-6 text-red-400 drop-shadow-md" /> : <Layers className="w-6 h-6 text-teal-300 drop-shadow-md" />}
             </button>
 
             {/* Map */}
-            <div className="flex-1 relative">
+            <div className="flex-1 relative z-0">
                 <IssueMap
                     issues={issues}
                     height="100%"
