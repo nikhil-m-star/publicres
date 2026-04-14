@@ -77,10 +77,6 @@ export default function Landing() {
             <section className="hero relative z-10 pt-24 pb-16">
                 <div className="page-container hero__grid">
                     <div className="hero__copy">
-                        <div className="hero__badge backdrop-blur-md border border-[var(--border-glow)] mb-4">
-                            <Activity className="w-4 h-4 text-[var(--glow)]" />
-                            <span className="text-[var(--text-main)] font-semibold tracking-wider">Live Citizen Platform</span>
-                        </div>
                         <h1 className="hero__title text-5xl md:text-7xl font-black text-white leading-tight drop-shadow-[0_0_20px_rgba(0,255,255,0.3)]">
                             Namma Parihara.
                             <span className="block text-2xl md:text-4xl font-light mt-4 text-[var(--text-muted)]">
@@ -107,10 +103,6 @@ export default function Landing() {
                             <Sparkles className="w-4 h-4 text-[var(--glow)]" />
                             <span>Join thousands of citizens improving the city everyday.</span>
                         </div>
-                    </div>
-
-                    <div className="hero__visual perspective-1000">
-                        <div className="radar-card glass hero-3d-card border-[var(--border-glow)] shadow-[0_0_40px_rgba(0,255,255,0.1)]">
                             <div className="radar">
                                 <div className="radar__ring" />
                                 <div className="radar__ring" />
