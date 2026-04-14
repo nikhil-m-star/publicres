@@ -4058,3 +4058,23 @@ tbody tr:hover {
   background: var(--accent-pill);
   color: var(--accent);
 }
+
+/* Override dropdown behavior for mobile strictly */
+@media (max-width: 900px) {
+  .nav-unified__dropdown-menu {
+    top: auto !important;
+    bottom: calc(100% + 12px) !important; /* Fly UPWARDS on mobile instead of downward */
+    transform: translateX(-50%) translateY(10px) !important;
+  }
+  .nav-unified__dropdown-container:hover .nav-unified__dropdown-menu {
+    transform: translateX(-50%) translateY(0) !important;
+  }
+  .nav-unified__dropdown-menu.dropdown-right {
+    left: auto !important;
+    right: -20px !important;
+    transform: translateX(0) translateY(10px) !important;
+  }
+  .nav-unified__dropdown-container:hover .nav-unified__dropdown-menu.dropdown-right {
+    transform: translateX(0) translateY(0) !important;
+  }
+}

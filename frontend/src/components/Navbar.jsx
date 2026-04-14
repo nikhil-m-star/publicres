@@ -1,6 +1,6 @@
 import { Link, useLocation } from 'react-router-dom'
 import { SignedIn, SignedOut, SignInButton, UserButton } from '@clerk/clerk-react'
-import { Menu, X, Shield, MapPin, Map, Trophy, Sparkles, Home, User, Plus, FileText, Users, ChevronDown } from 'lucide-react'
+import { Menu, X, Shield, MapPin, Map, Trophy, Sparkles, Home, User, Plus, FileText, Users, ChevronDown, MoreHorizontal } from 'lucide-react'
 import { useState, useEffect, useRef } from 'react'
 import NotificationsDropdown from './NotificationsDropdown'
 import { useAuthSync } from '../hooks/useIssues'
@@ -72,15 +72,35 @@ export default function Navbar() {
                             </div>
                         </div>
 
-                        <Link to="/report" className={`nav-unified__link ${isActive('/report') ? 'active' : ''}`}>
-                            <Sparkles className="w-4 h-4" />
-                            <span>AI Report</span>
-                        </Link>
+                        <div className="hidden sm:flex items-center gap-1">
+                            <Link to="/report" className={`nav-unified__link ${isActive('/report') ? 'active' : ''}`}>
+                                <Sparkles className="w-4 h-4" />
+                                <span>AI Report</span>
+                            </Link>
 
-                        <Link to="/leaderboard" className={`nav-unified__link ${isActive('/leaderboard') ? 'active' : ''}`}>
-                            <Trophy className="w-4 h-4" />
-                            <span>Rank</span>
-                        </Link>
+                            <Link to="/leaderboard" className={`nav-unified__link ${isActive('/leaderboard') ? 'active' : ''}`}>
+                                <Trophy className="w-4 h-4" />
+                                <span>Rank</span>
+                            </Link>
+                        </div>
+
+                        {/* More Menu for Mobile (Hidden on Desktop) */}
+                        <div className="nav-unified__dropdown-container sm:hidden">
+                            <button className={`nav-unified__link ${(isActive('/report') || isActive('/leaderboard')) ? 'active' : ''}`}>
+                                <MoreHorizontal className="w-4 h-4" />
+                                <span>More</span>
+                            </button>
+                            <div className="nav-unified__dropdown-menu dropdown-right">
+                                <Link to="/report" className={`nav-unified__dropdown-item ${isActive('/report') ? 'text-[var(--accent)] font-bold' : ''}`}>
+                                    <Sparkles className="w-4 h-4" />
+                                    AI Report
+                                </Link>
+                                <Link to="/leaderboard" className={`nav-unified__dropdown-item ${isActive('/leaderboard') ? 'text-[var(--accent)] font-bold' : ''}`}>
+                                    <Trophy className="w-4 h-4" />
+                                    Rank Leaderboard
+                                </Link>
+                            </div>
+                        </div>
 
                         <SignedIn>
                             <Link to="/profile" className={`nav-unified__link ${isActive('/profile') ? 'active' : ''}`}>
@@ -113,13 +133,7 @@ export default function Navbar() {
                     </div>
                 </div>
 
-                {/* Mobile Status Overlay */}
-                <div className="nav-unified__status-overlay">
-                    <div className="status-indicator">
-                        <div className="status-dot" />
-                        <span>System Live</span>
-                    </div>
-                </div>
+                {/* Mobile Status Overlay Removed upon request */}
             </nav>
         </div>
     )
