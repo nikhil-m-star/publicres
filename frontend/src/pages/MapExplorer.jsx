@@ -47,13 +47,13 @@ export default function MapExplorer() {
                     {/* Header */}
                     <div className="p-4 border-b border-gray-100">
                         <div className="flex items-center justify-between mb-3">
-                            <h2 className="text-lg font-bold text-gray-900 flex items-center gap-2">
+                            <h2 className="text-lg font-bold text-[var(--text-main)] flex items-center gap-2">
                                 <MapPin className="w-5 h-5 text-civic-600" />
                                 Issue Map
                             </h2>
                             <button
                                 onClick={() => setShowFilters(!showFilters)}
-                                className={`p-2 rounded-lg transition-colors ${showFilters ? 'bg-civic-50 text-civic-700' : 'hover:bg-gray-50 text-gray-500'
+                                className={`p-2 rounded-lg transition-colors ${showFilters ? 'bg-civic-50 text-civic-700' : 'hover:bg-transparent text-[var(--text-dim)]'
                                     }`}
                             >
                                 <Filter className="w-4 h-4" />
@@ -62,9 +62,9 @@ export default function MapExplorer() {
 
                         {/* Stats bar */}
                         <div className="flex gap-2">
-                            <div className="flex-1 bg-gray-50 rounded-lg px-3 py-2 text-center">
-                                <p className="text-lg font-bold text-gray-900">{counts.total}</p>
-                                <p className="text-[10px] text-gray-500 uppercase tracking-wider">Total</p>
+                            <div className="flex-1 bg-transparent rounded-lg px-3 py-2 text-center">
+                                <p className="text-lg font-bold text-[var(--text-main)]">{counts.total}</p>
+                                <p className="text-[10px] text-[var(--text-dim)] uppercase tracking-wider">Total</p>
                             </div>
                             <div className="flex-1 bg-red-50 rounded-lg px-3 py-2 text-center">
                                 <p className="text-lg font-bold text-red-600">{counts.reported}</p>
@@ -90,7 +90,7 @@ export default function MapExplorer() {
                                         value={filters.city}
                                         onChange={(e) => setFilters((f) => ({ ...f, city: e.target.value }))}
                                         placeholder="City (e.g. Bengaluru)"
-                                        className="w-full pl-9 pr-4 py-2 bg-gray-50 border border-gray-200 rounded-xl focus:border-civic-500 focus:ring-4 focus:ring-civic-500/10 outline-none transition-all text-sm mb-2"
+                                        className="w-full pl-9 pr-4 py-2 bg-transparent border border-[var(--border-glass)] rounded-xl focus:border-civic-500 focus:ring-4 focus:ring-civic-500/10 outline-none transition-all text-sm mb-2"
                                     />
                                 </div>
                                 <select
@@ -109,7 +109,7 @@ export default function MapExplorer() {
                                             onClick={() => setFilters((f) => ({ ...f, status: f.status === s.value ? '' : s.value }))}
                                             className={`flex-1 text-xs font-medium py-2 rounded-lg border transition-all ${filters.status === s.value
                                                 ? 'bg-civic-50 border-civic-300 text-civic-700'
-                                                : 'bg-white border-gray-200 text-gray-500 hover:border-gray-300'
+                                                : 'bg-transparent border-[var(--border-glass)] text-[var(--text-dim)] hover:border-gray-300'
                                                 }`}
                                         >
                                             {s.label}

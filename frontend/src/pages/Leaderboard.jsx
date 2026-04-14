@@ -21,7 +21,7 @@ const StarRating = ({ rating, size = 'sm' }) => {
                         }`}
                 />
             ))}
-            <span className={`ml-1 font-semibold ${size === 'sm' ? 'text-xs' : 'text-sm'} text-gray-600`}>
+            <span className={`ml-1 font-semibold ${size === 'sm' ? 'text-xs' : 'text-sm'} text-[var(--text-muted)]`}>
                 {rating > 0 ? rating.toFixed(1) : '—'}
             </span>
         </div>
@@ -54,9 +54,9 @@ function GeneralRatingDialog({ officer, onClose }) {
 
     return (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm p-4">
-            <div className="bg-white rounded-2xl shadow-2xl w-full max-w-sm p-6 animate-fade-in">
-                <h3 className="text-lg font-bold text-gray-900 mb-1">Rate Officer</h3>
-                <p className="text-sm text-gray-500 mb-5">Leave a rating for <strong>{officer.name}</strong> based on their overall civic service.</p>
+            <div className="bg-[var(--bg-panel)] backdrop-blur-xl border border-[var(--border-glass)] rounded-2xl shadow-2xl w-full max-w-sm p-6 animate-fade-in">
+                <h3 className="text-lg font-bold text-[var(--text-main)] mb-1">Rate Officer</h3>
+                <p className="text-sm text-[var(--text-dim)] mb-5">Leave a rating for <strong>{officer.name}</strong> based on their overall civic service.</p>
 
                 {/* Stars */}
                 <div className="flex justify-center gap-1.5 mb-5">
@@ -77,7 +77,7 @@ function GeneralRatingDialog({ officer, onClose }) {
                         </button>
                     ))}
                 </div>
-                <p className="text-center text-sm text-gray-500 mb-4">
+                <p className="text-center text-sm text-[var(--text-dim)] mb-4">
                     {score === 1 && 'Poor'}
                     {score === 2 && 'Below Average'}
                     {score === 3 && 'Average'}
@@ -95,7 +95,7 @@ function GeneralRatingDialog({ officer, onClose }) {
                 />
 
                 <div className="flex gap-2">
-                    <button onClick={onClose} className="flex-1 py-2.5 rounded-xl text-sm font-medium border border-gray-200 text-gray-600 hover:bg-gray-50 transition-colors">
+                    <button onClick={onClose} className="flex-1 py-2.5 rounded-xl text-sm font-medium border border-[var(--border-glass)] text-[var(--text-muted)] hover:bg-transparent transition-colors">
                         Cancel
                     </button>
                     <button
@@ -136,10 +136,10 @@ export default function Leaderboard() {
                     <Trophy className="w-4 h-4" />
                     Community Leaderboard
                 </div>
-                <h1 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-3">
+                <h1 className="text-3xl lg:text-4xl font-bold text-[var(--text-main)] mb-3">
                     Bengaluru's Civic Champions
                 </h1>
-                <p className="text-gray-500 max-w-lg mx-auto">
+                <p className="text-[var(--text-dim)] max-w-lg mx-auto">
                     Recognizing officers and citizens who are making Bengaluru better, one issue at a time.
                 </p>
             </div>
@@ -150,7 +150,7 @@ export default function Leaderboard() {
                     onClick={() => setTab('officers')}
                     className={`px-6 py-2.5 rounded-xl text-sm font-semibold transition-all ${tab === 'officers'
                         ? 'bg-civic-600 text-white shadow-lg shadow-civic-500/25'
-                        : 'bg-white border border-gray-200 text-gray-600 hover:border-gray-300'
+                        : 'bg-transparent border border-[var(--border-glass)] text-[var(--text-muted)] hover:border-gray-300'
                         }`}
                 >
                     <Award className="w-4 h-4 inline mr-1.5" />
@@ -160,7 +160,7 @@ export default function Leaderboard() {
                     onClick={() => setTab('citizens')}
                     className={`px-6 py-2.5 rounded-xl text-sm font-semibold transition-all ${tab === 'citizens'
                         ? 'bg-civic-600 text-white shadow-lg shadow-civic-500/25'
-                        : 'bg-white border border-gray-200 text-gray-600 hover:border-gray-300'
+                        : 'bg-transparent border border-[var(--border-glass)] text-[var(--text-muted)] hover:border-gray-300'
                         }`}
                 >
                     <Users className="w-4 h-4 inline mr-1.5" />
@@ -181,30 +181,30 @@ export default function Leaderboard() {
                         <div className="overflow-x-auto">
                             <table className="w-full text-left">
                                 <thead>
-                                    <tr className="bg-gray-50/80 border-b border-gray-100">
-                                        <th className="px-6 py-3.5 text-xs font-semibold text-gray-500 uppercase tracking-wider">Rank</th>
-                                        <th className="px-6 py-3.5 text-xs font-semibold text-gray-500 uppercase tracking-wider">Name</th>
-                                        <th className="px-6 py-3.5 text-xs font-semibold text-gray-500 uppercase tracking-wider">Role</th>
-                                        <th className="px-6 py-3.5 text-xs font-semibold text-gray-500 uppercase tracking-wider">Area</th>
-                                        <th className="px-6 py-3.5 text-xs font-semibold text-gray-500 uppercase tracking-wider">Rating</th>
-                                        <th className="px-6 py-3.5 text-xs font-semibold text-gray-500 uppercase tracking-wider">Resolved</th>
-                                        <th className="px-6 py-3.5 text-xs font-semibold text-gray-500 uppercase tracking-wider text-right">Actions</th>
+                                    <tr className="bg-transparent/80 border-b border-gray-100">
+                                        <th className="px-6 py-3.5 text-xs font-semibold text-[var(--text-dim)] uppercase tracking-wider">Rank</th>
+                                        <th className="px-6 py-3.5 text-xs font-semibold text-[var(--text-dim)] uppercase tracking-wider">Name</th>
+                                        <th className="px-6 py-3.5 text-xs font-semibold text-[var(--text-dim)] uppercase tracking-wider">Role</th>
+                                        <th className="px-6 py-3.5 text-xs font-semibold text-[var(--text-dim)] uppercase tracking-wider">Area</th>
+                                        <th className="px-6 py-3.5 text-xs font-semibold text-[var(--text-dim)] uppercase tracking-wider">Rating</th>
+                                        <th className="px-6 py-3.5 text-xs font-semibold text-[var(--text-dim)] uppercase tracking-wider">Resolved</th>
+                                        <th className="px-6 py-3.5 text-xs font-semibold text-[var(--text-dim)] uppercase tracking-wider text-right">Actions</th>
                                     </tr>
                                 </thead>
                                 <tbody className="divide-y divide-gray-50">
                                     {officers.map((officer, i) => (
-                                        <tr key={officer.id} className="hover:bg-gray-50/50 transition-colors">
+                                        <tr key={officer.id} className="hover:bg-transparent/50 transition-colors">
                                             <td className="px-6 py-4">
                                                 <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold ${i === 0 ? 'bg-amber-100 text-amber-700' :
-                                                    i === 1 ? 'bg-gray-100 text-gray-600' :
+                                                    i === 1 ? 'bg-[var(--bg-secondary)] text-[var(--text-muted)]' :
                                                         i === 2 ? 'bg-orange-100 text-orange-700' :
-                                                            'bg-gray-50 text-gray-400'
+                                                            'bg-transparent text-gray-400'
                                                     }`}>
                                                     {i + 1}
                                                 </div>
                                             </td>
                                             <td className="px-6 py-4">
-                                                <p className="font-semibold text-gray-900">{officer.name}</p>
+                                                <p className="font-semibold text-[var(--text-main)]">{officer.name}</p>
                                                 <p className="text-xs text-gray-400">{officer.totalRatings} rating{officer.totalRatings !== 1 ? 's' : ''}</p>
                                             </td>
                                             <td className="px-6 py-4">
@@ -212,14 +212,14 @@ export default function Leaderboard() {
                                                     {roleTitles[officer.role]}
                                                 </span>
                                             </td>
-                                            <td className="px-6 py-4 text-sm text-gray-600">
+                                            <td className="px-6 py-4 text-sm text-[var(--text-muted)]">
                                                 {officer.area || '—'}
                                             </td>
                                             <td className="px-6 py-4">
                                                 <StarRating rating={officer.avgRating} />
                                             </td>
                                             <td className="px-6 py-4">
-                                                <span className="text-sm font-semibold text-gray-900">{officer.resolvedCount}</span>
+                                                <span className="text-sm font-semibold text-[var(--text-main)]">{officer.resolvedCount}</span>
                                                 <span className="text-xs text-gray-400 ml-1">/ {officer.assignedCount} assigned</span>
                                             </td>
                                             <td className="px-6 py-4 text-right">
@@ -256,30 +256,30 @@ export default function Leaderboard() {
                         <div className="overflow-x-auto">
                             <table className="w-full text-left">
                                 <thead>
-                                    <tr className="bg-gray-50/80 border-b border-gray-100">
-                                        <th className="px-6 py-3.5 text-xs font-semibold text-gray-500 uppercase tracking-wider">Rank</th>
-                                        <th className="px-6 py-3.5 text-xs font-semibold text-gray-500 uppercase tracking-wider">Name</th>
-                                        <th className="px-6 py-3.5 text-xs font-semibold text-gray-500 uppercase tracking-wider">Issues Reported</th>
-                                        <th className="px-6 py-3.5 text-xs font-semibold text-gray-500 uppercase tracking-wider">Votes Cast</th>
-                                        <th className="px-6 py-3.5 text-xs font-semibold text-gray-500 uppercase tracking-wider">Comments</th>
+                                    <tr className="bg-transparent/80 border-b border-gray-100">
+                                        <th className="px-6 py-3.5 text-xs font-semibold text-[var(--text-dim)] uppercase tracking-wider">Rank</th>
+                                        <th className="px-6 py-3.5 text-xs font-semibold text-[var(--text-dim)] uppercase tracking-wider">Name</th>
+                                        <th className="px-6 py-3.5 text-xs font-semibold text-[var(--text-dim)] uppercase tracking-wider">Issues Reported</th>
+                                        <th className="px-6 py-3.5 text-xs font-semibold text-[var(--text-dim)] uppercase tracking-wider">Votes Cast</th>
+                                        <th className="px-6 py-3.5 text-xs font-semibold text-[var(--text-dim)] uppercase tracking-wider">Comments</th>
                                     </tr>
                                 </thead>
                                 <tbody className="divide-y divide-gray-50">
                                     {citizens.map((citizen, i) => (
-                                        <tr key={citizen.id} className="hover:bg-gray-50/50 transition-colors">
+                                        <tr key={citizen.id} className="hover:bg-transparent/50 transition-colors">
                                             <td className="px-6 py-4">
                                                 <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold ${i === 0 ? 'bg-amber-100 text-amber-700' :
-                                                    i === 1 ? 'bg-gray-100 text-gray-600' :
+                                                    i === 1 ? 'bg-[var(--bg-secondary)] text-[var(--text-muted)]' :
                                                         i === 2 ? 'bg-orange-100 text-orange-700' :
-                                                            'bg-gray-50 text-gray-400'
+                                                            'bg-transparent text-gray-400'
                                                     }`}>
                                                     {i + 1}
                                                 </div>
                                             </td>
-                                            <td className="px-6 py-4 font-semibold text-gray-900">{citizen.name}</td>
+                                            <td className="px-6 py-4 font-semibold text-[var(--text-main)]">{citizen.name}</td>
                                             <td className="px-6 py-4 text-sm font-semibold text-gray-700">{citizen._count.issues}</td>
-                                            <td className="px-6 py-4 text-sm text-gray-600">{citizen._count.votes}</td>
-                                            <td className="px-6 py-4 text-sm text-gray-600">{citizen._count.comments}</td>
+                                            <td className="px-6 py-4 text-sm text-[var(--text-muted)]">{citizen._count.votes}</td>
+                                            <td className="px-6 py-4 text-sm text-[var(--text-muted)]">{citizen._count.comments}</td>
                                         </tr>
                                     ))}
                                 </tbody>

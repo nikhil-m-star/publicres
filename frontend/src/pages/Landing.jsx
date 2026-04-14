@@ -82,7 +82,7 @@ export default function Landing() {
                                 <ArrowRight className="w-6 h-6" />
                             </Link>
                             <SignedOut>
-                                <SignInButton mode="modal">
+                                <SignInButton mode="modal" forceRedirectUrl="/profile">
                                     <button className="btn-secondary px-8 py-4 text-lg font-bold">Sign In</button>
                                 </SignInButton>
                             </SignedOut>

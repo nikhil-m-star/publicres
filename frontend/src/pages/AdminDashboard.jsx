@@ -20,7 +20,7 @@ export default function AdminDashboard() {
     const { data: analytics } = useAnalytics()
 
     if (me && me.user?.role === 'CITIZEN') {
-        return <Navigate to="/" replace />
+        return <Navigate to="/dashboard" replace />
     }
     const issues = data?.issues || []
 
@@ -66,8 +66,8 @@ export default function AdminDashboard() {
         <div className="page-container">
             {/* Header */}
             <div className="mb-8">
-                <h1 className="text-2xl font-bold text-gray-900">Admin Dashboard</h1>
-                <p className="text-gray-500 text-sm mt-0.5">Manage and resolve civic issues</p>
+                <h1 className="text-2xl font-bold text-[var(--text-main)]">Admin Dashboard</h1>
+                <p className="text-[var(--text-dim)] text-sm mt-0.5">Manage and resolve civic issues</p>
             </div>
 
             {/* Summary cards */}
@@ -79,8 +79,8 @@ export default function AdminDashboard() {
                                 <card.icon className={`w-5 h-5 ${card.color}`} />
                             </div>
                             <div>
-                                <p className="text-xl font-bold text-gray-900">{card.value}</p>
-                                <p className="text-xs text-gray-500">{card.label}</p>
+                                <p className="text-xl font-bold text-[var(--text-main)]">{card.value}</p>
+                                <p className="text-xs text-[var(--text-dim)]">{card.label}</p>
                             </div>
                         </div>
                     </div>
@@ -88,12 +88,12 @@ export default function AdminDashboard() {
             </div>
 
             {/* Tabs */}
-            <div className="flex gap-1 mb-6 bg-gray-100 p-1 rounded-xl w-fit">
+            <div className="flex gap-1 mb-6 bg-[var(--bg-secondary)] p-1 rounded-xl w-fit">
                 <button
                     onClick={() => setActiveTab('issues')}
                     className={`px-5 py-2 rounded-lg text-sm font-medium transition-all ${activeTab === 'issues'
-                            ? 'bg-white text-gray-900 shadow-sm'
-                            : 'text-gray-500 hover:text-gray-700'
+                            ? 'bg-transparent text-[var(--text-main)] shadow-sm'
+                            : 'text-[var(--text-dim)] hover:text-gray-700'
                         }`}
                 >
                     Issues
@@ -101,8 +101,8 @@ export default function AdminDashboard() {
                 <button
                     onClick={() => setActiveTab('analytics')}
                     className={`px-5 py-2 rounded-lg text-sm font-medium transition-all flex items-center gap-1.5 ${activeTab === 'analytics'
-                            ? 'bg-white text-gray-900 shadow-sm'
-                            : 'text-gray-500 hover:text-gray-700'
+                            ? 'bg-transparent text-[var(--text-main)] shadow-sm'
+                            : 'text-[var(--text-dim)] hover:text-gray-700'
                         }`}
                 >
                     <BarChart3 className="w-3.5 h-3.5" />
@@ -111,8 +111,8 @@ export default function AdminDashboard() {
                 <button
                     onClick={() => setActiveTab('notifications')}
                     className={`px-5 py-2 rounded-lg text-sm font-medium transition-all flex items-center gap-1.5 ${activeTab === 'notifications'
-                            ? 'bg-white text-gray-900 shadow-sm'
-                            : 'text-gray-500 hover:text-gray-700'
+                            ? 'bg-transparent text-[var(--text-main)] shadow-sm'
+                            : 'text-[var(--text-dim)] hover:text-gray-700'
                         }`}
                 >
                     <Bell className="w-3.5 h-3.5" />

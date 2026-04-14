@@ -10,6 +10,7 @@ import MapExplorer from './pages/MapExplorer'
 import Profile from './pages/Profile'
 import CityReport from './pages/CityReport'
 import SubmitIssue from './pages/SubmitIssue'
+import CommunityReports from './pages/CommunityReports'
 
 function ProtectedRoute({ children }) {
     return (
@@ -57,6 +58,7 @@ export default function App() {
                 />
                 <Route path="/report" element={<CityReport />} />
                 <Route path="/submit" element={<ProtectedRoute><SubmitIssue /></ProtectedRoute>} />
+                <Route path="/community" element={<CommunityReports />} />
             </Routes>
         </div>
     )

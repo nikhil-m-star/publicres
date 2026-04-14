@@ -111,12 +111,12 @@ export default function CityReport() {
                         </div>
 
                         {report.includes('No recent issues found') ? (
-                            <div className="text-center py-16 px-6 bg-gray-50 rounded-2xl border border-gray-100 mt-6">
-                                <div className="w-16 h-16 bg-white rounded-full flex items-center justify-center mx-auto mb-4 shadow-sm border border-gray-200">
+                            <div className="text-center py-16 px-6 bg-transparent rounded-2xl border border-gray-100 mt-6">
+                                <div className="w-16 h-16 bg-transparent rounded-full flex items-center justify-center mx-auto mb-4 shadow-sm border border-[var(--border-glass)]">
                                     <MapPin className="w-8 h-8 text-gray-400" />
                                 </div>
-                                <h3 className="text-xl font-bold text-gray-900 mb-2">Looking Good!</h3>
-                                <p className="text-gray-500 max-w-md mx-auto">
+                                <h3 className="text-xl font-bold text-[var(--text-main)] mb-2">Looking Good!</h3>
+                                <p className="text-[var(--text-dim)] max-w-md mx-auto">
                                     There are no recent civic issues reported in <span className="font-semibold text-gray-700">{area}</span>. This locality appears to be well-maintained at the moment.
                                 </p>
                             </div>

@@ -1,6 +1,6 @@
 import { Link, useLocation } from 'react-router-dom'
 import { SignedIn, SignedOut, SignInButton, UserButton } from '@clerk/clerk-react'
-import { Menu, X, Shield, MapPin, Map, Trophy, Sparkles, Home, User, Plus } from 'lucide-react'
+import { Menu, X, Shield, MapPin, Map, Trophy, Sparkles, Home, User, Plus, FileText, Users, ChevronDown } from 'lucide-react'
 import { useState, useEffect, useRef } from 'react'
 import NotificationsDropdown from './NotificationsDropdown'
 import { useAuthSync } from '../hooks/useIssues'
@@ -53,10 +53,24 @@ export default function Navbar() {
                             <span>Map</span>
                         </Link>
                         
-                        {/* Elite Floating Action */}
-                        <Link to="/submit" className="nav-unified__fab" aria-label="Submit Issue">
-                            <Plus className="w-5 h-5" />
-                        </Link>
+                        {/* Dropdown Menu for Reports */}
+                        <div className="nav-unified__dropdown-container">
+                            <button className={`nav-unified__link ${(isActive('/submit') || isActive('/community')) ? 'active' : ''}`}>
+                                <FileText className="w-4 h-4" />
+                                <span>Reports</span>
+                                <ChevronDown className="w-3 h-3 ml-1 opacity-60" />
+                            </button>
+                            <div className="nav-unified__dropdown-menu">
+                                <Link to="/submit" className="nav-unified__dropdown-item">
+                                    <Plus className="w-4 h-4" />
+                                    Report Issue
+                                </Link>
+                                <Link to="/community" className="nav-unified__dropdown-item">
+                                    <Users className="w-4 h-4" />
+                                    Community Reports
+                                </Link>
+                            </div>
+                        </div>
 
                         <Link to="/report" className={`nav-unified__link ${isActive('/report') ? 'active' : ''}`}>
                             <Sparkles className="w-4 h-4" />
@@ -75,7 +89,7 @@ export default function Navbar() {
                             </Link>
                         </SignedIn>
                         <SignedOut>
-                            <SignInButton mode="modal">
+                            <SignInButton mode="modal" forceRedirectUrl="/profile">
                                 <button className="nav-unified__link auth-btn">
                                     <User className="w-4 h-4" />
                                     <span>Login</span>

@@ -4009,3 +4009,52 @@ tbody tr:hover {
 .playful-loader span:nth-child(2) { animation-delay: -0.16s; }
 .playful-loader span:nth-child(3) { animation-delay: 0s; }
 
+
+/* Navbar Report Dropdown */
+.nav-unified__dropdown-container {
+  position: relative;
+}
+
+.nav-unified__dropdown-menu {
+  position: absolute;
+  top: calc(100% + 12px);
+  left: 50%;
+  transform: translateX(-50%) translateY(10px);
+  background: var(--bg-panel);
+  border: 1px solid var(--border-glass);
+  border-radius: 16px;
+  padding: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 200px;
+  backdrop-filter: blur(20px);
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: var(--shadow-elite);
+}
+
+.nav-unified__dropdown-container:hover .nav-unified__dropdown-menu {
+  opacity: 1;
+  visibility: visible;
+  transform: translateX(-50%) translateY(0);
+}
+
+.nav-unified__dropdown-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 14px;
+  border-radius: 10px;
+  color: var(--text-main);
+  text-decoration: none;
+  font-size: 13px;
+  font-weight: 600;
+  transition: background 0.2s;
+}
+
+.nav-unified__dropdown-item:hover {
+  background: var(--accent-pill);
+  color: var(--accent);
+}

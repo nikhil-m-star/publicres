@@ -56,7 +56,7 @@ export default function ReportsBoard({
                             </Link>
                         </SignedIn>
                         <SignedOut>
-                            <SignInButton mode="modal">
+                            <SignInButton mode="modal" forceRedirectUrl="/profile">
                                 <button className="btn-primary text-sm">Sign in to report</button>
                             </SignInButton>
                         </SignedOut>
