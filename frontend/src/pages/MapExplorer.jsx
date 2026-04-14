@@ -144,13 +144,13 @@ export default function MapExplorer() {
             {/* Toggle sidebar button */}
             <button
                 onClick={() => setShowSidebar(!showSidebar)}
-                className="absolute top-6 left-6 z-[50] panel glass p-3.5 rounded-2xl shadow-xl border border-white/10 text-white hover:scale-105 active:scale-95 transition-all lg:hidden"
+                className="absolute top-6 left-6 z-[500] panel glass p-3.5 rounded-2xl shadow-xl border border-white/10 text-white hover:scale-105 active:scale-95 transition-all lg:hidden"
             >
                 {showSidebar ? <X className="w-6 h-6 text-red-400 drop-shadow-md" /> : <Layers className="w-6 h-6 text-teal-300 drop-shadow-md" />}
             </button>
 
             {/* Map */}
-            <div className="flex-1 relative z-0">
+            <div className="flex-1 relative z-0 w-full h-full">
                 <IssueMap
                     issues={issues}
                     height="100%"

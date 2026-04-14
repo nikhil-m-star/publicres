@@ -235,11 +235,11 @@ export default function IssueMap({
     ))
 
     return (
-        <div style={{ height }} className="rounded-2xl overflow-hidden border border-gray-200 shadow-sm relative">
-            <MapContainer center={center} zoom={zoom} className="h-full w-full" scrollWheelZoom={true}>
+        <div style={{ height }} className="rounded-3xl overflow-hidden border border-[var(--border-glass)] shadow-2xl relative bg-black/50">
+            <MapContainer center={center} zoom={zoom} className="h-full w-full z-0" scrollWheelZoom={true}>
                 <TileLayer
-                    attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
-                    url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                    attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OSM</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>'
+                    url="https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png"
                 />
 
                 {flyTo && <FlyToLocation position={flyTo} />}
@@ -281,34 +281,37 @@ export default function IssueMap({
 
             {/* Controls overlay */}
             {showControls && (
-                <div className="absolute top-4 right-4 z-[1000] flex flex-col gap-2">
+                <div className="absolute top-4 right-4 z-[400] flex flex-col gap-2">
                     <button
                         onClick={handleLocateMe}
                         disabled={locating}
-                        className="bg-white hover:bg-gray-50 p-2.5 rounded-xl shadow-lg border border-gray-200 transition-all hover:shadow-xl"
+                        className="bg-black/60 backdrop-blur-md hover:bg-black/80 p-2.5 rounded-xl shadow-lg border border-[var(--border-clean)] hover:border-[var(--glow)] transition-all hover:shadow-[0_0_15px_rgba(0,255,255,0.2)]"
                         title="Find my location"
                     >
-                        <Crosshair className={`w-5 h-5 text-civic-600 ${locating ? 'animate-spin' : ''}`} />
+                        <Crosshair className={`w-5 h-5 text-[var(--glow)] ${locating ? 'animate-spin opacity-50' : ''}`} />
                     </button>
                 </div>
             )}
 
             {/* Legend */}
             {showLegend && (
-                <div className="absolute bottom-4 left-4 z-[1000] bg-white/90 backdrop-blur-sm rounded-xl px-3 py-2 shadow-lg border border-gray-100">
-                    <p className="text-[10px] font-semibold text-gray-500 uppercase tracking-wider mb-1.5">Status</p>
-                    <div className="flex items-center gap-3">
+                <div className="absolute bottom-6 left-6 z-[400] bg-black/60 backdrop-blur-md rounded-2xl p-4 shadow-2xl border border-[var(--border-clean)]">
+                    <p className="text-[10px] font-black text-[var(--text-muted)] uppercase tracking-wider mb-3 flex items-center gap-2">
+                        <span className="w-1.5 h-1.5 rounded-full bg-[var(--glow)] animate-pulse"></span>
+                        Live Status
+                    </p>
+                    <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3 sm:gap-4">
                         {[
-                            { color: '#ef4444', label: 'Reported' },
-                            { color: '#f59e0b', label: 'In Progress' },
-                            { color: '#22c55e', label: 'Resolved' },
+                            { color: '#00ffff', label: 'Reported', glow: 'rgba(0,255,255,0.4)' },
+                            { color: '#00cccc', label: 'In Progress', glow: 'rgba(0,204,204,0.4)' },
+                            { color: '#009999', label: 'Resolved', glow: 'rgba(0,153,153,0.4)' },
                         ].map((s) => (
-                            <div key={s.label} className="flex items-center gap-1">
+                            <div key={s.label} className="flex items-center gap-2 bg-white/5 py-1.5 px-3 rounded-full border border-white/5">
                                 <div
                                     className="w-3 h-3 rounded-full"
-                                    style={{ background: s.color, border: '2px solid white', boxShadow: '0 1px 3px rgba(0,0,0,0.2)' }}
+                                    style={{ background: s.color, border: '1px solid rgba(255,255,255,0.2)', boxShadow: `0 0 8px ${s.glow}` }}
                                 />
-                                <span className="text-[11px] text-gray-600">{s.label}</span>
+                                <span className="text-[11px] font-semibold text-white tracking-wide">{s.label}</span>
                             </div>
                         ))}
                     </div>
