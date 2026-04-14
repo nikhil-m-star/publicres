@@ -99,10 +99,10 @@ export default function Landing() {
                                 </SignInButton>
                             </SignedOut>
                         </div>
-                        <div className="hero__note mt-8 w-fit bg-black/40 backdrop-blur-md">
-                            <Sparkles className="w-4 h-4 text-[var(--glow)]" />
-                            <span>Join thousands of citizens improving the city everyday.</span>
-                        </div>
+                    </div>
+
+                    <div className="hero__visual perspective-1000">
+                        <div className="radar-card glass hero-3d-card border-[var(--border-glow)] shadow-[0_0_40px_rgba(0,255,255,0.1)]">
                             <div className="radar">
                                 <div className="radar__ring" />
                                 <div className="radar__ring" />
