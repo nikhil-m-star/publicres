@@ -185,61 +185,67 @@ export default function IssueMap({
             position={[issue.latitude, issue.longitude]}
             icon={statusIcons[issue.status] || statusIcons.REPORTED}
         >
-            <Popup>
-                <div className="min-w-[200px] p-1">
+            <Popup className="premium-popup">
+                <div className="w-[240px] p-0 font-sans">
                     {issue.imageUrl && (
-                        <img
-                            src={issue.imageUrl}
-                            alt={issue.title}
-                            className="w-full h-24 object-cover rounded-lg mb-2"
-                            onError={(e) => {
-                                e.target.onerror = null;
-                                e.target.src = `https://picsum.photos/seed/${issue.id}/400/300`;
-                            }}
-                        />
+                        <div className="relative">
+                            <img
+                                src={issue.imageUrl}
+                                alt={issue.title}
+                                className="w-full h-32 object-cover rounded-t-xl"
+                                onError={(e) => {
+                                    e.target.onerror = null;
+                                    e.target.src = `https://picsum.photos/seed/${issue.id}/400/300`;
+                                }}
+                            />
+                            <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent rounded-t-xl" />
+                        </div>
                     )}
-                    <h4 className="font-semibold text-sm mb-0.5">{issue.title}</h4>
-                    <p className="text-xs text-gray-500 mb-2 line-clamp-2">{issue.description}</p>
-                    <div className="flex items-center gap-2 mb-2">
-                        <span className="text-xs text-gray-400">{categoryLabels[issue.category]}</span>
-                    </div>
-                    <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-3">
+                    <div className="p-3">
+                        <div className="flex items-center justify-between mb-1.5">
+                            <h4 className="font-extrabold text-base text-gray-900 leading-tight truncate">{issue.title}</h4>
                             <span
-                                className={`text-xs font-medium px-2 py-0.5 rounded-full ${issue.status === 'REPORTED'
-                                    ? 'bg-red-100 text-red-700'
+                                className={`text-[10px] font-bold px-2 py-0.5 rounded-full whitespace-nowrap ${issue.status === 'REPORTED'
+                                    ? 'bg-red-100 text-red-700 border border-red-200'
                                     : issue.status === 'IN_PROGRESS'
-                                        ? 'bg-amber-100 text-amber-700'
-                                        : 'bg-emerald-100 text-emerald-700'
+                                        ? 'bg-amber-100 text-amber-700 border border-amber-200'
+                                        : 'bg-emerald-100 text-emerald-700 border border-emerald-200'
                                     }`}
                             >
                                 {statusLabels[issue.status]}
                             </span>
-                            <span className="text-xs text-gray-400 flex items-center gap-0.5">
-                                <ThumbsUp className="w-3 h-3" /> {issue.votes || 0}
-                            </span>
-                            <span className="text-xs text-gray-400 flex items-center gap-0.5">
-                                <MessageCircle className="w-3 h-3" /> {issue._count?.comments || 0}
-                            </span>
                         </div>
+                        <p className="text-sm text-gray-600 mb-3 line-clamp-2 leading-relaxed">{issue.description}</p>
+                        
+                        <div className="flex items-center justify-between pb-3 border-b border-gray-100 mb-3">
+                            <span className="text-xs font-semibold text-gray-500 bg-gray-100 px-2 py-1 rounded-md">{categoryLabels[issue.category]}</span>
+                            <div className="flex items-center gap-3">
+                                <span className="text-xs text-gray-500 flex items-center gap-1 font-medium">
+                                    <ThumbsUp className="w-3.5 h-3.5 text-blue-500" /> {issue.votes || 0}
+                                </span>
+                                <span className="text-xs text-gray-500 flex items-center gap-1 font-medium">
+                                    <MessageCircle className="w-3.5 h-3.5 text-blue-500" /> {issue._count?.comments || 0}
+                                </span>
+                            </div>
+                        </div>
+                        <Link
+                            to={`/issues/${issue.id}`}
+                            className="flex items-center justify-center w-full text-sm bg-black hover:bg-gray-800 text-white font-bold py-2 rounded-xl transition-all shadow-md hover:shadow-lg active:scale-[0.98]"
+                        >
+                            View Report
+                        </Link>
                     </div>
-                    <Link
-                        to={`/issues/${issue.id}`}
-                        className="block mt-2 text-center text-xs bg-civic-50 text-civic-700 hover:bg-civic-100 font-semibold py-1.5 rounded-lg transition-colors"
-                    >
-                        View Details →
-                    </Link>
                 </div>
             </Popup>
         </Marker>
     ))
 
     return (
-        <div style={{ height }} className="rounded-3xl overflow-hidden border border-[var(--border-glass)] shadow-2xl relative bg-black/50">
+        <div style={{ height }} className="rounded-3xl overflow-hidden border border-gray-200 shadow-2xl relative bg-white">
             <MapContainer center={center} zoom={zoom} className="h-full w-full z-0" scrollWheelZoom={true}>
                 <TileLayer
-                    attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OSM</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>'
-                    url="https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png"
+                    attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                    url="https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png"
                 />
 
                 {flyTo && <FlyToLocation position={flyTo} />}
@@ -285,33 +291,33 @@ export default function IssueMap({
                     <button
                         onClick={handleLocateMe}
                         disabled={locating}
-                        className="bg-black/60 backdrop-blur-md hover:bg-black/80 p-2.5 rounded-xl shadow-lg border border-[var(--border-clean)] hover:border-[var(--glow)] transition-all hover:shadow-[0_0_15px_rgba(0,255,255,0.2)]"
+                        className="bg-white hover:bg-gray-50 p-2.5 rounded-xl shadow-[0_8px_30px_rgba(0,0,0,0.12)] border border-gray-200/50 transition-all hover:shadow-[0_8px_30px_rgba(0,0,0,0.18)] active:scale-95"
                         title="Find my location"
                     >
-                        <Crosshair className={`w-5 h-5 text-[var(--glow)] ${locating ? 'animate-spin opacity-50' : ''}`} />
+                        <Crosshair className={`w-5 h-5 text-blue-600 ${locating ? 'animate-spin opacity-50' : ''}`} />
                     </button>
                 </div>
             )}
 
             {/* Legend */}
             {showLegend && (
-                <div className="absolute bottom-6 left-6 z-[400] bg-black/60 backdrop-blur-md rounded-2xl p-4 shadow-2xl border border-[var(--border-clean)]">
-                    <p className="text-[10px] font-black text-[var(--text-muted)] uppercase tracking-wider mb-3 flex items-center gap-2">
-                        <span className="w-1.5 h-1.5 rounded-full bg-[var(--glow)] animate-pulse"></span>
+                <div className="absolute bottom-6 left-6 z-[400] bg-white/95 backdrop-blur-xl rounded-2xl p-4 shadow-[0_12px_40px_rgba(0,0,0,0.12)] border border-gray-200/50">
+                    <p className="text-[11px] font-black text-gray-500 uppercase tracking-widest mb-3 flex items-center gap-2">
+                        <span className="w-1.5 h-1.5 rounded-full bg-blue-500 shadow-[0_0_8px_rgba(59,130,246,0.6)] animate-pulse"></span>
                         Live Status
                     </p>
                     <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3 sm:gap-4">
                         {[
-                            { color: '#00ffff', label: 'Reported', glow: 'rgba(0,255,255,0.4)' },
-                            { color: '#00cccc', label: 'In Progress', glow: 'rgba(0,204,204,0.4)' },
-                            { color: '#009999', label: 'Resolved', glow: 'rgba(0,153,153,0.4)' },
+                            { color: '#00ffff', label: 'Reported', glow: 'rgba(0,180,255,0.4)', bg: '#e0f7fa', border: '#b2ebf2', text: '#006064' },
+                            { color: '#00cccc', label: 'In Progress', glow: 'rgba(0,180,180,0.4)', bg: '#e0f2f1', border: '#b2ebf2', text: '#004d40' },
+                            { color: '#009999', label: 'Resolved', glow: 'rgba(0,130,130,0.4)', bg: '#e0f2f1', border: '#b2dfdb', text: '#004d40' },
                         ].map((s) => (
-                            <div key={s.label} className="flex items-center gap-2 bg-white/5 py-1.5 px-3 rounded-full border border-white/5">
+                            <div key={s.label} className="flex items-center gap-2 bg-gray-50 py-1.5 px-3 rounded-xl border border-gray-100 hover:border-gray-200 transition-colors">
                                 <div
                                     className="w-3 h-3 rounded-full"
-                                    style={{ background: s.color, border: '1px solid rgba(255,255,255,0.2)', boxShadow: `0 0 8px ${s.glow}` }}
+                                    style={{ background: s.color, border: '1.5px solid white', boxShadow: `0 2px 4px rgba(0,0,0,0.1)` }}
                                 />
-                                <span className="text-[11px] font-semibold text-white tracking-wide">{s.label}</span>
+                                <span className="text-[12px] font-bold text-gray-700 tracking-wide">{s.label}</span>
                             </div>
                         ))}
                     </div>
