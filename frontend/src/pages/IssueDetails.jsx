@@ -6,6 +6,7 @@ import { useState } from 'react'
 import StatusTimeline from '../components/StatusTimeline'
 import CommentSection from '../components/CommentSection'
 import IssueMap from '../components/IssueMap'
+import { PlayfulLoader } from '../components/ui/Loading'
 
 const categoryIcons = {
     POTHOLE: CircleDot,
@@ -108,8 +109,8 @@ export default function IssueDetails() {
 
     if (isLoading) {
         return (
-            <div className="flex items-center justify-center min-h-[60vh]">
-                <div className="w-8 h-8 border-3 border-civic-200 border-t-civic-600 rounded-full animate-spin" />
+            <div className="flex items-center justify-center min-h-[60vh] bg-transparent border-none">
+                <PlayfulLoader text="Loading Issue..." />
             </div>
         )
     }

@@ -1,10 +1,13 @@
 import { useState, useEffect } from 'react'
 import { SignedIn, SignedOut, SignInButton } from '@clerk/clerk-react'
+import { Link } from 'react-router-dom'
 import { Plus, List, Map as MapIcon, X, Search } from 'lucide-react'
 import { useIssuesScope, useAuthSync } from '../hooks/useIssues'
 import IssueCard from './IssueCard'
 import IssueForm from './IssueForm'
 import IssueMap from './IssueMap'
+
+import { PlayfulLoader } from './ui/Loading'
 
 export default function ReportsBoard({
     scope = 'all',
@@ -45,23 +48,12 @@ export default function ReportsBoard({
                 {showFormToggle && (
                     <>
                         <SignedIn>
-                            <button
-                                onClick={() => setShowForm(!showForm)}
-                                className={`flex items-center gap-2 text-sm font-semibold px-5 py-2.5 rounded-xl transition-all ${showForm
-                                    ? 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-                                    : 'btn-primary'
-                                    }`}
+                            <Link
+                                to="/submit"
+                                className="flex items-center gap-2 text-sm font-semibold px-5 py-2.5 rounded-xl transition-all btn-primary"
                             >
-                                {showForm ? (
-                                    <>
-                                        <X className="w-4 h-4" /> Close
-                                    </>
-                                ) : (
-                                    <>
-                                        <Plus className="w-4 h-4" /> Report
-                                    </>
-                                )}
-                            </button>
+                                <Plus className="w-4 h-4" /> Report Issue
+                            </Link>
                         </SignedIn>
                         <SignedOut>
                             <SignInButton mode="modal">
@@ -71,16 +63,6 @@ export default function ReportsBoard({
                     </>
                 )}
             </div>
-
-            {/* Report Form */}
-            <SignedIn>
-                {showFormToggle && showForm && (
-                    <div className="card glass p-6 mb-8 animate-slide-up">
-                        <h3 className="text-lg font-semibold text-gray-900 mb-5">Report</h3>
-                        <IssueForm onSuccess={() => setShowForm(false)} />
-                    </div>
-                )}
-            </SignedIn>
 
             {/* Toolbar */}
             <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 mb-6">
@@ -144,27 +126,8 @@ export default function ReportsBoard({
 
             {/* Content */}
             {isLoading ? (
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
-                    {Array.from({ length: 6 }).map((_, i) => (
-                        <div key={i} className="bg-white border text-transparent select-none border-gray-100 rounded-2xl shadow-sm overflow-hidden animate-pulse">
-                            <div className="h-44 bg-gray-200 w-full" />
-                            <div className="p-5">
-                                <div className="flex justify-between items-start mb-3">
-                                    <div className="h-5 bg-gray-200 rounded w-1/3" />
-                                    <div className="h-5 bg-gray-200 rounded-full w-20" />
-                                </div>
-                                <div className="h-6 bg-gray-200 rounded w-3/4 mb-4" />
-                                <div className="space-y-2 mb-4">
-                                    <div className="h-4 bg-gray-200 rounded w-full" />
-                                    <div className="h-4 bg-gray-200 rounded w-5/6" />
-                                </div>
-                                <div className="flex justify-between pt-4 border-t border-gray-50">
-                                    <div className="h-4 bg-gray-200 rounded w-1/4" />
-                                    <div className="h-4 bg-gray-200 rounded w-1/4" />
-                                </div>
-                            </div>
-                        </div>
-                    ))}
+                <div className="py-20 animate-slide-pop w-full border-none shadow-none rounded-2xl overflow-hidden bg-transparent">
+                    <PlayfulLoader text="Gathering Locality Issues..." />
                 </div>
             ) : view === 'map' ? (
                 <IssueMap issues={issues} height="550px" />

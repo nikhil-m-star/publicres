@@ -1,6 +1,6 @@
 import { Link, useLocation } from 'react-router-dom'
 import { SignedIn, SignedOut, SignInButton, UserButton } from '@clerk/clerk-react'
-import { Menu, X, Shield, MapPin, Map, Trophy, Sparkles, Home, User } from 'lucide-react'
+import { Menu, X, Shield, MapPin, Map, Trophy, Sparkles, Home, User, Plus } from 'lucide-react'
 import { useState, useEffect, useRef } from 'react'
 import NotificationsDropdown from './NotificationsDropdown'
 import { useAuthSync } from '../hooks/useIssues'
@@ -54,8 +54,13 @@ export default function Navbar() {
                         </Link>
                         
                         {/* Elite Floating Action */}
-                        <Link to="/report" className="nav-unified__fab" aria-label="Report">
-                            <Sparkles className="w-5 h-5" />
+                        <Link to="/submit" className="nav-unified__fab" aria-label="Submit Issue">
+                            <Plus className="w-5 h-5" />
+                        </Link>
+
+                        <Link to="/report" className={`nav-unified__link ${isActive('/report') ? 'active' : ''}`}>
+                            <Sparkles className="w-4 h-4" />
+                            <span>AI Report</span>
                         </Link>
 
                         <Link to="/leaderboard" className={`nav-unified__link ${isActive('/leaderboard') ? 'active' : ''}`}>

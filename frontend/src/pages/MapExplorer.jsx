@@ -3,6 +3,7 @@ import { MapPin, Filter, Layers, X, ChevronDown, Crosshair } from 'lucide-react'
 import { useIssues, useAuthSync } from '../hooks/useIssues'
 import IssueMap from '../components/IssueMap'
 import IssueCard from '../components/IssueCard'
+import { PlayfulLoader } from '../components/ui/Loading'
 
 const categories = [
     { value: '', label: 'All Categories' },
@@ -123,10 +124,10 @@ export default function MapExplorer() {
                     <div className="flex-1 overflow-y-auto p-3 space-y-3">
                         {isLoading ? (
                             <div className="flex items-center justify-center py-12">
-                                <div className="w-6 h-6 border-2 border-civic-200 border-t-civic-600 rounded-full animate-spin" />
+                                <PlayfulLoader text="Loading issues..." />
                             </div>
                         ) : issues.length === 0 ? (
-                            <div className="text-center py-12 text-gray-400">
+                            <div className="text-center py-12 text-[var(--text-muted)]">
                                 <MapPin className="w-8 h-8 mx-auto mb-2 opacity-30" />
                                 <p className="text-sm">No issues found</p>
                             </div>

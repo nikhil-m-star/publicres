@@ -9,6 +9,7 @@ import AdminDashboard from './pages/AdminDashboard'
 import MapExplorer from './pages/MapExplorer'
 import Profile from './pages/Profile'
 import CityReport from './pages/CityReport'
+import SubmitIssue from './pages/SubmitIssue'
 
 function ProtectedRoute({ children }) {
     return (
@@ -55,6 +56,7 @@ export default function App() {
                     }
                 />
                 <Route path="/report" element={<CityReport />} />
+                <Route path="/submit" element={<ProtectedRoute><SubmitIssue /></ProtectedRoute>} />
             </Routes>
         </div>
     )

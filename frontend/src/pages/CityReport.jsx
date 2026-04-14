@@ -4,6 +4,7 @@ import ReactMarkdown from 'react-markdown';
 import { Link } from 'react-router-dom';
 import { api } from '../api/client';
 import { BENGALURU_AREAS } from '../data/bengaluruAreas';
+import { PlayfulLoader } from '../components/ui/Loading';
 
 export default function CityReport() {
     const [area, setArea] = useState("");
@@ -85,12 +86,8 @@ export default function CityReport() {
 
                 {/* Loading State */}
                 {loading && (
-                    <div className="panel report-loading">
-                        <Loader2 className="w-10 h-10 animate-spin" />
-                        <h3>Synthesizing Data</h3>
-                        <p>
-                            Our AI is analyzing recent civic reports, severity levels, and resolution times for {area}, Bengaluru...
-                        </p>
+                    <div className="panel report-loading animate-slide-pop border-none bg-transparent">
+                        <PlayfulLoader text="Our AI is synthesizing the data..." />
                     </div>
                 )}
 
