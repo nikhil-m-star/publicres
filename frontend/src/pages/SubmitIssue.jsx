@@ -22,9 +22,6 @@ export default function SubmitIssue() {
                         <MapPin className="w-8 h-8 text-[var(--glow)] animate-pulse-slow" />
                     </div>
                     <h1 className="text-4xl md:text-5xl font-black text-white mb-4 tracking-tight">Report a Civic Issue</h1>
-                    <p className="text-[var(--text-dim)] font-medium text-lg max-w-lg">
-                        Help us improve the city by accurately reporting potholes, garbage, streetlight failures, and more.
-                    </p>
                 </div>
                 
                 <div className="panel glass p-8 md:p-12 rounded-[2rem] border-[var(--border-clean)] relative overflow-hidden shadow-[0_10px_40px_-10px_rgba(0,0,0,0.5)]">

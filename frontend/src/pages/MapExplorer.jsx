@@ -28,9 +28,9 @@ export default function MapExplorer() {
     const issues = data?.issues || []
 
     return (
-        <div className="h-screen w-full flex flex-col relative overflow-hidden bg-black pt-[80px]">
+        <div style={{ height: 'calc(100vh - 90px)', marginTop: '90px' }} className="w-full relative overflow-hidden bg-black">
             {/* Map Area */}
-            <div className="flex-1 relative z-0 w-full h-full min-h-[500px]">
+            <div className="absolute inset-0 z-0">
                 <IssueMap
                     issues={issues}
                     height="100%"
@@ -41,7 +41,7 @@ export default function MapExplorer() {
             </div>
             
             {/* Floating Top Filter Bar Overlay */}
-            <div className="absolute top-[100px] left-1/2 -translate-x-1/2 z-[400] panel glass !bg-black/60 border border-[var(--border-clean)] shadow-[0_10px_40px_-10px_rgba(0,0,0,0.5)] rounded-2xl px-4 py-3 flex items-center gap-4 w-[90%] max-w-3xl transition-all">
+            <div className="absolute top-4 left-1/2 -translate-x-1/2 z-[400] panel glass !bg-black/60 border border-[var(--border-clean)] shadow-[0_10px_40px_-10px_rgba(0,0,0,0.5)] rounded-2xl px-4 py-3 flex items-center gap-4 w-[90%] max-w-3xl transition-all">
                 <div className="flex-1 relative flex items-center">
                     <MapPin className="absolute left-4 w-5 h-5 text-[var(--glow)]" />
                     <input

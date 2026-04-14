@@ -1,5 +1,6 @@
 import { useEffect } from 'react'
 import { Link, useLocation } from 'react-router-dom'
+import { useScrollAnimation } from '../hooks/useScrollAnimation'
 import { SignedOut, SignInButton } from '@clerk/clerk-react'
 import { MapPin, AlertTriangle, CheckCircle, ArrowRight, Shield, Eye, ThumbsUp, Clock, TrendingUp, Sparkles, Activity } from 'lucide-react'
 import { useIssues, useStats } from '../hooks/useIssues'
@@ -38,6 +39,7 @@ const categoryNames = { POTHOLE: 'Pothole', GARBAGE: 'Garbage', STREETLIGHT: 'St
 export default function Landing() {
     const location = useLocation()
     const { data } = useIssues({ limit: 50 })
+    useScrollAnimation()
     const { data: stats } = useStats()
     const issues = data?.issues || []
 
@@ -74,7 +76,7 @@ export default function Landing() {
             <div className="absolute top-[20%] right-[-10%] w-96 h-96 bg-blue-500/20 rounded-full mix-blend-screen filter blur-[120px] animate-blob animation-delay-2000"></div>
             <div className="absolute bottom-[-20%] left-[20%] w-96 h-96 bg-purple-500/20 rounded-full mix-blend-screen filter blur-[120px] animate-blob animation-delay-4000"></div>
 
-            <section className="hero relative z-10 pt-24 pb-16">
+            <section className="hero relative z-10 pt-24 pb-16 scroll-animate">
                 <div className="page-container hero__grid">
                     <div className="hero__copy">
                         <h1 className="hero__title text-5xl md:text-7xl font-black text-white leading-tight drop-shadow-[0_0_20px_rgba(0,255,255,0.3)]">
@@ -259,7 +261,7 @@ export default function Landing() {
                                 <feature.icon className="w-7 h-7 text-[var(--glow)]" />
                             </div>
                             <h3 className="text-xl font-bold text-white mb-3 tracking-tight">{feature.title}</h3>
-                            <p className="text-[var(--text-dim)] leading-relaxed">{feature.description}</p>
+                            
                         </div>
                     ))}
                 </div>
@@ -288,7 +290,7 @@ export default function Landing() {
                         </span>
                         <span className="text-xl font-bold tracking-tight text-white drop-shadow-md">Namma Parihara</span>
                     </div>
-                    <p className="text-[var(--text-dim)] text-center md:text-right max-w-sm">Built for Namma Bengaluru. Bold, clear, and community-first.</p>
+                    
                 </div>
             </footer>
         </div>

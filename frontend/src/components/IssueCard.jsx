@@ -56,13 +56,13 @@ export default function IssueCard({ issue }) {
                 <div className="p-6">
                     {/* Category + Status (no image) */}
                     <div className="flex items-center justify-between mb-4">
-                        <div className="flex items-center gap-3">
-                            <span className={`category-badge ${catClass}`}>
+                        <div className="flex flex-wrap items-center gap-2 mb-2">
+                            <span className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-bold tracking-wide border bg-black/40 shadow-sm transition-all hover:scale-105 ${catClass}`}>
                                 <CatIcon className="w-3.5 h-3.5" />
                                 {categoryLabels[issue.category]}
                             </span>
                             {issue.area && (
-                                <span className="category-badge category-other">
+                                <span className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium tracking-wide border border-[var(--border-clean)] bg-white/5 text-[var(--text-muted)] hover:text-white transition-colors">
                                     <MapPin className="w-3 h-3" />
                                     {issue.area}
                                 </span>

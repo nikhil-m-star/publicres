@@ -17,7 +17,6 @@ export default function Dashboard() {
                 </div>
                 <div>
                     <h1 className="text-3xl md:text-5xl font-black text-white tracking-tight">Citizen Portal</h1>
-                    <p className="text-[var(--text-dim)] font-medium mt-1">Track your civic impact and personal reports.</p>
                 </div>
             </div>
 

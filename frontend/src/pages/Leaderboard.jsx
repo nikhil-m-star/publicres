@@ -30,8 +30,8 @@ const StarRating = ({ rating, size = 'sm' }) => {
 }
 
 const roleColors = {
-    PRESIDENT: 'bg-purple-500/10 text-purple-400 border-purple-500/20',
-    OFFICER: 'bg-blue-500/10 text-blue-400 border-blue-500/20',
+    PRESIDENT: 'bg-[var(--glow)]/10 text-[var(--glow)] border-[var(--glow)]/20',
+    OFFICER: 'bg-white/10 text-white border-white/20',
 }
 
 const roleTitles = {
@@ -62,18 +62,15 @@ export default function Leaderboard() {
     return (
         <div className="page-container py-12 md:py-24 mt-16 md:mt-24 relative z-10 w-full min-h-screen">
             {/* Background elements */}
-            <div className="fixed top-0 left-0 w-full h-[600px] bg-gradient-to-b from-amber-500/5 via-[var(--glow)]/5 to-transparent -z-10 pointer-events-none" />
+            <div className="fixed top-0 left-0 w-full h-[600px] bg-gradient-to-b from-[var(--glow)]/5 via-[var(--glow)]/5 to-transparent -z-10 pointer-events-none" />
 
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-12">
                 <div className="flex items-center gap-4">
-                    <div className="w-16 h-16 rounded-2xl panel glass flex items-center justify-center border border-amber-500/30 shadow-[0_0_30px_rgba(251,191,36,0.15)]">
-                        <Trophy className="w-8 h-8 text-amber-400" />
+                    <div className="w-16 h-16 rounded-2xl panel glass flex items-center justify-center border border-[var(--glow)]/30 shadow-[0_0_30px_rgba(0,255,255,0.15)]">
+                        <Trophy className="w-8 h-8 text-[var(--glow)]" />
                     </div>
                     <div>
                         <h1 className="text-4xl md:text-5xl font-black text-white tracking-tight">Authority Rankings</h1>
-                        <p className="text-[var(--text-dim)] font-medium text-lg mt-2 max-w-xl">
-                            Public operational efficiency index of civic leaders based on resolution speed and community trust.
-                        </p>
                     </div>
                 </div>
             </div>
@@ -83,9 +80,9 @@ export default function Leaderboard() {
                     const rank = index + 1
                     
                     let medalBadge = null
-                    if (rank === 1) medalBadge = <div className="absolute -top-3 -left-3 w-10 h-10 bg-amber-500/20 border border-amber-400/50 rounded-full flex items-center justify-center text-amber-400 shadow-[0_0_20px_rgba(251,191,36,0.4)] backdrop-blur-md font-black">1</div>
-                    else if (rank === 2) medalBadge = <div className="absolute -top-3 -left-3 w-10 h-10 bg-gray-300/20 border border-gray-300/50 rounded-full flex items-center justify-center text-gray-300 shadow-[0_0_20px_rgba(209,213,219,0.2)] backdrop-blur-md font-black">2</div>
-                    else if (rank === 3) medalBadge = <div className="absolute -top-3 -left-3 w-10 h-10 bg-orange-700/20 border border-orange-600/50 rounded-full flex items-center justify-center text-orange-500 shadow-[0_0_20px_rgba(194,65,12,0.3)] backdrop-blur-md font-black">3</div>
+                    if (rank === 1) medalBadge = <div className="absolute -top-3 -left-3 w-10 h-10 bg-[var(--glow)]/20 border border-[var(--glow)]/50 rounded-full flex items-center justify-center text-[var(--glow)] shadow-[0_0_20px_rgba(0,255,255,0.4)] backdrop-blur-md font-black">1</div>
+                    else if (rank === 2) medalBadge = <div className="absolute -top-3 -left-3 w-10 h-10 bg-white/20 border border-white/50 rounded-full flex items-center justify-center text-white shadow-[0_0_20px_rgba(255,255,255,0.2)] backdrop-blur-md font-black">2</div>
+                    else if (rank === 3) medalBadge = <div className="absolute -top-3 -left-3 w-10 h-10 bg-[var(--text-muted)]/20 border border-[var(--text-dim)]/50 rounded-full flex items-center justify-center text-[var(--text-dim)] shadow-[0_0_20px_rgba(255,255,255,0.1)] backdrop-blur-md font-black">3</div>
                     else medalBadge = <div className="absolute top-6 right-6 font-black text-4xl text-white/5 pointer-events-none">#{rank}</div>
 
                     return (
@@ -124,7 +121,7 @@ export default function Leaderboard() {
                                     <div className="flex flex-wrap items-center gap-6">
                                         <div className="flex flex-col">
                                             <span className="text-[10px] font-black tracking-widest uppercase text-gray-500 mb-1 flex items-center gap-1">
-                                                <Star className="w-3 h-3 text-amber-500/50" /> Trust Score
+                                                <Star className="w-3 h-3 text-[var(--glow)]/50" /> Trust Score
                                             </span>
                                             <StarRating rating={officer.rating} size="lg" />
                                         </div>
@@ -133,7 +130,7 @@ export default function Leaderboard() {
                                         
                                         <div className="flex flex-col">
                                             <span className="text-[10px] font-black tracking-widest uppercase text-gray-500 mb-1 flex items-center gap-1">
-                                                <TrendingUp className="w-3 h-3 text-emerald-500/50" /> Total Solved
+                                                <TrendingUp className="w-3 h-3 text-[var(--glow)]/50" /> Total Solved
                                             </span>
                                             <span className="text-xl font-black text-white">
                                                 {officer._count?.resolvedBy} <span className="text-sm font-medium text-gray-500 ml-1">jobs</span>
@@ -172,7 +169,7 @@ export default function Leaderboard() {
                             <Trophy className="w-10 h-10 text-[var(--text-muted)]" />
                         </div>
                         <h3 className="text-2xl font-black text-white mb-2">No Ratings Yet</h3>
-                        <p className="text-[var(--text-dim)]">Officers are currently accumulating trust metrics.</p>
+                        
                     </div>
                 )}
             </div>

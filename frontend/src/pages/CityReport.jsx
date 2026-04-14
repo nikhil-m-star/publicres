@@ -42,9 +42,6 @@ export default function CityReport() {
                     </div>
                     <div>
                         <h1 className="text-3xl md:text-5xl font-black text-white tracking-tight">AI Health Report</h1>
-                        <p className="text-[var(--text-dim)] mt-2 font-medium">
-                            Harness real-time civic data to generate a deep-dive health synthesis.
-                        </p>
                     </div>
                 </div>
             </div>

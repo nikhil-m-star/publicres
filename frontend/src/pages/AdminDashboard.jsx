@@ -67,7 +67,6 @@ export default function AdminDashboard() {
                     </div>
                     <div>
                         <h1 className="text-3xl md:text-5xl font-black text-white tracking-tight">Command Center</h1>
-                        <p className="text-[var(--text-dim)] font-medium mt-1">Namma Parihara Authority Protocol</p>
                     </div>
                 </div>
             </div>
