@@ -1,4 +1,6 @@
-import { Trophy, Star, Shield, Target, User, ChevronDown } from 'lucide-react'
+const fs = require('fs');
+
+const content = `import { Trophy, Star, Shield, Target, User, ChevronDown } from 'lucide-react'
 import { useLeaderboard, useRateOfficerGeneral } from '../hooks/useIssues'
 import { useUser } from '@clerk/clerk-react'
 import { useState } from 'react'
@@ -13,16 +15,16 @@ const StarRating = ({ rating, size = 'sm' }) => {
             {[1, 2, 3, 4, 5].map((i) => (
                 <Star
                     key={i}
-                    className={`${sizeClass} ${
+                    className={\`\${sizeClass} \${
                         i <= full
                             ? 'text-[var(--glow)] fill-[var(--glow)] drop-shadow-[0_0_8px_rgba(0,255,255,0.6)]'
                             : i === full + 1 && half
                                 ? 'text-[var(--glow)]/60 fill-[var(--glow)]/40'
                                 : 'text-white/10'
-                    }`}
+                    }\`}
                 />
             ))}
-            <span className={`ml-2 font-black ${size === 'sm' ? 'text-sm' : 'text-lg'} text-white`}>
+            <span className={\`ml-2 font-black \${size === 'sm' ? 'text-sm' : 'text-lg'} text-white\`}>
                 {rating > 0 ? rating.toFixed(1) : 'NEW'}
             </span>
         </div>
@@ -97,11 +99,11 @@ export default function Leaderboard() {
                         : 'text-[var(--text-muted)] bg-transparent font-bold border border-white/5';
 
                     return (
-                        <div key={officer.id} className={`scroll-animate slide-up panel glass rounded-[1.5rem] p-6 transition-all duration-300 backdrop-blur-xl ${rankStyle}`}>
+                        <div key={officer.id} className={\`scroll-animate slide-up panel glass rounded-[1.5rem] p-6 transition-all duration-300 backdrop-blur-xl \${rankStyle}\`}>
                             <div className="flex flex-col md:flex-row items-center md:items-start gap-8 relative">
                                 
                                 {/* Rank Badge Absolute on Mobile / Sticky Desktop */}
-                                <div className={`absolute md:static top-0 right-0 md:translate-y-0 -translate-y-2 translate-x-2 md:translate-x-0 w-12 h-12 flex items-center justify-center rounded-2xl text-xl font-black ${rankBadge}`}>
+                                <div className={\`absolute md:static top-0 right-0 md:translate-y-0 -translate-y-2 translate-x-2 md:translate-x-0 w-12 h-12 flex items-center justify-center rounded-2xl text-xl font-black \${rankBadge}\`}>
                                     #{rank}
                                 </div>
 
@@ -143,10 +145,10 @@ export default function Leaderboard() {
                                                 onClick={() => toggleRating(officer.id)}
                                                 className="w-full py-2 flex justify-center items-center gap-2 text-xs font-bold text-[var(--text-muted)] hover:text-white uppercase tracking-widest transition-colors"
                                             >
-                                                Rate Official <ChevronDown className={`w-4 h-4 transition-transform ${ratingState[officer.id] ? 'rotate-180' : ''}`}/>
+                                                Rate Official <ChevronDown className={\`w-4 h-4 transition-transform \${ratingState[officer.id] ? 'rotate-180' : ''}\`}/>
                                             </button>
 
-                                            <div className={`overflow-hidden transition-all duration-500 ${ratingState[officer.id] ? 'max-h-32 opacity-100 mt-4' : 'max-h-0 opacity-0'}`}>
+                                            <div className={\`overflow-hidden transition-all duration-500 \${ratingState[officer.id] ? 'max-h-32 opacity-100 mt-4' : 'max-h-0 opacity-0'}\`}>
                                                 <div className="bg-black/50 border border-[var(--glow)]/20 p-4 rounded-xl flex items-center justify-between gap-4">
                                                     <span className="text-sm font-bold text-[var(--text-muted)]">Select Rating:</span>
                                                     <div className="flex gap-2">
@@ -180,3 +182,6 @@ export default function Leaderboard() {
         </div>
     )
 }
+`
+
+fs.writeFileSync('src/pages/Leaderboard.jsx', content);
